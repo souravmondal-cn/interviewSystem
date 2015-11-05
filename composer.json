@@ -1,0 +1,27 @@
+{
+    "name": "capitalnumbers/interviewsystem",
+    "description": "Interview System",
+    "authors": [
+        {
+            "name": "Sourav Mondal",
+            "email": "souravm@capitalnumbers.com"
+        }
+    ],
+    "require": {
+        "doctrine/orm": "~2.4",
+        "doctrine/migrations": "1.0.*@dev",
+        "doctrine/doctrine-migrations-bundle": "*",
+        "silex/silex": "~1.2",
+        "twig/twig": "1.*",
+        "swiftmailer/swiftmailer": "~5.4"
+    },
+    "require-dev": {
+        "phpmd/phpmd": "~2.2",
+        "squizlabs/php_codesniffer": "1.5.6"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    }
+}
