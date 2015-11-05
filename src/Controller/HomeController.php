@@ -91,4 +91,5 @@ class HomeController {
        $sessionData->clear();
        return $this->app->redirect("/");
     }
+    //
 }
