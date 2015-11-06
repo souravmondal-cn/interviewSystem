@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Dashboard
+        </title>
+    </head>
+    
+    <body>
+        <div align="center">
+            <h3>
+            Welcome to admin panel!
+            </h3>
+        </div>
+        <div align="right">
+            <p>
+                {{UserEmail}}
+            </p>
+            <p>
+                <a href="/adminlogout">Logout</a>
+            </p>
+        </div>
+            <br>
+                {%block body %}{% endblock %}
+    </body>
+</html>

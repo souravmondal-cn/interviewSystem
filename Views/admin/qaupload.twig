@@ -1,0 +1,64 @@
+{% include 'admin/adminpanel.twig' %}
+<div align="center">
+    <h4>
+    Question and answer upload
+    </h4>
+    
+    <form action="/questionupload" method="post">
+         
+        <table cellpadding="5">
+            <tr>
+                <td align="right" colspan="2">
+                    <b>Question :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                </td>
+                <td align="left" colspan="2">
+                    <textarea name="addquestion" id="addquestion"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Option A:
+                </td>
+                <td>
+                    <input type="text" name="opta" id="opta">
+                </td>
+                <td>
+                    Option B:
+                </td>
+                <td>
+                    <input type="text" name="optb" id="optb">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Option C:
+                </td>
+                <td>
+                    <input type="text" name="optc" id="optc">
+                </td>
+                <td>
+                    Option D:
+                </td>
+                <td>
+                    <input type="text" name="optd" id="optd">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" align="center">
+                    <select name="correct">
+                        <option>Select correct one</option>
+                        <option value="a">A</option>
+                        <option value="b">B</option>
+                        <option value="c">C</option>
+                        <option value="d">D</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" align="center">
+                    <input type="submit" value="Upload question">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
