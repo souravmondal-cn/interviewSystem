@@ -21,4 +21,6 @@ $app->get("/logout", 'home.controller:logout');
 $app->get("/admin", 'admin.controller:loginAdmin');
 $app->post("/adminlogin", 'admin.controller:doLoginAdmin');
 $app->get("/adminpanel", 'admin.controller:adminPanel');
-$app->get("/adminLogout",'admin.controller:adminLogout');
+$app->get("/adminlogout",'admin.controller:adminLogout');
+$app->get("/upload","admin.controller:questionUpload");
+$app->post("/questionupload","admin.controller:doUpload");

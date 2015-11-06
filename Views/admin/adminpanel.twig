@@ -1,25 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>
-            Dashboard
-        </title>
-    </head>
-    
-    <body>
+{% extends "admin/base.twig" %}
+
+{% block body %}       
         <div align="center">
-            <h3>
-            Welcome to admin panel!
-            </h3>
-            <p>
-                Hello {{UserEmail}}...
-            </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="/upload"> Upload questions </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-            <br><br><br>
-        <div align="center">
-            <p>
-                <a href="/adminLogout">Logout</a>
-            </p>
-        </div>
-    </body>
-</html>
+{% endblock %}

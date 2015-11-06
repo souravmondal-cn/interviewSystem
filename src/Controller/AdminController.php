@@ -52,6 +52,17 @@ class AdminController {
         return $this->app['twig']->render('admin/adminpanel.twig',array('UserEmail' => $adminLogInEmail));
     }
     
+    public function questionUpload() {
+        $sessionData = $this->app['session'];
+        $adminLogInEmail = $sessionData->get('loginAdminEmail');
+        
+        return $this->app['twig']->render('admin/qaupload.twig',array('UserEmail' => $adminLogInEmail));
+    }
+    
+    public function doUpload(Request $request) {
+        $postedData = $request->request->all();
+    }
+    
     public function adminLogout() {
        $sessionData = $this->app['session'];
        $sessionData->clear();
