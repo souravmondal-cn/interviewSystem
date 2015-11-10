@@ -9,7 +9,7 @@ namespace Entity;
  * @Entity
  */
 
-class questions {
+class Questions {
     
     /**
      * @var integer
@@ -23,44 +23,51 @@ class questions {
     /**
      * @var string
      * 
-     * @column(name="question", type="string", nullable=false)
+     * @column(name="question", type="string")
      */
     private $question;
     
     /**
      * @var string
      * 
-     * @column(name="opta", type="string", nullable=false)
+     * @column(name="optionA", type="string")
      */
-    private $opta;
+    private $optionA;
     
     /**
      * @var string
      * 
-     * @column(name="optb", type="string", nullable=false)
+     * @column(name="optionB", type="string")
      */
-    private $optb;
+    private $optionB;
     
     /**
      * @var string
      * 
-     * @column(name="optc", type="string", nullable=false)
+     * @column(name="optionC", type="string")
      */
-    private $optc;
+    private $optionC;
     
     /**
      * @var string
      * 
-     * @column(name="optd", type="string", nullable=false)
+     * @column(name="optionD", type="string")
      */
-    private $optd;
+    private $optionD;
     
     /**
      * @var string
      * 
-     * @column(name="answer", type="string", nullable=false)
+     * @column(name="answer", type="string")
      */
     private $answer;
+    
+    /**
+     * @var integer
+     * 
+     * @column(name="categoryId", type="integer")
+     */
+    private $categoryId;
     
     /**
      * Get id
@@ -68,7 +75,7 @@ class questions {
      * @return integer
      */
     public function getId() {
-        return $this->id;
+        return $this->qid;
     }
     
     /**
@@ -91,62 +98,117 @@ class questions {
     }
     
     /**
-     * Set opta
+     * Set $optionA
      * 
-     * @param string $opta
-     * @return opta
+     * @param string $optionA
+     * @return optionA
      */
-    public function setOptA($opta) {
-        $this->question = $opta;
+    public function setOptionA($optionA) {
+        $this->optionA = $optionA;
     }
     
     /**
-     * Set optb
+     * Get $optionA
      * 
-     * @param string $optb
-     * @return optb
+     * @return string
      */
-    public function setOptB($optb) {
-        $this->question = $optb;
+    public function getOptionA() {
+        return $this->optionA;
     }
     
     /**
-     * Set optc
+     * Set $optionB
      * 
-     * @param string $optc
-     * @return optc
+     * @param string $optionB
+     * @return optionB
      */
-    public function setOptC($optc) {
-        $this->question = $optc;
+    public function setOptionB($optionB) {
+        $this->optionB = $optionB;
     }
     
     /**
-     * Set optd
+     * Get $optionC
      * 
-     * @param string $optd
-     * @return optd
+     * @return string
      */
-    public function setOptD($optd) {
-        $this->question = $optd;
+    public function getOptionB() {
+        return $this->optionC;
     }
     
     /**
-     * Set answer
+     * Set $optionC
+     * 
+     * @param string $optionC
+     * @return optionC
+     */
+    public function setOptionC($optionC) {
+        $this->optionC = $optionC;
+    }
+    
+    /**
+     * Get $optionC
+     * 
+     * @return string
+     */
+    public function getOptionC() {
+        return $this->optionC;
+    }
+    
+    /**
+     * Set $optionD
+     * 
+     * @param string $optionD
+     * @return optionD
+     */
+    public function setOptionD($optionD) {
+        $this->optionD = $optionD;
+    }
+    
+    /**
+     * Get $optionD
+     * 
+     * @return string
+     */
+    public function getOptionD() {
+        return $this->optionD;
+    }
+    
+    /**
+     * Set $answer
      * 
      * @param string $answer
      * @return answer
      */
     public function setAnswer($answer) {
-        $this->question = $answer;
+        $this->answer = $answer;
     }
     
     /**
-     * Get answer
+     * Get $answer
      * 
      * @return string
      */
     public function getAnswer() {
         return $this->answer;
+    }
+    
+    /**
+     * Set $subCategoryId
+     * 
+     * @param integer $subCategoryId
+     * @return subCategoryId
+     */
+    public function setCategoryId($categoryId) {
+        $this->categoryId = $categoryId;
+    }
+    
+    /**
+     * Get $subCategoryId
+     * 
+     * @return integer
+     */
+    public function getCategoryId() {
+        return $this->categoryId;
     }
 }
 

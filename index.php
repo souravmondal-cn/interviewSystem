@@ -20,7 +20,7 @@ $app->register(new TwigServiceProvider(), array(
 $app->register(new SessionServiceProvider());
 $app['session.storage.handler'] = null;
 
-$app['debug'] = false;
+$app['debug'] = true;
 
 /* @var $entityManager \Doctrine\ORM\EntityManager */
 
