@@ -22,10 +22,31 @@ $app->get("/admin", 'admin.controller:loginAdmin');
 $app->post("/adminlogin", 'admin.controller:doLoginAdmin');
 $app->get("/adminpanel", 'admin.controller:adminPanel');
 $app->get("/adminlogout",'admin.controller:adminLogout');
+
+$app->get("/questionlisting","admin.controller:questionListing");
 $app->get("/questionupload","admin.controller:questionUpload");
 $app->post("/questionupload","admin.controller:doUpload");
+$app->get("/editQuestion/{id}", "admin.controller:editQuestion");
+$app->get("/deleteQuestion/{id}", "admin.controller:deleteQuestion");
+
 $app->get("/category","admin.controller:categorySetting");
 $app->get("/addcategory","admin.controller:addCategory");
 $app->post("/addcategory","admin.controller:doAddCategory");
 $app->get("/editCategory/{id}", "admin.controller:editCategory");
 $app->get("/deleteCategory/{id}", "admin.controller:deleteCategory");
+
+$app->get("/adminsetting","admin.controller:showAdminSettings");
+$app->get("/usersetting","admin.controller:showUserSettings");
+$app->get("/adduser/{userType}", "admin.controller:addAllUsers");
+$app->post("/adduser/{userType}", "admin.controller:doAddUser");
+$app->get("/edituser/{userType}/{id}", "admin.controller:editUserData");
+$app->get("/deleteuser/{userType}/{id}", "admin.controller:deleteUserData");
+
+$app->get("/examsetting","admin.controller:examSetting");
+$app->post("/examsetting","admin.controller:examGenerate");
+
+$app->post("/checkEmail/{email}","admin.controller:checkUserRegistration");
+$app->get("viewHistory/{email}", "admin.controller:listExamHistory");
+$app->get("/viewfile/{id}","admin.controller:downloadFile");
+
+$app->get("/examnow/{email}", "home.controller:examNow");

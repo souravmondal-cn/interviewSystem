@@ -25,7 +25,7 @@ $app['debug'] = true;
 /* @var $entityManager \Doctrine\ORM\EntityManager */
 
 $app['doctrine'] = $entityManager;
-
+$app['basedir'] = "/";
 require_once './routes.php';
 
 $app->run();

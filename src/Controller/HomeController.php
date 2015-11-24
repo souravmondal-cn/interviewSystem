@@ -31,13 +31,13 @@ class HomeController {
             $user = new User();
             $user->setUserName($postedUserData['userName']);
             $user->setEmail($postedUserData['userEmail']);
-            $user->setPassword($postedUserData['userPassword']);
-
+            $user->setPassword(md5($postedUserData['userPassword']));
+            $user->setIs_Admin('0');
+            
             $entityManager = $this->app['doctrine'];
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $sessionData = $this->app['session'];
             $sessionData->getFlashBag()->add('message','Registration successful');
         } catch (UniqueConstraintViolationException $ex) {
             $sessionData->getFlashBag()->add('message','Sorry, this email id is already registered!');
@@ -54,7 +54,8 @@ class HomeController {
         
         $loginDetails = array(
             'email' => $postedLogInData['loginEmail'],
-            'password' => $postedLogInData['loginPassword']
+            'password' => md5($postedLogInData['loginPassword']),
+            'is_admin' => '0'
         );
         
         $entityManager = $this->app['doctrine'];
@@ -65,25 +66,69 @@ class HomeController {
             return $this->app->redirect("/");
         }
         
-        $sessionData = $this->app['session'];
         $sessionData->set('loginSession',true);
         $sessionData->set('loginEmail',$loginDetails['email']);
         $sessionData->set('loggerName',$loginInfo[0]->getUserName());
+        
         return $this->app->redirect('/dashboard');
     }
     
     public function dashboard() {
-        
         $sessionData = $this->app['session'];
+        
         $validSession = $sessionData->get('loginSession');
+        $logInEmail = $sessionData->get('loginEmail');
+        $loggerName = $sessionData->get('loggerName');
         
         if(empty($validSession)) {
             return $this->app->redirect("/");
         }
         
+        $examData = $this->getExamdata($logInEmail);
+        
+        if(!empty($examData)) {
+            $examset = 'true';
+        }
+        else {
+            $examset = 'false';
+        }
+        
+        return $this->app['twig']->render('dashboard.twig',  ['UserEmail' => $logInEmail, 
+                'UserName' => $loggerName,
+                'examset' => $examset
+                ]);
+    }
+    
+    public function getExamdata($emailId) {
+        $entityManager = $this->app['doctrine'];
+        $examData = $entityManager->getRepository('Entity\Examination')->findBy(array(
+                'email' => $emailId,
+                'date_completed' => null)
+            );
+        return $examData;
+    }
+    
+    public function examNow($email) {
+        $sessionData = $this->app['session'];
+        $entitymanager = $this->app['doctrine'];
+        
+        $validSession = $sessionData->get('loginSession');
         $logInEmail = $sessionData->get('loginEmail');
         $loggerName = $sessionData->get('loggerName');
-        return $this->app['twig']->render('dashboard.twig',array('UserEmail' => $logInEmail, 'UserName' => $loggerName));
+        
+        $questionRepository = $entitymanager->getRepository('Entity\Questions');
+        
+        $examdata = $this->getExamdata($email);
+        $getQuestions = $examdata[0]->getQuestions();
+        $questions = explode(',', $getQuestions);
+        
+        $questionData = $questionRepository->findBy(['qid' => $questions]);
+
+        return $this->app['twig']->render('examnow.twig',[
+            'UserEmail' => $logInEmail,
+            'UserName' => $loggerName,
+            'questions' => $questionData
+                ]);
     }
     
     public function logout() {

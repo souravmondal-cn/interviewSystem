@@ -1,28 +1,14 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>
-            Dashboard
-        </title>
-    </head>
+{% extends 'base.twig' %}
+
+        {% block body %}
+<div align="center">
+            
+    <h3>
+        Welcome to dashboard!
+    </h3>
+            
+    {% if examset is defined and examset == 'true' %}<a href = '/examnow/{{UserEmail}}'>Start examination</a>{% endif %}
     
-    <body>
-        <div align="center">
-            <h3>
-            Welcome to dashboard!
-            </h3>
-            <p>
-                {{UserEmail}}
-            </p>
-            <p>
-                {{UserName}}
-            </p>
-        </div>
-            <br><br><br>
-        <div align="center">
-            <p>
-                <a href="/logout">Logout</a>
-            </p>
-        </div>
-    </body>
-</html>
+</div>
+        {% endblock %}
+    

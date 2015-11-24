@@ -63,18 +63,22 @@ class Questions {
     private $answer;
     
     /**
-     * @var integer
-     * 
-     * @column(name="categoryId", type="integer")
+     * @var \Entity\Category
+     *
+     * @ManyToOne(targetEntity="Entity\Category")
+     * @JoinColumns({
+     *   @JoinColumn(name="categoryId", referencedColumnName="cid", nullable=true)
+     * })
      */
+    
     private $categoryId;
     
     /**
-     * Get id
+     * Get qid
      * 
      * @return integer
      */
-    public function getId() {
+    public function getQId() {
         return $this->qid;
     }
     
@@ -193,22 +197,26 @@ class Questions {
     }
     
     /**
-     * Set $subCategoryId
+     * Set $categoryId
      * 
-     * @param integer $subCategoryId
-     * @return subCategoryId
+     * @param \Entity\Category $categoryId
+     * @return categoryId
      */
     public function setCategoryId($categoryId) {
         $this->categoryId = $categoryId;
     }
     
     /**
-     * Get $subCategoryId
+     * Get $categoryId
      * 
-     * @return integer
+     * @return \Entity\Category
      */
     public function getCategoryId() {
         return $this->categoryId;
+    }
+    
+    public function __toString() {
+        return $this->setCategoryId($categoryId);
     }
 }
 

@@ -1,26 +1,58 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>
-            Dashboard
+            Interview System Admin Section
         </title>
+        
+        <link rel="stylesheet" href="../../interviewsystem/assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../interviewsystem/assets/css/dashboard.css">  
+        <link rel='stylesheet' href='../../interviewsystem/assets/css/jquery.dataTables.min.css'>
+        <link rel='stylesheet' href='../../interviewsystem/assets/css/dataTables.bootstrap.min.css'>
+        
     </head>
-    
+
     <body>
-        <div align="center">
-            <h2>
-            Admin Section
-            </h2>
-        </div>
-        <div align="right">
-            <p>
-                {{UserEmail}}
-            </p>
-            <p>
-                <a href="/adminlogout">Logout</a>
-            </p>
-        </div>
-            <br>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                
+                <div class="navbar-header">
+                    <p class="navbar-brand">Admin Section</p>
+                </div>
+                
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/adminpanel"> Dashboard </a></li>
+                        <li><a href="/adminlogout">Logout</a></li>
+                    </ul>
+                </div>
+                
+            </div>
+        </nav>
+        <br>
+        <div class="container-fluid">
+            
+            <div class="row">     
+                {% include 'admin/sidebar.twig' %}
+                    
+                <div align="center">
+                    {% for message in app.session.getFlashBag.get('admin_message') %}
+                        <p>{{message}}</p>
+                    {%endfor%}
+                </div>
+                    
                 {%block body %}{% endblock %}
+                
+            </div>
+        </div>
+    
+    <!-- footer section -->
+    <script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
+    <script src='../../interviewsystem/assets/js/dataTables.bootstrap.min.js'></script>
+    <script src="../../interviewsystem/assets/js/jq.js"></script>
+    <script src='../../interviewsystem/assets/js/jquery.dataTables.min.js'></script>
+    
+    {% include 'admin/scripts.twig' %}
     </body>
 </html>

@@ -1,84 +1,83 @@
-{% include 'admin/adminpanel.twig' %}
-<div align="center">
+{% extends "admin/base.twig" %}
+
+{% block body %}
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">   
+    </div>   
+    
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
     <h3>
-    Question and answer upload
+        {{formHeading}}
     </h3>
-    
-    <br><br>
-    
-    <form action="/questionupload" method="post">
-         
-        <table cellpadding="5">
-            <tr>
-                <td colspan="2" align="right">
-                    Subject :
-                </td>
-                <td colspan="2" align="left">
-                    <select name="category">
-                        <option>Choose category</option>
-                        {% for category in categories %} 
-                            <option value= "{{category.cid}}">{{category.categoryName}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td align="right" colspan="2">
-                    <b>Question :</b>
-                </td>
-                <td align="left" colspan="2">
-                    <textarea name="addquestion" id="addquestion"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Option A:
-                </td>
-                <td>
-                    <input type="text" name="opta" id="opta">
-                </td>
-                <td>
-                    Option B:
-                </td>
-                <td>
-                    <input type="text" name="optb" id="optb">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Option C:
-                </td>
-                <td>
-                    <input type="text" name="optc" id="optc">
-                </td>
-                <td>
-                    Option D:
-                </td>
-                <td>
-                    <input type="text" name="optd" id="optd">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" align="center">
-                    <select name="correct">
-                        <option>Select correct one</option>
-                        <option value="option_a">A</option>
-                        <option value="option_b">B</option>
-                        <option value="option_c">C</option>
-                        <option value="option_d">D</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" align="center">
-                    <input type="submit" value="Upload question">
-                </td>
-            </tr>
-        </table>
-    </form>
-    <div align="center">
-        {% for message in app.session.getFlashBag.get('admin_message') %}
-                <p>{{message}}</p>
-        {%endfor%}
+
+        <br><br>
+
+        <form action="/questionupload" method="post" class="form-horizontal">
+                      
+            <div class="form-group">
+                
+                <input type="hidden" name="questionId" value="{%if questionDetails.qid is defined%}{{questionDetails.qid}}{% endif %}">
+                
+                <label for="category">Question Category :</label>
+                <select name="category" id="category" class="form-control">
+                    <option>Select question category</option>
+                {% for category in categories %}
+
+                    <option value= "{{category.cid}}" {% if questionDetails.categoryId.cid is defined and questionDetails.categoryId.cid == category.cid %}selected="selected"{% endif %}>{{category.categoryName}}</option>
+                
+                {% endfor %}
+                </select>
+                
+            </div>
+            
+            <div class="form-group">
+                        <label for="addquestion">Question :</label>
+                        <textarea name="addquestion" id="addquestion"  class="form-control">{% if questionDetails.question is defined %}{{questionDetails.question}}{%endif%}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="opta">Option A:</label>
+                <textarea name="opta" id="opta" class="form-control">{% if questionDetails.optionA is defined %}{{questionDetails.optionA}}{%endif%}</textarea>
+            </div>
+            
+            <div class="form-group">
+                        <label for="optb">Option B:</label>
+                        <textarea name="optb" id="optb" class="form-control">{% if questionDetails.optionB is defined %}{{questionDetails.optionB}}{%endif%}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="optc">Option C:</label>
+                <textarea name="optc" id="optc" class="form-control">{% if questionDetails.optionC is defined %}{{questionDetails.optionC}}{%endif%}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="optd">Option D:</label>
+                <textarea name="optd" id="optd" class="form-control">{% if questionDetails.optionD is defined %}{{questionDetails.optionD}}{%endif%}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="correct">Correct option</label>
+                <select name="correct" id="correct" class="form-control">
+                    <option value=""> Select correct option </option>
+                    <option value="option_a" {% if questionDetails.answer is defined and questionDetails.answer == "option_a" %}selected="selected"{%endif%}>A</option>
+                    <option value="option_b" {% if questionDetails.answer is defined and questionDetails.answer == "option_b" %}selected="selected"{%endif%}>B</option>
+                    <option value="option_c" {% if questionDetails.answer is defined and questionDetails.answer == "option_c" %}selected="selected"{%endif%}>C</option>
+                    <option value="option_d" {% if questionDetails.answer is defined and questionDetails.answer == "option_d" %}selected="selected"{%endif%}>D</option>
+                </select>
+            </div>
+                
+            <div class="form-group">
+                <button type="submit" value="addQuestion" class="btn btn-primary" >Submit</button>
+            </div>
+        </form>
+        <div align="center">
+            {% for message in app.session.getFlashBag.get('admin_message') %}
+                    <p>{{message}}</p>
+            {%endfor%}
+        </div>
+            
     </div>
-</div>
+            
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">   
+    </div>
+            
+{% endblock %}

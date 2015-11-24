@@ -4,22 +4,30 @@
         <title>
             Login
         </title>
+        <link rel="stylesheet" href="interviewsystem/assets/css/bootstrap.min.css">
     </head>
     
     <body>
-        <div align="center">
-            <h2 class="form-signin-heading">Admin section</h2>
-            <h4>Please sign in</h4>
-            <br>
-            <form method="post" name ="adminLoginForm" id="logInForm" action="/adminlogin">
-                <input type="email" id="loginEmail" name = "loginEmail" placeholder="Email address">
-                <input type="password" id="loginPassword" name = "loginPassword" placeholder="Password">
-                <input type="submit">
-            </form>
-            <br>
-            {% for message in app.session.getFlashBag.get('message') %}
-                <p>{{message}}</p>
-            {%endfor%}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4"></div>
+                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4" align="center">
+                <h2 class="form-signin-heading">Admin section</h2>
+                <h4>Please sign in</h4>
+                <br>
+                <form method="post" name ="adminLoginForm" class="form-signin" id="logInForm" action="/adminlogin">
+                    <input type="email" id="loginEmail" name = "loginEmail"  class="form-control" placeholder="Email address" required autofocus>
+                    <input type="password" id="loginPassword" name = "loginPassword"  class="form-control" placeholder="Password" required>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                </form>
+                <br>
+                {% for message in app.session.getFlashBag.get('message') %}
+                    <p>{{message}}</p>
+                {%endfor%}
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4" align="center">
+            </div>
+        </div>
         </div>
         
     </body>

@@ -4,32 +4,32 @@
         <title>
             Registration
         </title>
+        <link rel="stylesheet" href="interviewsystem/assets/css/bootstrap.min.css">
     </head>
     
     <body>
-        <h1 align = "center">New Registration</h1>
-        
-        <form action = "/register" method = "post">
-        <table align = "center">
-                <tr>
-                        <td>Name:</td>	<td><input type  = "text" name = "userName"></td>
-                </tr>
-                <tr>
-                        <td>Email Id:</td>	<td><input type  = "text" name = "userEmail"></td>
-                </tr>
-                <tr>
-                        <td>Password:</td>	<td><input type  = "password" name = "userPassword"></td>
-                </tr>
-                <tr>
-                        <td colspan = "2" align = "center"><input type = "submit" name = "New Registration" value = "Sign Up"></td>
-                </tr>
-        </table>
-        </form>
-        <br>
-        <div align="center">
-            {% for message in app.session.getFlashBag.get('message') %}
-                <p>{{message}}</p>
-            {%endfor%}
-        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4"></div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                    <h1>New Registration</h1>
+
+                    <form action = "/register" method = "post">
+                        Name:<input type  = "text" name = "userName" class='form-control'>
+                        Email Id:<input type  = "text" name = "userEmail"  class='form-control'>
+                        Password:<input type  = "password" name = "userPassword" class='form-control'>
+                        <button type = "submit" name = "New Registration" value = "Sign Up" class='btn btn-primary btn-lg btn-block'>Register</button>
+                    </form>
+                    
+                    <br>
+                    <div align="center">
+                        {% for message in app.session.getFlashBag.get('message') %}
+                            <p>{{message}}</p>
+                        {%endfor%}
+                    </div>
+                </div>
+            </div>
+        <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4"></div>
     </body>
 </html>
