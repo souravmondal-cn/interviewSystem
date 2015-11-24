@@ -50,3 +50,5 @@ $app->get("viewHistory/{email}", "admin.controller:listExamHistory");
 $app->get("/viewfile/{id}","admin.controller:downloadFile");
 
 $app->get("/examnow/{email}", "home.controller:examNow");
+$app->get("/displayQuestion", "home.controller:displayQuestion");
+$app->post("/examsubmit", "home.controller:examSubmit");

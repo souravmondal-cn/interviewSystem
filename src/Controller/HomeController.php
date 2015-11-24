@@ -120,15 +120,65 @@ class HomeController {
         
         $examdata = $this->getExamdata($email);
         $getQuestions = $examdata[0]->getQuestions();
+        $examId = $examdata[0]->getExamId();
         $questions = explode(',', $getQuestions);
-        
+        $totalQuestions = count($questions);
         $questionData = $questionRepository->findBy(['qid' => $questions]);
-
+        
+        $sessionData->set('questionData',$questionData);
+        $sessionData->set('totalQuestions',$totalQuestions);
+        $sessionData->set('flag',0);
+        $sessionData->set('examId',$examId);
+        return $this->app->redirect('/displayQuestion');
+    }
+    
+    public function displayQuestion(){
+        $entitymanager = $this->app['doctrine'];
+        $questionRepository = $entitymanager->getRepository('Entity\Questions');
+        $sessionData = $this->app['session'];
+        
+        $validSession = $sessionData->get('loginSession');
+        $logInEmail = $sessionData->get('loginEmail');
+        $loggerName = $sessionData->get('loggerName');
+        $questionData = $sessionData->get('questionData');
+        //$totalQuestions = $sessionData->get('totalQuestions');
+        $flag = $sessionData->get('flag');
+        
+        $displayQuestion = $questionData[$flag];
+        
         return $this->app['twig']->render('examnow.twig',[
             'UserEmail' => $logInEmail,
             'UserName' => $loggerName,
-            'questions' => $questionData
+            'displayQuestion' => $displayQuestion
                 ]);
+    }
+    
+    public function examSubmit(Request $request) {
+        $entityManager = $this->app['doctrine'];
+        $sessionData = $this->app['session'];
+        $examId = $sessionData->get('examId');
+        
+        $postedExamData = $request->request->all();
+        $qid = $postedExamData['qid'];
+        $answer = $postedExamData['answer'];
+        
+        $entityManager = $this->app['doctrine'];
+        $examDetail = $entityManager->find('Entity\Examination', $examId);
+        
+        $questionDetail = $entityManager->find('Entity\Questions', $qid);
+        $originalAnswer = $questionDetail->getAnswer();
+        
+        if($originalAnswer == $answer) {
+            $prevAnswers = $examDetail->getCorrect_Answers();
+            $newAnswers = $prevAnswers+1;
+            $examDetail->setCorrect_Answers($newAnswers);
+            $entityManager->persist($examDetail);
+            $entityManager->flush();
+        }
+        $flagPrev = $sessionData->get('flag');
+        $flagNew = $flagPrev+1;
+        $sessionData->set('flag',$flagNew);
+        return $this->app->redirect('/displayQuestion');
     }
     
     public function logout() {

@@ -7,34 +7,35 @@
         <h3>
             Examination
         </h3>
-    {% for question in questions %}
-    <form action="/submitexam" method="post">
-        <input type="hidden" name="qId" value="{{question.qid}}">
-        <input type="hidden" name="ans" value="{{question.answer}}">
+        
+    <form action="/examsubmit" method="post">
+        <input type="hidden" name="qid" value="{{displayQuestion.qid}}">
+        <p>{{displayQuestion.question|striptags}}</p>
         <div class="form-group">
-            <label>{{question.question|striptags}}</label>
+            Option A:<br>
+            <input type="radio" name="answer" value="option_a">
+            {{displayQuestion.optionA|striptags}}
         </div>
         <div class="form-group">
-            {{question.optionA|striptags}}
-            <input type="checkbox" value="option_a" class="form-control">
+            <input type="radio" name="answer" value="option_b">
+            Option B:<br>
+            {{displayQuestion.optionB|striptags}}
         </div>
         <div class="form-group">
-            {{question.optionB|striptags}}
-            <input type="checkbox" value="option_b" class="form-control">
+            <input type="radio" name="answer" value="option_c">
+            Option C:<br>
+            {{displayQuestion.optionC|striptags}}
         </div>
         <div class="form-group">
-            {{question.optionC|striptags}}
-            <input type="checkbox" value="option_c" class="form-control">
-        </div>
-        <div class="form-group">
-            {{question.optionD|striptags}}
-            <input type="checkbox" value="option_d" class="form-control">
+            <input type="radio" name="answer" value="option_d">
+            Option D:<br>
+            {{displayQuestion.optionD|striptags}}
         </div>
         
-        {% endfor %}
         <div class="form-group">
-            <button type="submit" name="" id="" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-default">Submit</button>
         </div>
     </form>
+        
     </div>
 {% endblock %}
