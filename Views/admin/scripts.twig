@@ -1,0 +1,52 @@
+<script>tinymce.init({selector:'textarea'});</script>
+    
+    <script>
+        $(document).ready(function(){
+            $('.table-striped').DataTable();
+            $('#userHist').hide();
+            
+            var isAdmin = $("#isAdmin").val();
+            if(isAdmin == '1') {
+                $("#addressDiv").hide();
+                $("#locationDiv").hide();
+                $("#fileUploadDiv").hide();
+            }
+                
+            if(isAdmin == '0') {
+                $("#addressDiv").show();
+                $("#locationDiv").show();
+                $("#fileUploadDiv").show();
+            }
+        });
+        
+        $("#isAdmin").change(function(){
+            var isAdmin = $("#isAdmin").val();
+            if(isAdmin == '1') {
+                $("#addressDiv").hide();
+                $("#locationDiv").hide();
+                $("#fileUploadDiv").hide();
+            }
+                
+            if(isAdmin == '0') {
+                $("#addressDiv").show();
+                $("#locationDiv").show();
+                $("#fileUploadDiv").show();
+            }
+        });
+        
+        $('#userEmail').blur(function(){
+            var email = $('#userEmail').val();
+            $.ajax({
+                url: '/checkEmail/'+email,
+                method: 'post',
+                success:function(data,status){
+                    if(data == '1'){
+                        $('#userEmailCheck').html('Email id is already registered!');
+                        $('#userHist').show();
+                        $('#viewUserHistory').attr('href','/viewHistory/'+email);
+                        $('#userEmail').focus();
+                    }
+                }
+            });
+        });
+    </script>

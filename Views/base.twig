@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <title>
+            Dashboard
+        </title>
+        
+        <link rel="stylesheet" href="../../interviewsystem/assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../interviewsystem/assets/css/dashboard.css">  
+    </head>
+    
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <p class="navbar-brand">User dashboard</p>
+                </div>
+                
+                <div id="navbar" class="navbar-collapse collapse">
+                    <p class="navbar-text">
+                        {{UserName}}
+                    </p>
+                    <p class="navbar-text">
+                        {{UserEmail}}
+                    </p>
+                
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+                
+                
+            </div>
+        </nav>
+        
+        <div class="container-fluid">
+            <div class="row">
+   
+        {% include 'sidebar.twig' %}
+        {% block body %}{% endblock %} 
+
+            </div>
+        </div>
+            
+    </body>
+</html>

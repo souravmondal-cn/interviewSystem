@@ -1,0 +1,56 @@
+{% extends "admin/base.twig" %}
+
+{% block body %}
+    
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"> 
+    </div>
+    
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"> 
+        <h3>
+            Examination Setting
+        </h3>
+        <br>
+        
+        <div align="center">
+            {% for message in app.session.getFlashBag.get('admin_message') %}
+                <p>{{message}}</p>
+            {%endfor%}
+        </div>
+        
+        <form action="/examsetting" method="post">
+            
+            <div class="form-group">
+                <label for="userEmailId">User Email :</label>
+                <input type="text" name="userEmailId" id="userEmailId" class="form-control">
+            </div>
+                <br>
+            <div class="form-group">
+                <label>Question category :</label>
+                <br>{% set i = 0 %}
+                {% for key,value in categories %}
+                    {{value}} &nbsp;&nbsp;&nbsp; : <input type="checkbox" name="qCategory[]" id="qCategory[]" value="{{key}}">&nbsp;&nbsp;&nbsp;
+                    {% set i = i+1 %} {% if i%3 == 0 %}<br>{% endif %}
+                {% endfor %}
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Set number of total questions from each category :</label>
+                <input type="text" name="qNumbers" id="qNumbers"  class="form-control">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Timeout for each question :</label>
+                <span style='color:gray'>60 Seconds</span>
+            </div>
+            <br>
+            <div class="form-group">
+                <button type="submit" name="examGen" id="examGen" class="btn btn-primary">Generate Exam</button>  
+            </div>
+        </form>
+        
+    </div>
+    
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"> 
+    </div>
+    
+{% endblock %}

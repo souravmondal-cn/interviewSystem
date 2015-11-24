@@ -1,0 +1,40 @@
+{% extends 'base.twig' %}
+
+{% block body %}
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+    
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+        <h3>
+            Examination
+        </h3>
+    {% for question in questions %}
+    <form action="/submitexam" method="post">
+        <input type="hidden" name="qId" value="{{question.qid}}">
+        <input type="hidden" name="ans" value="{{question.answer}}">
+        <div class="form-group">
+            <label>{{question.question|striptags}}</label>
+        </div>
+        <div class="form-group">
+            {{question.optionA|striptags}}
+            <input type="checkbox" value="option_a" class="form-control">
+        </div>
+        <div class="form-group">
+            {{question.optionB|striptags}}
+            <input type="checkbox" value="option_b" class="form-control">
+        </div>
+        <div class="form-group">
+            {{question.optionC|striptags}}
+            <input type="checkbox" value="option_c" class="form-control">
+        </div>
+        <div class="form-group">
+            {{question.optionD|striptags}}
+            <input type="checkbox" value="option_d" class="form-control">
+        </div>
+        
+        {% endfor %}
+        <div class="form-group">
+            <button type="submit" name="" id="" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+    </div>
+{% endblock %}
