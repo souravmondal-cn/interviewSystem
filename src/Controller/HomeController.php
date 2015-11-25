@@ -5,7 +5,7 @@ namespace Controller;
 use Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use \Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-
+use \DateTime;
 class HomeController {
 
     private $app;
@@ -110,15 +110,20 @@ class HomeController {
     
     public function examNow($email) {
         $sessionData = $this->app['session'];
-        $entitymanager = $this->app['doctrine'];
+        $entityManager = $this->app['doctrine'];
         
         $validSession = $sessionData->get('loginSession');
-        $logInEmail = $sessionData->get('loginEmail');
-        $loggerName = $sessionData->get('loggerName');
+        if(empty($validSession)) {
+            return $this->app->redirect("/");
+        }
         
-        $questionRepository = $entitymanager->getRepository('Entity\Questions');
-        
+        $questionRepository = $entityManager->getRepository('Entity\Questions');
         $examdata = $this->getExamdata($email);
+        
+        if(empty($examdata)) {
+            $sessionData->getFlashBag()->add('user_message','Examination finished');
+            return $this->app->redirect("/dashboard");
+        }
         $getQuestions = $examdata[0]->getQuestions();
         $examId = $examdata[0]->getExamId();
         $questions = explode(',', $getQuestions);
@@ -133,16 +138,28 @@ class HomeController {
     }
     
     public function displayQuestion(){
-        $entitymanager = $this->app['doctrine'];
-        $questionRepository = $entitymanager->getRepository('Entity\Questions');
+        $entityManager = $this->app['doctrine'];
+        $questionRepository = $entityManager->getRepository('Entity\Questions');
         $sessionData = $this->app['session'];
         
         $validSession = $sessionData->get('loginSession');
         $logInEmail = $sessionData->get('loginEmail');
         $loggerName = $sessionData->get('loggerName');
+        $totalQuestions = $sessionData->get('totalQuestions');
         $questionData = $sessionData->get('questionData');
-        //$totalQuestions = $sessionData->get('totalQuestions');
+        //$sessionData->set('counter',$totalQuestions);
         $flag = $sessionData->get('flag');
+        
+        if($flag == $totalQuestions) {
+            $sessionData->remove('questionData');
+            $sessionData->remove('totalQuestions');
+            $sessionData->remove('flag');
+            $sessionData->remove('examId');
+            $sessionData->remove('examId');
+            
+            $sessionData->getFlashBag()->add('user_message','Examination finished');
+            return $this->app->redirect('/dashboard');
+        }
         
         $displayQuestion = $questionData[$flag];
         
@@ -157,10 +174,19 @@ class HomeController {
         $entityManager = $this->app['doctrine'];
         $sessionData = $this->app['session'];
         $examId = $sessionData->get('examId');
+        $totalQuestions = $sessionData->get('totalQuestions');
+        $questionData = $sessionData->get('questionData');
+        $flag = $sessionData->get('flag');
         
         $postedExamData = $request->request->all();
         $qid = $postedExamData['qid'];
+        
+        if(empty($postedExamData['answer'])) {
+            $answer = '';
+        }
+        else {
         $answer = $postedExamData['answer'];
+        }
         
         $entityManager = $this->app['doctrine'];
         $examDetail = $entityManager->find('Entity\Examination', $examId);
@@ -169,15 +195,27 @@ class HomeController {
         $originalAnswer = $questionDetail->getAnswer();
         
         if($originalAnswer == $answer) {
-            $prevAnswers = $examDetail->getCorrect_Answers();
-            $newAnswers = $prevAnswers+1;
-            $examDetail->setCorrect_Answers($newAnswers);
-            $entityManager->persist($examDetail);
-            $entityManager->flush();
+            $scorePoint = 1; 
         }
-        $flagPrev = $sessionData->get('flag');
-        $flagNew = $flagPrev+1;
+        else{
+            $scorePoint = 0;
+        }
+        
+        $prevAnswers = $examDetail->getCorrect_Answers();
+        $newAnswers = $prevAnswers+$scorePoint;
+        $examDetail->setCorrect_Answers($newAnswers);
+        
+        unset($questionData[$flag]);
+        $sessionData->set('questionData', $questionData);
+            
+        $flagNew = $flag+1;
         $sessionData->set('flag',$flagNew);
+        
+        date_default_timezone_set("Asia/Calcutta");
+        $examDetail->setDate_Completed(new DateTime());
+        $entityManager->persist($examDetail);
+        $entityManager->flush();
+        
         return $this->app->redirect('/displayQuestion');
     }
     

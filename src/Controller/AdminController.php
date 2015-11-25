@@ -10,6 +10,7 @@ use \Entity\User;
 use \Entity\Examination;
 use DateTime;
 use \Doctrine\ORM\Query\ResultSetMapping;
+use \Doctrine\DBAL\Exception\NotNullConstraintViolationException;
 
 class AdminController {
     
@@ -548,7 +549,6 @@ class AdminController {
         $entityManager = $this->app['doctrine'];
         $sessionData = $this->app['session'];
         $postedExamData = $request->request->all();
-        
         $userEmail = $postedExamData['userEmailId'];
         $qCategoryId = $postedExamData['qCategory'];
         $qNumbers = $postedExamData['qNumbers'];
@@ -590,10 +590,10 @@ class AdminController {
         $examination->setEmail($userEmail);
         $examination->setQuestions($allQuestionIds);
         $examination->setTotalTime($totalTimeInSeconds);
-        $examination->setTotalQuestions($totalQuestions);
+        $examination->setTotal_Questions($totalQuestions);
         
         date_default_timezone_set("Asia/Calcutta");
-        $examination->setDateCreated(new DateTime());
+        $examination->setDate_Created(new DateTime());
         
         $entityManager->persist($examination);
         $entityManager->flush();
@@ -601,9 +601,10 @@ class AdminController {
         $sessionData->getFlashBag()->add('admin_message', 'Examination set successful!');
         return $this->app->redirect('/adminpanel');
         }
-        catch(UniqueConstraintViolationException $ex){
-            $sessionData->getFlashBag()->add('admin_message', 'User already registered for an examination');
-            return $this->app->redirect('/examsetting');
+        catch(\Exception $ex){
+//            $sessionData->getFlashBag()->add('admin_message', 'Fill up all fields');
+//            return $this->app->redirect('/examsetting');
+            $ex->getCode();exit;
         }
     }
     

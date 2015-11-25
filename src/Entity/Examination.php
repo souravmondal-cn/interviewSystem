@@ -30,49 +30,49 @@ class Examination {
     /**
      *  @var string
      * 
-     * @column(name="questions", type="string", nullable=false)
+     * @Column(name="questions", type="string", nullable=false)
      */
     private $questions;
     
     /**
      * @var integer
      * 
-     * @column(name="total_questions", type="integer")
+     * @Column(name="total_questions", type="integer")
      */
     private $total_questions;
     
     /**
      * @var integer
      * 
-     * @column(name="correct_answers", type="integer", nullable=true)
+     * @Column(name="correct_answers", type="integer", nullable=true)
      */
     private $correct_answers;
     
     /**
      *  @var integer
      * 
-     *  @column(name="totaltime", type="integer", nullable=false)
+     *  @Column(name="totaltime", type="integer", nullable=false)
      */
     private $totaltime;
     
     /**
      * @var datetime
      * 
-     * @column(name="date_created", type="datetime", nullable=true)
+     * @Column(name="date_created", type="datetime", nullable=true)
      */
     private $date_created;
     
     /**
      * @var datetime
      * 
-     * @column(name="date_completed", type="datetime", nullable=true) 
+     * @Column(name="date_completed", type="datetime", nullable=true) 
      */
     private $date_completed;
     
     /**
      *@var boolean
      * 
-     * @column(name="is_qualified", type="boolean") 
+     * @Column(name="is_qualified", type="boolean") 
      */
     private $is_qualified = false;
     

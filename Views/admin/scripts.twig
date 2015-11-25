@@ -49,4 +49,22 @@
                 }
             });
         });
+        
+        $('#userEmailId').blur(function(){
+           var emailId = $('#userEmailId').val();
+           $.ajax({
+              url: '/checkEmail/'+emailId,
+              method: 'post',
+              success:function(data,status){
+                  if(data == '0'){
+                      $('#checkEmailForExam').html('this email id is not registered!');
+                      $('#userEmailId').val('');
+                      $('#userEmailId').focus();
+                  }
+                  else{
+                      $('#checkEmailForExam').html('');
+                  }
+              }
+           });
+        });
     </script>

@@ -6,7 +6,12 @@
     <h3>
         Welcome to dashboard!
     </h3>
-            
+    <div align="center">
+        {% for message in app.session.getFlashBag.get('user_message') %}
+            <p>{{message}}</p>
+        {%endfor%}
+    </div>
+    
     {% if examset is defined and examset == 'true' %}<a href = '/examnow/{{UserEmail}}'>Start examination</a>{% endif %}
     
 </div>

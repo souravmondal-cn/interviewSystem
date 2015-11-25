@@ -3,32 +3,34 @@
 {% block body %}
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
     
-    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <h3>
             Examination
         </h3>
-        
-    <form action="/examsubmit" method="post">
+    <br><br>    
+    <form action="/examsubmit" method="post" id="examNowForm" name="examNowForm">
         <input type="hidden" name="qid" value="{{displayQuestion.qid}}">
-        <p>{{displayQuestion.question|striptags}}</p>
+        <p>{{displayQuestion.question|striptags}} ?</p>
+        
         <div class="form-group">
-            Option A:<br>
+            
             <input type="radio" name="answer" value="option_a">
+            <label>Option A:</label><br>
             {{displayQuestion.optionA|striptags}}
         </div>
         <div class="form-group">
             <input type="radio" name="answer" value="option_b">
-            Option B:<br>
+            <label>Option B:</label><br>
             {{displayQuestion.optionB|striptags}}
         </div>
         <div class="form-group">
             <input type="radio" name="answer" value="option_c">
-            Option C:<br>
+            <label>Option C:</label><br>
             {{displayQuestion.optionC|striptags}}
         </div>
         <div class="form-group">
             <input type="radio" name="answer" value="option_d">
-            Option D:<br>
+            <label>Option D:</label><br>
             {{displayQuestion.optionD|striptags}}
         </div>
         
@@ -38,4 +40,5 @@
     </form>
         
     </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
 {% endblock %}
