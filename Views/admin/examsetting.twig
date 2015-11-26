@@ -21,7 +21,7 @@
             
             <div class="form-group">
                 <label for="userEmailId">User Email :</label>
-                <input type="text" name="userEmailId" id="userEmailId" class="form-control">
+                <input type="email" name="userEmailId" id="userEmailId" class="form-control" required="required">
                 <span id='checkEmailForExam' style='color:red'>
                     
                 </span>
@@ -31,14 +31,14 @@
                 <label>Question category :</label>
                 <br>{% set i = 0 %}
                 {% for key,value in categories %}
-                    {{value}} &nbsp;&nbsp;&nbsp; : <input type="checkbox" name="qCategory[]" id="qCategory[]" value="{{key}}">&nbsp;&nbsp;&nbsp;
+                    {{value}} &nbsp;&nbsp;&nbsp; : <input type="checkbox" name="qCategory[]" id="qCategory[]" value="{{key}}" required="required">&nbsp;&nbsp;&nbsp;
                     {% set i = i+1 %} {% if i%3 == 0 %}<br>{% endif %}
                 {% endfor %}
             </div>
             <br>
             <div class="form-group">
                 <label>Set number of total questions from each category :</label>
-                <input type="text" name="qNumbers" id="qNumbers"  class="form-control">
+                <input type="number" min="1" max="10" name="qNumbers" id="qNumbers"  class="form-control" required="required">
             </div>
             <br>
             <div class="form-group">

@@ -14,7 +14,7 @@ class Examination {
     /**
      * @var integer
      * 
-     * @column(name="examid", type="integer")
+     * @Column(name="examid", type="integer", unique=true)
      * @Id
      * @Generatedvalue(strategy="IDENTITY")
      */
@@ -23,7 +23,7 @@ class Examination {
     /**
      * @var string
      * 
-     * @column(name="email", type="string", length=100, nullable=false)
+     * @Column(name="email", type="string", length=100)
      */
     private $email;
     

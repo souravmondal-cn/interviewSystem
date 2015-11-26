@@ -546,6 +546,7 @@ class AdminController {
     }
     
     public function examGenerate(Request $request) {
+        
         $entityManager = $this->app['doctrine'];
         $sessionData = $this->app['session'];
         $postedExamData = $request->request->all();
@@ -553,7 +554,7 @@ class AdminController {
         $qCategoryId = $postedExamData['qCategory'];
         $qNumbers = $postedExamData['qNumbers'];
         $timeout = 60;
-        
+
         $countCatNum = count($qCategoryId);
         
         if($countCatNum>5 || $countCatNum<3){
@@ -601,10 +602,9 @@ class AdminController {
         $sessionData->getFlashBag()->add('admin_message', 'Examination set successful!');
         return $this->app->redirect('/adminpanel');
         }
-        catch(\Exception $ex){
-//            $sessionData->getFlashBag()->add('admin_message', 'Fill up all fields');
-//            return $this->app->redirect('/examsetting');
-            $ex->getCode();exit;
+        catch(UniqueConstraintViolationException $ex){
+            $sessionData->getFlashBag()->add('admin_message', 'Fill up all fields');
+            return $this->app->redirect('/examsetting');
         }
     }
     

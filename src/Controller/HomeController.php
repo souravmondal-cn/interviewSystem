@@ -126,6 +126,7 @@ class HomeController {
         }
         $getQuestions = $examdata[0]->getQuestions();
         $examId = $examdata[0]->getExamId();
+        $totaltime = $examdata[0]->getTotalTime();
         $questions = explode(',', $getQuestions);
         $totalQuestions = count($questions);
         $questionData = $questionRepository->findBy(['qid' => $questions]);
@@ -134,20 +135,33 @@ class HomeController {
         $sessionData->set('totalQuestions',$totalQuestions);
         $sessionData->set('flag',0);
         $sessionData->set('examId',$examId);
+        $sessionData->set('validExam',TRUE);
+        $sessionData->set('totaltime',$totaltime);
         return $this->app->redirect('/displayQuestion');
     }
     
     public function displayQuestion(){
+        $sessionData = $this->app['session'];
+        $totaltime = $sessionData->get('totaltime');
+        header("Refresh: $totaltime; url=/examsubmit");
+        
+        $validExam = $sessionData->get('validExam');
+        if($validExam == FALSE) {
+            return $this->app->redirect('/examsubmit');
+        }
+        
+        $sessionData->set('validExam',FALSE);
+        
         $entityManager = $this->app['doctrine'];
         $questionRepository = $entityManager->getRepository('Entity\Questions');
-        $sessionData = $this->app['session'];
+        
         
         $validSession = $sessionData->get('loginSession');
         $logInEmail = $sessionData->get('loginEmail');
         $loggerName = $sessionData->get('loggerName');
         $totalQuestions = $sessionData->get('totalQuestions');
         $questionData = $sessionData->get('questionData');
-        //$sessionData->set('counter',$totalQuestions);
+        
         $flag = $sessionData->get('flag');
         
         if($flag == $totalQuestions) {
@@ -174,11 +188,13 @@ class HomeController {
         $entityManager = $this->app['doctrine'];
         $sessionData = $this->app['session'];
         $examId = $sessionData->get('examId');
+        
         $totalQuestions = $sessionData->get('totalQuestions');
         $questionData = $sessionData->get('questionData');
         $flag = $sessionData->get('flag');
         
         $postedExamData = $request->request->all();
+        
         $qid = $postedExamData['qid'];
         
         if(empty($postedExamData['answer'])) {
@@ -188,7 +204,6 @@ class HomeController {
         $answer = $postedExamData['answer'];
         }
         
-        $entityManager = $this->app['doctrine'];
         $examDetail = $entityManager->find('Entity\Examination', $examId);
         
         $questionDetail = $entityManager->find('Entity\Questions', $qid);
@@ -216,7 +231,30 @@ class HomeController {
         $entityManager->persist($examDetail);
         $entityManager->flush();
         
+        $sessionData->set('validExam',TRUE);
         return $this->app->redirect('/displayQuestion');
+    }
+    
+    public function forceSubmit() {
+        $entityManager = $this->app['doctrine'];
+        $sessionData = $this->app['session'];
+        $examId = $sessionData->get('examId');
+        
+        if(empty($examId)) {
+            return $this->app->redirect('/dashboard');
+        }
+        $sessionData->remove('examId');
+        $sessionData->remove('totalQuestions');
+        $sessionData->remove('questionData');
+        $sessionData->remove('flag');
+        
+        $examDetail = $entityManager->find('Entity\Examination', $examId);
+        date_default_timezone_set("Asia/Calcutta");
+        $examDetail->setDate_Completed(new DateTime());
+        $entityManager->persist($examDetail);
+        $entityManager->flush();
+        $sessionData->getFlashBag()->add('user_message','Examination finished');
+        return $this->app->redirect('/dashboard');
     }
     
     public function logout() {
