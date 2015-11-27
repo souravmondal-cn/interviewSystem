@@ -14,12 +14,12 @@
     <form action="/addcategory" method="post">
         
         <div class="form-group">
-                    Subject :
+                    Subject category :
 
                     <input type="hidden"  class="form-control" name="categoryId" value="{%if categoryDetails.cid is defined%}{{categoryDetails.cid}}{% endif %}">
                     <select name="category" class="form-control" >
-                        <option>Choose subject</option>
-                        <option value="0">No sub category</option>
+                        <option>Choose parent category</option>
+                        <option value="0">None</option>
                         {% for category in categories %} 
                             <option value= "{{category.cid}}" {%if categoryDetails.parentId is defined and category.cid == categoryDetails.parentId %}selected{% endif %}>{{category.categoryName}}</option>
                         {% endfor %}
@@ -28,7 +28,7 @@
                     
         <div class="form-group">
                     Category :
-                    <input type="text" class="form-control" name="subcategory" value="{%if categoryDetails.categoryName is defined%}{{categoryDetails.categoryName}}{% endif %}">
+                    <input type="text" class="form-control" name="subcategory" value="{%if categoryDetails.categoryName is defined%}{{categoryDetails.categoryName}}{% endif %}" required="required">
         </div>
         
         <div class="form-group">

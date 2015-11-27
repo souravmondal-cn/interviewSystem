@@ -47,7 +47,7 @@ $app->post("/examsetting","admin.controller:examGenerate");
 
 $app->post("/checkEmail/{email}","admin.controller:checkUserRegistration");
 $app->get("viewHistory/{email}", "admin.controller:listExamHistory");
-$app->get("/viewfile/{id}","admin.controller:downloadFile");
+$app->get("/viewfile/{filename}","admin.controller:downloadFile");
 
 $app->get("/examnow/{email}", "home.controller:examNow");
 $app->get("/displayQuestion", "home.controller:displayQuestion");

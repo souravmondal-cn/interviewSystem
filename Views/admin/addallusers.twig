@@ -26,7 +26,7 @@
                 
             <div class="form-group">
                 <label for="userEmail">Email Address</label>
-                <input type="text" id="userEmail" name="userEmail" class="form-control" value='{% if userData.email is defined %}{{userData.email}}{% endif %}'>
+                <input type="email" id="userEmail" name="userEmail" class="form-control" value='{% if userData.email is defined %}{{userData.email}}{% endif %}' required="required">
                 <span id='userEmailCheck' style='color:red'></span>
                 <span id='userHist'>
                     <a id="viewUserHistory">View history</a>
@@ -57,7 +57,7 @@
             
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control" value='{% if userData.password is defined %}{{userData.password}}{% endif %}'>
+                <input type="password" id="password" name="password" class="form-control" value='{% if userData.password is defined %}{{userData.password}}{% endif %}' required="required">
             </div>
             
             <div class="form-group" id='fileUploadDiv'>

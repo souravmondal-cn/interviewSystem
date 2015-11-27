@@ -11,6 +11,9 @@ use \Entity\Examination;
 use DateTime;
 use \Doctrine\ORM\Query\ResultSetMapping;
 use \Doctrine\DBAL\Exception\NotNullConstraintViolationException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class AdminController {
     
@@ -379,9 +382,25 @@ class AdminController {
         if(empty($uploadedFile)){
              return false;   
         }
-                
-        $mimeType = $uploadedFile->getMimeType();
         
+        //Delete previous file of this user
+        $fs = new FileSystem();
+        if ($fs->exists(__DIR__.'/../../uploads/'.$fileName.'.docx')) {
+            $fileFullName = $fileName.'.docx';
+        }
+        elseif ($fs->exists(__DIR__.'/../../uploads/'.$fileName.'.doc')) {
+            $fileFullName = $fileName.'.doc';
+        }
+        else{
+            $fileFullName = $fileName.'.pdf';
+        }
+        
+        if ($fs->exists(__DIR__.'/../../uploads/'.$fileFullName)) {
+            unlink(__DIR__.'/../../uploads/'.$fileFullName);
+        }
+        //delete block ends
+        
+        $mimeType = $uploadedFile->getMimeType();
         $allowedTypes = array(
             'application/msword',
             'application/pdf'
@@ -574,7 +593,7 @@ class AdminController {
               return $this->app->redirect('/examsetting');
             }
             
-//             manual native query select * from questions where categoryId = 23  order by rand() limit 3
+//            manual native query select * from questions where categoryId = 23  order by rand() limit 3
 //            $questions = $this->generateQuestions($cId, $qNumbers);
             $questions = $questionRepository->findBy(array('categoryId' => $cId),array(),$qNumbers);
             foreach ($questions as $question) {
@@ -602,7 +621,7 @@ class AdminController {
         $sessionData->getFlashBag()->add('admin_message', 'Examination set successful!');
         return $this->app->redirect('/adminpanel');
         }
-        catch(UniqueConstraintViolationException $ex){
+        catch(NotNullConstraintViolationException $ex){
             $sessionData->getFlashBag()->add('admin_message', 'Fill up all fields');
             return $this->app->redirect('/examsetting');
         }
@@ -618,9 +637,40 @@ class AdminController {
         return $result;
     }
     
-//    public function downloadFile($id) {
-//        
-//    }
+    public function downloadFile($filename) {
+        $sessionData = $this->app['session'];
+//        $rootPath = $request->getBaseUrl();
+//        $basePath = $rootPath.'/uploads';
+        $file = __DIR__.'/../../uploads/'.$filename;
+
+        // check if file exists
+        $fs = new FileSystem();
+        if ($fs->exists($file.'.docx')) {
+            $filePath = $file.'.docx';
+        }
+        elseif ($fs->exists($file.'.doc')) {
+            $filePath = $file.'.doc';
+        }
+        else{
+            $filePath = $file.'.pdf';
+        }
+        
+        if (!$fs->exists($filePath)) {
+            $sessionData->getFlashBag()->add('admin_message', 'File not found!');
+            return $this->app->redirect('/usersetting');
+        }
+
+        // prepare BinaryFileResponse
+        $response = new BinaryFileResponse($filePath);
+        $response->trustXSendfileTypeHeader();
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_INLINE,
+            $filename,
+            iconv('UTF-8', 'ASCII//TRANSLIT', $filename)
+        );
+
+        return $response;
+    }
     public function listExamHistory($email) {
         $entityManager = $this->app['doctrine'];
         $examRepository = $entityManager->getRepository('Entity\Examination');
@@ -635,4 +685,3 @@ class AdminController {
         return $this->app->redirect("/admin");
     }
 }
-
