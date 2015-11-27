@@ -31,7 +31,7 @@
                 <label>Question category :</label>
                 <br>{% set i = 0 %}
                 {% for key,value in categories %}
-                    {{value}} &nbsp;&nbsp;&nbsp; : <input type="checkbox" name="qCategory[]" id="qCategory[]" value="{{key}}" required="required">&nbsp;&nbsp;&nbsp;
+                    {{value}} &nbsp;&nbsp;&nbsp; : <input type="checkbox" name="qCategory[]" id="qCategory[]" value="{{key}}">&nbsp;&nbsp;&nbsp;
                     {% set i = i+1 %} {% if i%3 == 0 %}<br>{% endif %}
                 {% endfor %}
             </div>

@@ -85,7 +85,16 @@ class AdminController {
     public function doUpload(Request $request) {
         $postedData = $request->request->all();
         $category = array('cid' => $postedData['category']);
+        $sessionData = $this->app['session'];
         $entityManager = $this->app['doctrine'];
+        $adminLogInEmail = $sessionData->get('loginAdminEmail');
+        
+        if($postedData['addquestion'] == '' || $postedData['opta'] == '' || $postedData['optc'] == '' || $postedData['optd'] == '' || $postedData['correct'] == '') {
+            
+            $sessionData->getFlashBag()->add('admin_message','No field should be blank, please fillup correctly.');
+            
+            return $this->app->redirect("/questionupload");
+        }
         
         try{
             if($postedData['questionId'] != '') {
@@ -105,10 +114,8 @@ class AdminController {
                 $entityManager->persist($question);
                 $entityManager->flush();
 
-                $sessionData = $this->app['session'];
                 $sessionData->getFlashBag()->add('admin_message','Question edited successfully');
                 
-                $adminLogInEmail = $sessionData->get('loginAdminEmail');
                 return $this->app->redirect("/questionlisting");
             }
             else{
@@ -175,6 +182,10 @@ class AdminController {
         $postedData = $request->request->all();
         $sessionData = $this->app['session'];
         $adminLogInEmail = $sessionData->get('loginAdminEmail');
+        if($postedData['category'] == 'Choose parent category' || $postedData['category'] == '' || $postedData['subcategory'] == '') {
+            $sessionData->getFlashBag()->add('admin_message','No field should be blank, please fillup correctly');
+            return $this->app->redirect('/addcategory');
+        }
         
         if($postedData['categoryId'] == '') {
             try{
@@ -187,10 +198,9 @@ class AdminController {
             $entityManager->persist($category);
             $entityManager->flush();
 
-            $sessionData = $this->app['session'];
             $sessionData->getFlashBag()->add('admin_message','Category added successfully');
             } catch (UniqueConstraintViolationException $ex) {
-                return $this->app['twig']->render('admin/category_setting.twig');
+                return $this->app->redirect('/addcategory');
             }
         
         }
@@ -420,6 +430,15 @@ class AdminController {
         $sessionData = $this->app['session'];
         
         $postedFormData = $request->request->all();
+        if($postedFormData['userName'] == '' || $postedFormData['userEmail'] == '' || $postedFormData['password'] == '' || $postedFormData['isAdmin'] == '') {
+            $sessionData->getFlashBag()->add("admin_message", "No field should left blank");
+            if($userType == 'User') {
+                return $this->app->redirect("/usersetting");
+            }
+            else {
+                return $this->app->redirect("/adminsetting");
+            }    
+        }
         
         try{
             if($postedFormData['userId'] == '') {
@@ -459,7 +478,8 @@ class AdminController {
                 return $this->app->redirect("/adminsetting");
             }
             else {
-                $entityManager = $this->app['doctrine'];
+                $prevPassword = $postedFormData['userPassword'];
+                $newPassword = $postedFormData['password'];
                 $user = $entityManager->find('Entity\User', $postedFormData['userId']);
                 $uploadedFile = $request->files->get('uploadedFile');
                 if(!empty($uploadedFile)){
@@ -473,15 +493,13 @@ class AdminController {
                 $user->setLocation($postedFormData['location']);
                 $user->setUser_Address($postedFormData['user_address']);
                 
-                if($postedFormData['userPassword'] != $postedFormData['password']) {
+                if($prevPassword != $newPassword) {
                     $user->setPassword(md5($postedFormData['password']));
                 }
                 
-                $entityManager = $this->app['doctrine'];
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                $sessionData = $this->app['session'];
                 $sessionData->getFlashBag()->add('admin_message', $userType.' details edited successfully');
                 
                 if($userType == 'User') {
@@ -491,7 +509,6 @@ class AdminController {
                 return $this->app->redirect("/adminsetting");
             }
         }catch (UniqueConstraintViolationException $ex){
-            $sessionData = $this->app['session'];
             $sessionData->getFlashBag()->add("admin_message","Email id is already registered, unique required!");
             
             $userData = ['is_admin' => $postedFormData['isAdmin'],
@@ -501,7 +518,10 @@ class AdminController {
                 'user_address' => $postedFormData['user_address'],
                 'password' => $postedFormData['password']
                 ];
-            return $this->app['twig']->render('admin/addallusers.twig',array('userData' => $userData, 'formHeading' => 'Edit ', 'userType' => $userType));
+            return $this->app['twig']->render('admin/addallusers.twig', array(
+                'userData' => $userData, 
+                'formHeading' => 'Edit ', 
+                'userType' => $userType));
         }
     }
     
@@ -519,7 +539,10 @@ class AdminController {
         
         $userDetails = $entityManager->find('Entity\User',$id);
         
-        return $this->app['twig']->render('admin/addallusers.twig',array('userData' => $userDetails, 'formHeading' => 'Edit ', 'userType' => $userType));
+        return $this->app['twig']->render('admin/addallusers.twig',array(
+            'userData' => $userDetails, 
+            'formHeading' => 'Edit ', 
+            'userType' => $userType));
     }
     
     public function deleteUserData($userType, $id) {
@@ -574,6 +597,10 @@ class AdminController {
         $qNumbers = $postedExamData['qNumbers'];
         $timeout = 60;
 
+        if($userEmail == '' || $qNumbers == '' || empty($qCategoryId)) {
+            $sessionData->getFlashBag()->add('admin_message', 'Fillup every detail carefully');
+            return $this->app->redirect('/examsetting');
+        }
         $countCatNum = count($qCategoryId);
         
         if($countCatNum>5 || $countCatNum<3){
