@@ -19,7 +19,7 @@
                     <input type="hidden"  class="form-control" name="categoryId" value="{%if categoryDetails.cid is defined%}{{categoryDetails.cid}}{% endif %}">
                     <select name="category" class="form-control" >
                         <option>Choose parent category</option>
-                        <option value="0">None</option>
+                        <option value="0" {%if categoryDetails.parentId is defined and categoryDetails.parentId == "0"%}selected="selected"{% endif %}>None</option>
                         {% for category in categories %} 
                             <option value= "{{category.cid}}" {%if categoryDetails.parentId is defined and category.cid == categoryDetails.parentId %}selected{% endif %}>{{category.categoryName}}</option>
                         {% endfor %}

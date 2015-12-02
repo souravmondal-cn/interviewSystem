@@ -189,7 +189,6 @@ class HomeController {
         $sessionData = $this->app['session'];
         $examId = $sessionData->get('examId');
         
-        $totalQuestions = $sessionData->get('totalQuestions');
         $questionData = $sessionData->get('questionData');
         $flag = $sessionData->get('flag');
         

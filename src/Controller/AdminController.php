@@ -20,8 +20,7 @@ class AdminController {
     private $app;
     
     public function __construct($app) {
-        $this->app = $app;
-        
+        $this->app = $app; 
     }
     
     public function loginAdmin() {
@@ -54,9 +53,7 @@ class AdminController {
     
     public function adminPanel() {
         $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE){
             return $this->app->redirect("/admin");
         }
         
@@ -65,17 +62,13 @@ class AdminController {
     }
     
     public function questionUpload() {
-        $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE){
             return $this->app->redirect("/admin");
         }
         
+        $entityManager = $this->app['doctrine'];
         $adminLogInEmail = $sessionData->get('loginAdminEmail');
         
-        $entityManager = $this->app['doctrine'];
-
         $categoryRepository = $entityManager->getRepository('Entity\Category');
         $categories = $categoryRepository->findAll();
         
@@ -84,9 +77,10 @@ class AdminController {
     
     public function doUpload(Request $request) {
         $postedData = $request->request->all();
-        $category = array('cid' => $postedData['category']);
+        
         $sessionData = $this->app['session'];
         $entityManager = $this->app['doctrine'];
+        
         $adminLogInEmail = $sessionData->get('loginAdminEmail');
         
         if($postedData['addquestion'] == '' || $postedData['opta'] == '' || $postedData['optc'] == '' || $postedData['optd'] == '' || $postedData['correct'] == '') {
@@ -96,151 +90,97 @@ class AdminController {
             return $this->app->redirect("/questionupload");
         }
         
-        try{
-            if($postedData['questionId'] != '') {
-                $question = $entityManager->find('Entity\Questions',$postedData['questionId']);
+        if($postedData['questionId'] != '') {
+            $question = $entityManager->find('Entity\Questions',$postedData['questionId']);
 
-                $question->setQuestion($postedData['addquestion']);
-                $question->setOptionA($postedData['opta']);
-                $question->setOptionB($postedData['optb']);
-                $question->setOptionC($postedData['optc']);
-                $question->setOptionD($postedData['optd']);
-                $question->setAnswer($postedData['correct']);
-
-                $QuestionCategory = $entityManager->getRepository('Entity\Category')->find($postedData['category']);
-                $question->setCategoryId($QuestionCategory);
-
+            $sessionData->getFlashBag()->add('admin_message','Question edited successfully');
+        }
+        else{
+            $question = new Questions();
                 
-                $entityManager->persist($question);
-                $entityManager->flush();
-
-                $sessionData->getFlashBag()->add('admin_message','Question edited successfully');
-                
-                return $this->app->redirect("/questionlisting");
-            }
-            else{
+            $sessionData->getFlashBag()->add('admin_message','Question uploaded successfully');
+        } 
         
-            $questions = new Questions();
-            
-            $questions->setQuestion($postedData['addquestion']);
-            $questions->setOptionA($postedData['opta']);
-            $questions->setOptionB($postedData['optb']);
-            $questions->setOptionC($postedData['optc']);
-            $questions->setOptionD($postedData['optd']);
-            $questions->setAnswer($postedData['correct']);
-            
+        try{
+            $question->setQuestion($postedData['addquestion']);
+            $question->setOptionA($postedData['opta']);
+            $question->setOptionB($postedData['optb']);
+            $question->setOptionC($postedData['optc']);
+            $question->setOptionD($postedData['optd']);
+            $question->setAnswer($postedData['correct']);
+
             $QuestionCategory = $entityManager->getRepository('Entity\Category')->find($postedData['category']);
-            $questions->setCategoryId($QuestionCategory);
+            $question->setCategoryId($QuestionCategory);
 
-            $entityManager->persist($questions);
+            $entityManager->persist($question);
             $entityManager->flush();
-
-            $sessionData = $this->app['session'];
-            $sessionData->getFlashBag()->add('admin_message','Question uploading successful');
-            $adminLogInEmail = $sessionData->get('loginAdminEmail');
-            return $this->app->redirect("/questionupload");
-            } 
+            return $this->app->redirect("/questionlisting");
         }
         catch (UniqueConstraintViolationException $ex) {
             $sessionData = $this->app['session'];
             $sessionData->getFlashBag()->add('admin_message','Unique value required');
-            return $this->app->redirect("/questionupload");
+            return $this->app->redirect("/questionlisting");
         }
     }
     
     public function categorySetting() {
-        $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE){
             return $this->app->redirect("/admin");
         }
         
-        $adminLogInEmail = $sessionData->get('loginAdminEmail');
         $entityManager = $this->app['doctrine'];
+        $sessionData = $this->app['session'];
+        $adminLogInEmail = $sessionData->get('loginAdminEmail');
         $categoryRepository = $entityManager->getRepository('Entity\Category');
         
         $result = $categoryRepository->findAll();
         $categories = $result;
         
-        //Or uncomment this line
-        //$categories = $this->getParentCategory();
-        
         return $this->app['twig']->render('admin/category_setting.twig',array('UserEmail' => $adminLogInEmail, 'categories' => $categories));
-
-    }
-    
-    public function getParentCategory() {
-        $entityManager = $this->app['doctrine'];
-        $categoryReposity = $entityManager->getRepository('Entity\Category');
-        $result = $categoryRepository->findByparentId(0);
-        
-        return $result;
     }
     
     public function doAddCategory(Request $request) {
         $postedData = $request->request->all();
         $sessionData = $this->app['session'];
-        $adminLogInEmail = $sessionData->get('loginAdminEmail');
+        $entityManager = $this->app['doctrine'];
+        
         if($postedData['category'] == 'Choose parent category' || $postedData['category'] == '' || $postedData['subcategory'] == '') {
             $sessionData->getFlashBag()->add('admin_message','No field should be blank, please fillup correctly');
             return $this->app->redirect('/addcategory');
         }
         
         if($postedData['categoryId'] == '') {
-            try{
             $category = new Category();
-            
-            $category->setParentId($postedData['category']);
-            $category->setCategoryName($postedData['subcategory']);
-
-            $entityManager = $this->app['doctrine'];
-            $entityManager->persist($category);
-            $entityManager->flush();
-
             $sessionData->getFlashBag()->add('admin_message','Category added successfully');
-            } catch (UniqueConstraintViolationException $ex) {
-                return $this->app->redirect('/addcategory');
-            }
-        
         }
         else {
-            try {
-                $entityManager = $this->app['doctrine'];
-                $category = $entityManager->find('Entity\Category', $postedData['categoryId']);
-                
-                $category->setParentId($postedData['category']);
-                $category->setCategoryName($postedData['subcategory']);
-
-                $entityManager = $this->app['doctrine'];
-                $entityManager->persist($category);
-                $entityManager->flush();
-
-                $sessionData = $this->app['session'];
-                $sessionData->getFlashBag()->add('admin_message','Category edited successfully');
-                
-            } catch (UniqueConstraintViolationException $ex) {
-                return $this->app['twig']->render('admin/category_setting.twig');
-            }
+            $category = $entityManager->find('Entity\Category', $postedData['categoryId']);
+            $sessionData->getFlashBag()->add('admin_message','Category edited successfully');
+        }
+            
+        try{
+            $category->setParentId($postedData['category']);
+            $category->setCategoryName($postedData['subcategory']);
+            $entityManager->persist($category);
+            $entityManager->flush();
+            
+        } catch (UniqueConstraintViolationException $ex) {
+            $sessionData->getFlashBag()->add('admin_message','Something went wrong!');
+            return $this->app->redirect('/addcategory');
+        }
         
-            return $this->app->redirect('/category');
-            }
-        
-        return $this->app->redirect('/addcategory');  
+        return $this->app->redirect('/category');
     }
 
     public function addCategory() {
-        $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE){
             return $this->app->redirect("/admin");
         }
         
+        $entityManager = $this->app['doctrine'];
+        $sessionData = $this->app['session'];
         $adminLogInEmail = $sessionData->get('loginAdminEmail');
         
-        $entityManager = $this->app['doctrine'];
-
         $categoryRepository = $entityManager->getRepository('Entity\Category');
         $categories = $categoryRepository->findAll();
         
@@ -248,43 +188,40 @@ class AdminController {
     }
     
     public function editCategory($id) {
-        $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE){
             return $this->app->redirect("/admin");
         }
         
-        $adminLogInEmail = $sessionData->get('loginAdminEmail');
-        
         $entityManager = $this->app['doctrine'];
+        
         $categoryRepository = $entityManager->getRepository('Entity\Category');
         $categories = $categoryRepository->findAll();
         
         $categoryDetails = $entityManager->find('Entity\Category',$id);
         
-        return $this->app['twig']->render('admin/addcategory.twig',array('categories' => $categories, 'categoryDetails' => $categoryDetails, 'formHeading' => 'Edit Category'));
+        $details = ['categories' => $categories, 'categoryDetails' => $categoryDetails, 'formHeading' => 'Edit Category'];
+        return $this->app['twig']->render('admin/addcategory.twig', $details);
     }
     
     public function deleteCategory($id) {
         $entityManager = $this->app['doctrine'];
         $sessionData = $this->app['session'];
         $categoryRepository = $entityManager->getRepository('Entity\Category');
-        $categories = $categoryRepository->findAll();
         
         $categoryParent = array(
             'parentId' => $id
         );
         $checkCategory = $categoryRepository->findBy($categoryParent);
+        
         if(!empty($checkCategory)){
             $sessionData->getFlashBag()->add('admin_message','Category has sub categories!');
         
             return $this->app->redirect('/category');
         }
+        
         $categoryDetails = $entityManager->find('Entity\Category',$id);
         $entityManager->remove($categoryDetails);
         
-        $adminLogInEmail = $sessionData->get('loginAdminEmail');
         $entityManager->flush();
         
         $sessionData->getFlashBag()->add('admin_message','Category deleted successfully');
@@ -294,9 +231,7 @@ class AdminController {
 
     public function questionListing() {
         $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE) {
             return $this->app->redirect("/admin");
         }
         
@@ -310,14 +245,9 @@ class AdminController {
     }
     
     public function editQuestion($id) {
-        $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE) {
             return $this->app->redirect("/admin");
         }
-        
-        $adminLogInEmail = $sessionData->get('loginAdminEmail');
         
         $entityManager = $this->app['doctrine'];
         $categoryRepository = $entityManager->getRepository('Entity\Category');
@@ -343,10 +273,7 @@ class AdminController {
     }
     
     public function showAdminSettings() {
-        $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE) {
             return $this->app->redirect("/admin");
         }
         
@@ -357,10 +284,7 @@ class AdminController {
     }
     
         public function showUserSettings() {
-        $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE) {
             return $this->app->redirect("/admin");
         }
         
@@ -374,24 +298,7 @@ class AdminController {
         return $this->app['twig']->render('admin/addallusers.twig',array('formHeading' => 'Add ', 'userType' => $userType));
     }
     
-    public function checkUserRegistration($email) {
-        $entityManager = $this->app['doctrine'];
-        $userRepository = $entityManager->getRepository('Entity\User');
-        $user = $userRepository->findBy(array('email' => $email, 'is_admin' => '0'));
-        
-        if(!empty($user)) {
-            echo '1';exit;
-        }
-        else {
-            echo '0';exit;
-        }
-    }
-    
     public function newFileUpload($uploadedFile, $fileName) {
-        
-        if(empty($uploadedFile)){
-             return false;   
-        }
         
         //Delete previous file of this user
         $fs = new FileSystem();
@@ -417,97 +324,76 @@ class AdminController {
         );
                 
         if(!in_array($mimeType, $allowedTypes)) {
-            return false;
+            $returnStatement = FALSE;
         }
         
         $uploadedFile->move(__DIR__.'/../../uploads/', $fileName.'.'.$uploadedFile->guessExtension());
-
-        return true;
+        $returnStatement = TRUE;
+        
+        return $returnStatement;
     }
     
     public function doAddUser(Request $request, $userType) {
+        
         $entityManager = $this->app['doctrine'];
         $sessionData = $this->app['session'];
         
         $postedFormData = $request->request->all();
+        $prevPassword = $postedFormData['userPassword'];
+        $newPassword = $postedFormData['password'];
+                
         if($postedFormData['userName'] == '' || $postedFormData['userEmail'] == '' || $postedFormData['password'] == '' || $postedFormData['isAdmin'] == '') {
             $sessionData->getFlashBag()->add("admin_message", "No field should left blank");
-            if($userType == 'User') {
-                return $this->app->redirect("/usersetting");
-            }
-            else {
-                return $this->app->redirect("/adminsetting");
-            }    
+            return $this->app->redirect("/adduser/".$userType);  
+        }
+        
+        if($postedFormData['userId'] == '') {
+                
+            $user = new User();
+            $sessionData->getFlashBag()->add("admin_message", $userType." added successfully!");
+        }
+        else {
+            
+            $user = $entityManager->find('Entity\User', $postedFormData['userId']);
+            $sessionData->getFlashBag()->add('admin_message', $userType.' details edited successfully');
         }
         
         try{
-            if($postedFormData['userId'] == '') {
+            $user->setUserName($postedFormData['userName']);
+            $user->setEmail($postedFormData['userEmail']);
                 
-                $user = new User();
+            $user->setIs_Admin($postedFormData['isAdmin']);
+            $user->setLocation($postedFormData['location']);
+            $user->setUser_Address($postedFormData['user_address']);
                 
-                $user->setUserName($postedFormData['userName']);
-                $user->setEmail($postedFormData['userEmail']);
+            if($prevPassword != $newPassword) {
                 $user->setPassword(md5($postedFormData['password']));
-                $user->setLocation($postedFormData['location']);
-                $user->setUser_Address($postedFormData['user_address']);
-                $user->setIs_Admin($postedFormData['isAdmin']);
+            }
                 
-                $entityManager->persist($user);
-                $entityManager->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
                 
-                if($userType != 'Admin') {
-                    $uploadedFile = $request->files->get('uploadedFile');
+            $uploadedFile = $request->files->get('uploadedFile');
+            
+            if($userType != 'Admin' && !empty($uploadedFile)) {
                     
-                    $generatedUserData = $entityManager->getRepository('Entity\User')->findBy(array('email' => $postedFormData['userEmail']));
-                    $generatedId = $generatedUserData[0]->getId();
+                $generatedUserData = $entityManager->getRepository('Entity\User')->findBy(array('email' => $postedFormData['userEmail']));
+                $generatedId = $generatedUserData[0]->getId();
                     
-                    if($this->newFileUpload($uploadedFile, $generatedId)) {
-                        $sessionData->getFlashBag()->add("admin_message", "File added successfully");
-                    }
-                    else {
-                        $sessionData->getFlashBag()->add("admin_message", "File uploading not done");
-                    }
+                if($this->newFileUpload($uploadedFile, $generatedId)) {
+                    $sessionData->getFlashBag()->add("admin_message", "File added successfully");
                 }
-
-                $sessionData->getFlashBag()->add("admin_message", $userType." added successfully!");
+            }
                 
-                if($userType == 'User') {
-                    return $this->app->redirect("/usersetting");
-                }
-                
-                return $this->app->redirect("/adminsetting");
+            if($userType == 'User') {
+                $reDirectUrl = "/usersetting";
             }
             else {
-                $prevPassword = $postedFormData['userPassword'];
-                $newPassword = $postedFormData['password'];
-                $user = $entityManager->find('Entity\User', $postedFormData['userId']);
-                $uploadedFile = $request->files->get('uploadedFile');
-                if(!empty($uploadedFile)){
-                    $this->newFileUpload($uploadedFile, $postedFormData['userId']);  
-                }
-        
-                $user->setUserName($postedFormData['userName']);
-                $user->setEmail($postedFormData['userEmail']);
-                
-                $user->setIs_Admin($postedFormData['isAdmin']);
-                $user->setLocation($postedFormData['location']);
-                $user->setUser_Address($postedFormData['user_address']);
-                
-                if($prevPassword != $newPassword) {
-                    $user->setPassword(md5($postedFormData['password']));
-                }
-                
-                $entityManager->persist($user);
-                $entityManager->flush();
-
-                $sessionData->getFlashBag()->add('admin_message', $userType.' details edited successfully');
-                
-                if($userType == 'User') {
-                    return $this->app->redirect("/usersetting");
-                }
-                
-                return $this->app->redirect("/adminsetting");
+                $reDirectUrl = "/adminsetting";
             }
+                
+            return $this->app->redirect($reDirectUrl);
+            
         }catch (UniqueConstraintViolationException $ex){
             $sessionData->getFlashBag()->add("admin_message","Email id is already registered, unique required!");
             
@@ -526,10 +412,7 @@ class AdminController {
     }
     
     public function editUserData($userType, $id) {
-        $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE){
             return $this->app->redirect("/admin");
         }
         
@@ -556,18 +439,18 @@ class AdminController {
         
         $sessionData->getFlashBag()->add('admin_message',$userType.' deleted from database');
         
-        if ($userType == 'User'){
-            return $this->app->redirect('/usersetting');
+        if ($userType == 'User') {
+            $redirectUrl = '/usersetting';
+        }
+        else {
+            $redirectUrl = '/adminsetting';
         }
         
-        return $this->app->redirect('/adminsetting');
+        return $this->app->redirect($redirectUrl);
     }
 
     public function examSetting() {
-        $sessionData = $this->app['session'];
-        $validAdminSession = $sessionData->get('loginAdminSession');
-        
-        if(empty($validAdminSession)) {
+        if($this->checkAdminSession() == FALSE){
             return $this->app->redirect("/admin");
         }
         
@@ -607,7 +490,6 @@ class AdminController {
             $sessionData->getFlashBag()->add('admin_message', 'Minimum 3 and maximum 5 category should be selected!');
             return $this->app->redirect('/examsetting');
         }
-        
         
         $questionRepository = $entityManager->getRepository('Entity\Questions');
         
@@ -654,20 +536,18 @@ class AdminController {
         }
     }
     
-    public function generateQuestions($categoryId,$limit) {
-        $resultSetMapping = new ResultSetMapping();
-        $entityManager = $this->app['doctrine'];
-        $query = $entityManager->createNativeQuery('select * from questions where categoryId = ?  order by rand limit ?', $resultSetMapping);
-        $query->setParameter(1,$categoryId);
-        $query->setParameter(2,$limit);
-        $result = $query->getResult();
-        return $result;
-    }
+//    public function generateQuestions($categoryId,$limit) {
+//        $resultSetMapping = new ResultSetMapping();
+//        $entityManager = $this->app['doctrine'];
+//        $query = $entityManager->createNativeQuery('select * from questions where categoryId = ?  order by rand limit ?', $resultSetMapping);
+//        $query->setParameter(1,$categoryId);
+//        $query->setParameter(2,$limit);
+//        $result = $query->getResult();
+//        return $result;
+//    }
     
     public function downloadFile($filename) {
         $sessionData = $this->app['session'];
-//        $rootPath = $request->getBaseUrl();
-//        $basePath = $rootPath.'/uploads';
         $file = __DIR__.'/../../uploads/'.$filename;
 
         // check if file exists
@@ -686,7 +566,6 @@ class AdminController {
             $sessionData->getFlashBag()->add('admin_message', 'File not found!');
             return $this->app->redirect('/usersetting');
         }
-
         // prepare BinaryFileResponse
         $response = new BinaryFileResponse($filePath);
         $response->trustXSendfileTypeHeader();
@@ -710,5 +589,31 @@ class AdminController {
         $sessionData = $this->app['session'];
         $sessionData->clear();
         return $this->app->redirect("/admin");
+    }
+    
+    public function checkAdminSession() {
+        $sessionData = $this->app['session'];
+        $entityManager = $this->app['doctrine'];
+        
+        $validAdminSession = $sessionData->get('loginAdminSession');
+        
+        if(!empty($validAdminSession)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+        public function checkUserRegistration($email) {
+        $entityManager = $this->app['doctrine'];
+        $userRepository = $entityManager->getRepository('Entity\User');
+        $user = $userRepository->findBy(array('email' => $email, 'is_admin' => '0'));
+        
+        if(!empty($user)) {
+            echo '1';exit;
+        }
+        else {
+            echo '0';exit;
+        }
     }
 }
