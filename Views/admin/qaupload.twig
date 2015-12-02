@@ -68,11 +68,6 @@
                 <button type="submit" value="addQuestion" class="btn btn-primary" >Submit</button>
             </div>
         </form>
-        <div align="center">
-            {% for message in app.session.getFlashBag.get('admin_message') %}
-                    <p>{{message}}</p>
-            {%endfor%}
-        </div>
             
     </div>
             

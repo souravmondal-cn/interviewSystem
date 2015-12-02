@@ -27,10 +27,13 @@
             <div class="form-group">
                 <label for="userEmail">Email Address</label>
                 <input type="email" id="userEmail" name="userEmail" class="form-control" value='{% if userData.email is defined %}{{userData.email}}{% endif %}' required="required">
-                <span id='userEmailCheck' style='color:red'></span>
+                
                 <span id='userHist'>
                     <a id="viewUserHistory">View history</a>
                 </span>
+                
+                <span id='userEmailCheck' style='color:red'></span>
+                
             </div>
                 
             <div class="form-group">
@@ -52,7 +55,7 @@
             
             <div class="form-group" id="addressDiv">
                 <label for="user_address">Address</label>
-                <textarea id="user_address" name="user_address" class="form-control">{% if userData.user_address is defined %}{{userData.user_address}}{% endif %}</textarea>
+                <textarea id="user_address" name="user_address" class="form-control" rows="6">{% if userData.user_address is defined %}{{userData.user_address}}{% endif %}</textarea>
             </div>
             
             <div class="form-group">
@@ -70,12 +73,12 @@
                 <button type="submit" value="addUser" class="btn btn-primary">Submit</button>
             </div>
         </form>
-        
-        <div align="center">
+            
             {% for message in app.session.getFlashBag.get('admin_message') %}
-                <p>{{message}}</p>
+                <div align="center">
+                    <p>{{message}}</p>
+                </div>
             {%endfor%}
-        </div>
         
     </div>
     

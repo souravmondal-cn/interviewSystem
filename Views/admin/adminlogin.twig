@@ -12,8 +12,8 @@
             <div class="row">
                 <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4"></div>
                 <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4" align="center">
-                <h2 class="form-signin-heading">Admin section</h2>
-                <h4>Please sign in</h4>
+                <h2 class="form-signin-heading">Interview System</h2>
+                <h4>Admin section</h4>
                 <br>
                 <form method="post" name ="adminLoginForm" class="form-signin" id="logInForm" action="/adminlogin">
                     <input type="email" id="loginEmail" name = "loginEmail"  class="form-control" placeholder="Email address" required autofocus>
@@ -22,7 +22,9 @@
                 </form>
                 <br>
                 {% for message in app.session.getFlashBag.get('message') %}
-                    <p>{{message}}</p>
+                    <div class="alert alert-danger">
+                        <p>{{message}}</p>
+                    </div>
                 {%endfor%}
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4" align="center">

@@ -75,11 +75,11 @@
             </tbody>
         </table>
             
+        {% for message in app.session.getFlashBag.get('admin_message') %}
             <div align="center">
-            {% for message in app.session.getFlashBag.get('admin_message') %}
                 <p>{{message}}</p>
-            {%endfor%}
             </div>
+        {%endfor%}
         
     </div>
     

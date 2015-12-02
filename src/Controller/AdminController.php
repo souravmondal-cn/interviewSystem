@@ -9,7 +9,6 @@ use \Entity\Category;
 use \Entity\User;
 use \Entity\Examination;
 use DateTime;
-use \Doctrine\ORM\Query\ResultSetMapping;
 use \Doctrine\DBAL\Exception\NotNullConstraintViolationException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -42,7 +41,7 @@ class AdminController {
         $loginInfo = $entityManager->getRepository('Entity\User')->findBy($loginDetails);
         
         if(empty($loginInfo)) {
-            $sessionData->getFlashBag()->add('message','Sorry, user email and password does not match or not registered!');
+            $sessionData->getFlashBag()->add('message','Sorry, email id and password does not matched!');
             return $this->app->redirect("/admin");
         }
         
@@ -62,6 +61,7 @@ class AdminController {
     }
     
     public function questionUpload() {
+        $sessionData = $this->app['session'];
         if($this->checkAdminSession() == FALSE){
             return $this->app->redirect("/admin");
         }
@@ -85,7 +85,7 @@ class AdminController {
         
         if($postedData['addquestion'] == '' || $postedData['opta'] == '' || $postedData['optc'] == '' || $postedData['optd'] == '' || $postedData['correct'] == '') {
             
-            $sessionData->getFlashBag()->add('admin_message','No field should be blank, please fillup correctly.');
+            $sessionData->getFlashBag()->add('alert_danger','No field should be blank, please fillup correctly.');
             
             return $this->app->redirect("/questionupload");
         }
@@ -93,12 +93,12 @@ class AdminController {
         if($postedData['questionId'] != '') {
             $question = $entityManager->find('Entity\Questions',$postedData['questionId']);
 
-            $sessionData->getFlashBag()->add('admin_message','Question edited successfully');
+            $sessionData->getFlashBag()->add('alert_info','Question edited successfully');
         }
         else{
             $question = new Questions();
                 
-            $sessionData->getFlashBag()->add('admin_message','Question uploaded successfully');
+            $sessionData->getFlashBag()->add('alert_success','Question uploaded successfully');
         } 
         
         try{
@@ -118,7 +118,7 @@ class AdminController {
         }
         catch (UniqueConstraintViolationException $ex) {
             $sessionData = $this->app['session'];
-            $sessionData->getFlashBag()->add('admin_message','Unique value required');
+            $sessionData->getFlashBag()->add('alert_danger','Unique value required');
             return $this->app->redirect("/questionlisting");
         }
     }
@@ -145,17 +145,17 @@ class AdminController {
         $entityManager = $this->app['doctrine'];
         
         if($postedData['category'] == 'Choose parent category' || $postedData['category'] == '' || $postedData['subcategory'] == '') {
-            $sessionData->getFlashBag()->add('admin_message','No field should be blank, please fillup correctly');
+            $sessionData->getFlashBag()->add('alert_danger','No field should be blank, please fillup correctly');
             return $this->app->redirect('/addcategory');
         }
         
         if($postedData['categoryId'] == '') {
             $category = new Category();
-            $sessionData->getFlashBag()->add('admin_message','Category added successfully');
+            $sessionData->getFlashBag()->add('alert_success','Category added successfully');
         }
         else {
             $category = $entityManager->find('Entity\Category', $postedData['categoryId']);
-            $sessionData->getFlashBag()->add('admin_message','Category edited successfully');
+            $sessionData->getFlashBag()->add('alert_info','Category edited successfully');
         }
             
         try{
@@ -165,7 +165,7 @@ class AdminController {
             $entityManager->flush();
             
         } catch (UniqueConstraintViolationException $ex) {
-            $sessionData->getFlashBag()->add('admin_message','Something went wrong!');
+            $sessionData->getFlashBag()->add('alert_danger','Something went wrong!');
             return $this->app->redirect('/addcategory');
         }
         
@@ -214,7 +214,7 @@ class AdminController {
         $checkCategory = $categoryRepository->findBy($categoryParent);
         
         if(!empty($checkCategory)){
-            $sessionData->getFlashBag()->add('admin_message','Category has sub categories!');
+            $sessionData->getFlashBag()->add('alert_danger','Category has sub categories!');
         
             return $this->app->redirect('/category');
         }
@@ -224,7 +224,7 @@ class AdminController {
         
         $entityManager->flush();
         
-        $sessionData->getFlashBag()->add('admin_message','Category deleted successfully');
+        $sessionData->getFlashBag()->add('alert_success','Category deleted successfully');
         
         return $this->app->redirect('/category');
     }
@@ -267,7 +267,7 @@ class AdminController {
         
         $entityManager->flush();
         
-        $sessionData->getFlashBag()->add('admin_message','Question deleted successfully');
+        $sessionData->getFlashBag()->add('alert_success','Question deleted successfully');
         
         return $this->app->redirect('/questionlisting');
     }
@@ -343,7 +343,7 @@ class AdminController {
         $newPassword = $postedFormData['password'];
                 
         if($postedFormData['userName'] == '' || $postedFormData['userEmail'] == '' || $postedFormData['password'] == '' || $postedFormData['isAdmin'] == '') {
-            $sessionData->getFlashBag()->add("admin_message", "No field should left blank");
+            $sessionData->getFlashBag()->add("alert_danger", "No field should left blank");
             return $this->app->redirect("/adduser/".$userType);  
         }
         
@@ -355,7 +355,7 @@ class AdminController {
         else {
             
             $user = $entityManager->find('Entity\User', $postedFormData['userId']);
-            $sessionData->getFlashBag()->add('admin_message', $userType.' details edited successfully');
+            $sessionData->getFlashBag()->add('alert_info', $userType.' details edited successfully');
         }
         
         try{
@@ -381,7 +381,7 @@ class AdminController {
                 $generatedId = $generatedUserData[0]->getId();
                     
                 if($this->newFileUpload($uploadedFile, $generatedId)) {
-                    $sessionData->getFlashBag()->add("admin_message", "File added successfully");
+                    $sessionData->getFlashBag()->add("alert_success", "File added successfully");
                 }
             }
                 
@@ -395,7 +395,7 @@ class AdminController {
             return $this->app->redirect($reDirectUrl);
             
         }catch (UniqueConstraintViolationException $ex){
-            $sessionData->getFlashBag()->add("admin_message","Email id is already registered, unique required!");
+            $sessionData->getFlashBag()->add("alert_danger","Email id is already registered, unique required!");
             
             $userData = ['is_admin' => $postedFormData['isAdmin'],
                 'username' => $postedFormData['userName'],
@@ -437,7 +437,7 @@ class AdminController {
         
         $entityManager->flush();
         
-        $sessionData->getFlashBag()->add('admin_message',$userType.' deleted from database');
+        $sessionData->getFlashBag()->add('alert_success',$userType.' deleted from database');
         
         if ($userType == 'User') {
             $redirectUrl = '/usersetting';
@@ -471,23 +471,24 @@ class AdminController {
     }
     
     public function examGenerate(Request $request) {
-        
+        $postedExamData = $request->request->all();
         $entityManager = $this->app['doctrine'];
         $sessionData = $this->app['session'];
-        $postedExamData = $request->request->all();
+        
+        if($postedExamData['userEmailId'] == '' || $postedExamData['qNumbers'] == '' || empty($postedExamData['qCategory']))    {
+            $sessionData->getFlashBag()->add('alert_danger', 'Please fill up every detail carefully!');
+            return $this->app->redirect('/examsetting');
+        }
+        
         $userEmail = $postedExamData['userEmailId'];
         $qCategoryId = $postedExamData['qCategory'];
         $qNumbers = $postedExamData['qNumbers'];
         $timeout = 60;
 
-        if($userEmail == '' || $qNumbers == '' || empty($qCategoryId)) {
-            $sessionData->getFlashBag()->add('admin_message', 'Fillup every detail carefully');
-            return $this->app->redirect('/examsetting');
-        }
         $countCatNum = count($qCategoryId);
         
         if($countCatNum>5 || $countCatNum<3){
-            $sessionData->getFlashBag()->add('admin_message', 'Minimum 3 and maximum 5 category should be selected!');
+            $sessionData->getFlashBag()->add('alert_danger', 'Minimum three and maximum five categories should be selected!');
             return $this->app->redirect('/examsetting');
         }
         
@@ -498,7 +499,7 @@ class AdminController {
             $countQuestion = $questionRepository->findBycategoryId($cId);
             $countQNumbers = count($countQuestion);
             if($qNumbers > $countQNumbers) {
-              $sessionData->getFlashBag()->add('admin_message', 'Not enough questions to generate exam!');
+              $sessionData->getFlashBag()->add('alert_danger', 'Not enough questions to generate exam!');
               return $this->app->redirect('/examsetting');
             }
             
@@ -527,11 +528,11 @@ class AdminController {
         $entityManager->persist($examination);
         $entityManager->flush();
         
-        $sessionData->getFlashBag()->add('admin_message', 'Examination set successful!');
+        $sessionData->getFlashBag()->add('alert_success', 'Examination set successful!');
         return $this->app->redirect('/adminpanel');
         }
         catch(NotNullConstraintViolationException $ex){
-            $sessionData->getFlashBag()->add('admin_message', 'Fill up all fields');
+            $sessionData->getFlashBag()->add('alert_danger', 'Please fill up all fields');
             return $this->app->redirect('/examsetting');
         }
     }
@@ -563,7 +564,7 @@ class AdminController {
         }
         
         if (!$fs->exists($filePath)) {
-            $sessionData->getFlashBag()->add('admin_message', 'File not found!');
+            $sessionData->getFlashBag()->add('alert_danger', 'File not found!');
             return $this->app->redirect('/usersetting');
         }
         // prepare BinaryFileResponse

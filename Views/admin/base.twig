@@ -33,17 +33,33 @@
         <br>
         <div class="container-fluid">
             
+            <div class="row">
+                
+                <div align="center" class="col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
+                <div align="center" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    {% for message in app.session.getFlashBag.get('alert_danger') %}
+                        <div class="alert alert-danger">
+                            <p>{{message}}</p>
+                        </div>
+                    {%endfor%}
+                    {% for message in app.session.getFlashBag.get('alert_success') %}
+                        <div class="alert alert-success alert-dismissible">
+                            <p>{{message}}</p>
+                        </div>
+                    {%endfor%}
+                    {% for message in app.session.getFlashBag.get('alert_info') %}
+                        <div class="alert alert-info alert-dismissable">
+                            <p>{{message}}</p>
+                        </div>
+                    {%endfor%}
+                </div>
+                <div align="center" class="col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
+                
+            </div>
             <div class="row">     
                 {% include 'admin/sidebar.twig' %}
                     
-                <div align="center">
-                    {% for message in app.session.getFlashBag.get('admin_message') %}
-                        <p>{{message}}</p>
-                    {%endfor%}
-                </div>
-                    
-                {%block body %}{% endblock %}
-                
+                {%block body %}{% endblock %} 
             </div>
         </div>
     
