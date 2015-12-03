@@ -41,12 +41,13 @@ class AdminController {
         $loginInfo = $entityManager->getRepository('Entity\User')->findBy($loginDetails);
         
         if(empty($loginInfo)) {
-            $sessionData->getFlashBag()->add('message','Sorry, email id and password does not matched!');
+            $sessionData->getFlashBag()->add('alert_danger','Sorry, email id and password does not matched!');
             return $this->app->redirect("/admin");
         }
         
         $sessionData->set('loginAdminSession',true);
         $sessionData->set('loginAdminEmail',$loginDetails['email']);
+        $sessionData->getFlashBag()->add('alert_success','Welcome to admin panel');
         return $this->app->redirect('/adminpanel');
     }
     
@@ -350,7 +351,7 @@ class AdminController {
         if($postedFormData['userId'] == '') {
                 
             $user = new User();
-            $sessionData->getFlashBag()->add("admin_message", $userType." added successfully!");
+            $sessionData->getFlashBag()->add("alert_success", $userType." added successfully!");
         }
         else {
             

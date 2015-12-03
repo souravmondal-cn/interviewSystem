@@ -21,7 +21,7 @@
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                 </form>
                 <br>
-                {% for message in app.session.getFlashBag.get('message') %}
+                {% for message in app.session.getFlashBag.get('alert_danger') %}
                     <div class="alert alert-danger">
                         <p>{{message}}</p>
                     </div>
