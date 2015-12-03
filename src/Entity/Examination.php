@@ -39,7 +39,14 @@ class Examination {
      * @Column(name="total_questions", type="integer")
      */
     private $total_questions;
-
+    
+    /**
+     * @var string
+     * 
+     * @Column(name="submits", type="string", nullable=true)
+     */
+    private $submits;
+    
     /**
      * @var integer
      * 
@@ -180,6 +187,25 @@ class Examination {
         return $this->date_completed;
     }
 
+    /**
+     * Get submits
+     * 
+     * @return string
+     */
+    public function getSubmits() {
+        return $this->submits;
+    }
+    
+    /**
+     * set submits
+     * 
+     * @param string $submits
+     * @return submits
+     */
+    public function setSubmits($submits) {
+        $this->submits = $submits;
+    }
+    
     /**
      * set is_qualified
      * 

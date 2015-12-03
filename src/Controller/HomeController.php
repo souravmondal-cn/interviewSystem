@@ -76,7 +76,7 @@ class HomeController {
 
     public function dashboard() {
         $sessionData = $this->app['session'];
-
+            
         $validSession = $sessionData->get('loginSession');
         $logInEmail = $sessionData->get('loginEmail');
         $loggerName = $sessionData->get('loggerName');
@@ -121,6 +121,8 @@ class HomeController {
         $examdata = $this->getExamdata($email);
 
         if (empty($examdata)) {
+            return $this->app->redirect('/dashboard');
+            
             $sessionData->getFlashBag()->add('user_message', 'Examination finished');
             return $this->app->redirect("/dashboard");
         }
@@ -165,6 +167,8 @@ class HomeController {
         $flag = $sessionData->get('flag');
 
         if ($flag == $totalQuestions) {
+            $qa = $sessionData->get('examQa');
+            
             $sessionData->remove('questionData');
             $sessionData->remove('totalQuestions');
             $sessionData->remove('flag');
@@ -201,10 +205,26 @@ class HomeController {
         } else {
             $answer = $postedExamData['answer'];
         }
-
+        
         $examDetail = $entityManager->find('Entity\Examination', $examId);
 
         $questionDetail = $entityManager->find('Entity\Questions', $qid);
+        
+        /* code block : exam question and respective answer submitted by user */
+        $qa[$qid] = $answer;
+        
+        $qaa = $examDetail->getSubmits();
+        $json = json_encode($qa);
+        if($qaa === '' || $qaa === NULL) {
+            $qaa = $json;
+        }
+        else {
+            $qaa = rtrim($qaa,'}').','.ltrim($json,'{');
+        }
+        
+        $examDetail->setSubmits($qaa);
+        /* End code block : exam question and respective answer submitted by user */
+        
         $originalAnswer = $questionDetail->getAnswer();
 
         if ($originalAnswer == $answer) {
