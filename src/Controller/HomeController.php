@@ -38,9 +38,9 @@ class HomeController {
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $sessionData->getFlashBag()->add('message','Registration successful');
+            $sessionData->getFlashBag()->add('alert_success','Registration successful');
         } catch (UniqueConstraintViolationException $ex) {
-            $sessionData->getFlashBag()->add('message','Sorry, this email id is already registered!');
+            $sessionData->getFlashBag()->add('alert_danger','Sorry, this email id is already registered!');
             return $this->app->redirect("/register");
         }
 
@@ -62,7 +62,7 @@ class HomeController {
         $loginInfo = $entityManager->getRepository('Entity\User')->findBy($loginDetails);
         
         if(empty($loginInfo)) {
-            $sessionData->getFlashBag()->add('message','Sorry, user email and password does not match!');
+            $sessionData->getFlashBag()->add('alert_danger','Sorry, email id and password does not matched!');
             return $this->app->redirect("/");
         }
         

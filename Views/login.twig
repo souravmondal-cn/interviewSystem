@@ -24,8 +24,15 @@
                 <br>
                 <h4><a href="/register">New user registration</a></h4>
                 
-                {% for message in app.session.getFlashBag.get('message') %}
-                    <p>{{message}}</p>
+                {% for message in app.session.getFlashBag.get('alert_danger') %}
+                    <div class="alert alert-danger">
+                        <p>{{message}}</p>
+                    </div>
+                {%endfor%}
+                {% for message in app.session.getFlashBag.get('alert_success') %}
+                    <div class="alert alert-success">
+                        <p>{{message}}</p>
+                    </div>
                 {%endfor%}
                 </div>
                 
