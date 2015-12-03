@@ -23,11 +23,12 @@
                     </form>
                     
                     <br>
-                    <div align="center">
-                        {% for message in app.session.getFlashBag.get('message') %}
+                    {% for message in app.session.getFlashBag.get('alert_danger') %}
+                        <div class="alert alert-danger" align="center">
                             <p>{{message}}</p>
-                        {%endfor%}
-                    </div>
+                        </div>
+                    {%endfor%}
+                    <a href='#' class='btn btn-default btn-block' onclick="history.go(-1);"> << </a>
                 </div>
             </div>
         <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4"></div>
