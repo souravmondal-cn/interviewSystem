@@ -8,9 +8,8 @@ namespace Entity;
  * @Table(name = "category")
  * @Entity
  */
-
 class Category {
-    
+
     /**
      * @var integer
      * 
@@ -19,21 +18,21 @@ class Category {
      * @Generatedvalue(strategy="IDENTITY")
      */
     private $cid;
-    
+
     /**
      * @var string
      * 
      * @column(name="categoryName", type="string")
      */
     private $categoryName;
-    
+
     /**
      * @var integer
      * 
      * @column(name="parentId", type="integer")
      */
     private $parentId;
-    
+
     /**
      * Get cid
      * 
@@ -42,7 +41,7 @@ class Category {
     public function getCId() {
         return $this->cid;
     }
-    
+
     /**
      * Set categoryName
      * 
@@ -52,7 +51,7 @@ class Category {
     public function setCategoryName($categoryName) {
         $this->categoryName = $categoryName;
     }
-    
+
     /**
      * Get categoryName
      * 
@@ -61,7 +60,7 @@ class Category {
     public function getCategoryName() {
         return $this->categoryName;
     }
-    
+
     /**
      * Set parentId
      * 
@@ -71,7 +70,7 @@ class Category {
     public function setParentId($parentId) {
         $this->parentId = $parentId;
     }
-    
+
     /**
      * Get parentId
      * 
@@ -80,8 +79,9 @@ class Category {
     public function getParentId() {
         return $this->parentId;
     }
-    
+
     public function __toString() {
         return $this->getCategoryName();
     }
+
 }

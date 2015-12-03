@@ -8,9 +8,8 @@ namespace Entity;
  * @Table(name = "examination")
  * @Entity
  */
-
 class Examination {
-    
+
     /**
      * @var integer
      * 
@@ -19,63 +18,63 @@ class Examination {
      * @Generatedvalue(strategy="IDENTITY")
      */
     private $examid;
-    
+
     /**
      * @var string
      * 
      * @Column(name="email", type="string", length=100)
      */
     private $email;
-    
+
     /**
      *  @var string
      * 
      * @Column(name="questions", type="string", nullable=false)
      */
     private $questions;
-    
+
     /**
      * @var integer
      * 
      * @Column(name="total_questions", type="integer")
      */
     private $total_questions;
-    
+
     /**
      * @var integer
      * 
      * @Column(name="correct_answers", type="integer", nullable=true)
      */
     private $correct_answers;
-    
+
     /**
      *  @var integer
      * 
      *  @Column(name="totaltime", type="integer", nullable=false)
      */
     private $totaltime;
-    
+
     /**
      * @var datetime
      * 
      * @Column(name="date_created", type="datetime", nullable=true)
      */
     private $date_created;
-    
+
     /**
      * @var datetime
      * 
      * @Column(name="date_completed", type="datetime", nullable=true) 
      */
     private $date_completed;
-    
+
     /**
-     *@var boolean
+     * @var boolean
      * 
      * @Column(name="is_qualified", type="boolean") 
      */
     private $is_qualified = false;
-    
+
     /**
      * Get examid
      * 
@@ -84,7 +83,7 @@ class Examination {
     public function getExamId() {
         return $this->examid;
     }
-    
+
     /**
      * Set email
      * 
@@ -94,7 +93,7 @@ class Examination {
     public function setEmail($email) {
         $this->email = $email;
     }
-    
+
     /**
      * Get email
      * 
@@ -103,7 +102,7 @@ class Examination {
     public function getEmail() {
         return $this->email;
     }
-    
+
     /**
      * Set questions
      * 
@@ -113,7 +112,7 @@ class Examination {
     public function setQuestions($questions) {
         $this->questions = $questions;
     }
-    
+
     /**
      * Get questions
      * 
@@ -122,7 +121,7 @@ class Examination {
     public function getQuestions() {
         return $this->questions;
     }
-    
+
     /**
      * Set totaltime
      * 
@@ -132,7 +131,7 @@ class Examination {
     public function setTotalTime($totaltime) {
         $this->totaltime = $totaltime;
     }
-    
+
     /**
      * Get totaltime
      * 
@@ -141,7 +140,7 @@ class Examination {
     public function getTotalTime() {
         return $this->totaltime;
     }
-    
+
     /**
      * set date_created
      * 
@@ -149,10 +148,10 @@ class Examination {
      * @return date_created
      */
     public function setDate_Created($date_created) {
-        
+
         $this->date_created = $date_created;
     }
-    
+
     /**
      * get date_created
      * 
@@ -161,7 +160,7 @@ class Examination {
     public function getDate_Created() {
         return $this->date_created;
     }
-    
+
     /**
      * set date_completed
      * 
@@ -171,7 +170,7 @@ class Examination {
     public function setDate_Completed($date_completed) {
         $this->date_completed = $date_completed;
     }
-    
+
     /**
      * get date_completed
      * 
@@ -180,7 +179,7 @@ class Examination {
     public function getDate_Completed() {
         return $this->date_completed;
     }
-    
+
     /**
      * set is_qualified
      * 
@@ -190,7 +189,7 @@ class Examination {
     public function setIs_Qualified($is_qualified) {
         $this->is_qualified = $is_qualified;
     }
-    
+
     /**
      * get is_qualified
      * 
@@ -199,7 +198,7 @@ class Examination {
     public function getIs_Qualified() {
         return $this->is_qualified;
     }
-    
+
     /**
      * set total_questions
      * 
@@ -209,7 +208,7 @@ class Examination {
     public function setTotal_Questions($total_questions) {
         $this->total_questions = $total_questions;
     }
-    
+
     /**
      * get total_questions
      * 
@@ -218,7 +217,7 @@ class Examination {
     public function getTotal_Questions() {
         return $this->total_questions;
     }
-    
+
     /**
      * set correct_answers
      * 
@@ -228,7 +227,7 @@ class Examination {
     public function setCorrect_Answers($correct_answers) {
         $this->correct_answers = $correct_answers;
     }
-    
+
     /**
      * get correct_answers
      * 
@@ -237,5 +236,5 @@ class Examination {
     public function getCorrect_Answers() {
         return $this->correct_answers;
     }
-}
 
+}

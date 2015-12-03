@@ -1,19 +1,19 @@
 {% extends "admin/base.twig" %}
 
 {% block body %}
-    
+
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"> 
     </div>
-    
+
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"> 
         <h3>
             {{formHeading}}{{userType}}
         </h3>
-        
+
         <br><br>
-        
+
         <form action="/adduser/{{userType}}" method="post" enctype="multipart/form-data" id='addUserForm'>
-            
+
             <div class="form-group">
                 <input type="hidden" name="userId" id="userId" value="{% if userData.id is defined %}{{userData.id}}{% endif %}">
                 <input type='hidden' name='userPassword' id='userPassword' value='{% if userData.password is defined %}{{userData.password}}{% endif %}'>
@@ -23,24 +23,24 @@
                     <option value="1" {% if userData.is_admin is defined and userData.is_admin == '1' %}selected='selected'{% endif %}>Yes</option>
                 </select>
             </div>
-                
+
             <div class="form-group">
                 <label for="userEmail">Email Address</label>
                 <input type="email" id="userEmail" name="userEmail" class="form-control" value='{% if userData.email is defined %}{{userData.email}}{% endif %}' required="required">
-                
+
                 <span id='userHist'>
                     <a id="viewUserHistory">View history</a>
                 </span>
-                
+
                 <span id='userEmailCheck' style='color:red'></span>
-                
+
             </div>
-                
+
             <div class="form-group">
                 <label for="userName">Name</label>
                 <input type="text" id="userName" name="userName" class="form-control" value='{% if userData.username is defined %}{{userData.username}}{% endif %}'>
             </div>
-            
+
             <div class="form-group" id="locationDiv">
                 <label for="location">Location</label>
                 <select id="location" name="location" class="form-control">
@@ -52,31 +52,31 @@
                     <option value='Chennai' {% if userData.location is defined and userData.location == 'Chennai' %}selected='selected'{% endif %}>Chennai</option>
                 </select>
             </div>
-            
+
             <div class="form-group" id="addressDiv">
                 <label for="user_address">Address</label>
                 <textarea id="user_address" name="user_address" class="form-control" rows="6">{% if userData.user_address is defined %}{{userData.user_address}}{% endif %}</textarea>
             </div>
-            
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" class="form-control" value='{% if userData.password is defined %}{{userData.password}}{% endif %}' required="required">
             </div>
-            
+
             <div class="form-group" id='fileUploadDiv'>
                 <label for='uploadedFile'>Upload resume </label>
                 <span style="color:grey">(  allowed file types: PDF, DOC & DOCX  )</span>
                 <input type='file' name='uploadedFile' id='uploadedFile'>
             </div>
-            
+
             <div class="form-group">
                 <button type="submit" value="addUser" class="btn btn-primary">Submit</button>
             </div>
         </form>
-        
+
     </div>
-    
+
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
     </div>
-    
+
 {% endblock %}

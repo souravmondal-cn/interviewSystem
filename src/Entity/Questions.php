@@ -8,9 +8,8 @@ namespace Entity;
  * @Table(name = "questions")
  * @Entity
  */
-
 class Questions {
-    
+
     /**
      * @var integer
      * 
@@ -19,49 +18,49 @@ class Questions {
      * @Generatedvalue(strategy="IDENTITY")
      */
     private $qid;
-    
+
     /**
      * @var string
      * 
      * @column(name="question", type="string")
      */
     private $question;
-    
+
     /**
      * @var string
      * 
      * @column(name="optionA", type="string")
      */
     private $optionA;
-    
+
     /**
      * @var string
      * 
      * @column(name="optionB", type="string")
      */
     private $optionB;
-    
+
     /**
      * @var string
      * 
      * @column(name="optionC", type="string")
      */
     private $optionC;
-    
+
     /**
      * @var string
      * 
      * @column(name="optionD", type="string")
      */
     private $optionD;
-    
+
     /**
      * @var string
      * 
      * @column(name="answer", type="string")
      */
     private $answer;
-    
+
     /**
      * @var \Entity\Category
      *
@@ -70,9 +69,8 @@ class Questions {
      *   @JoinColumn(name="categoryId", referencedColumnName="cid", nullable=true)
      * })
      */
-    
     private $categoryId;
-    
+
     /**
      * Get qid
      * 
@@ -81,7 +79,7 @@ class Questions {
     public function getQId() {
         return $this->qid;
     }
-    
+
     /**
      * Set question
      * 
@@ -91,7 +89,7 @@ class Questions {
     public function setQuestion($question) {
         $this->question = $question;
     }
-    
+
     /**
      * Get question
      * 
@@ -100,7 +98,7 @@ class Questions {
     public function getQuestion() {
         return $this->question;
     }
-    
+
     /**
      * Set $optionA
      * 
@@ -110,7 +108,7 @@ class Questions {
     public function setOptionA($optionA) {
         $this->optionA = $optionA;
     }
-    
+
     /**
      * Get $optionA
      * 
@@ -119,7 +117,7 @@ class Questions {
     public function getOptionA() {
         return $this->optionA;
     }
-    
+
     /**
      * Set $optionB
      * 
@@ -129,7 +127,7 @@ class Questions {
     public function setOptionB($optionB) {
         $this->optionB = $optionB;
     }
-    
+
     /**
      * Get $optionC
      * 
@@ -138,7 +136,7 @@ class Questions {
     public function getOptionB() {
         return $this->optionC;
     }
-    
+
     /**
      * Set $optionC
      * 
@@ -148,7 +146,7 @@ class Questions {
     public function setOptionC($optionC) {
         $this->optionC = $optionC;
     }
-    
+
     /**
      * Get $optionC
      * 
@@ -157,7 +155,7 @@ class Questions {
     public function getOptionC() {
         return $this->optionC;
     }
-    
+
     /**
      * Set $optionD
      * 
@@ -167,7 +165,7 @@ class Questions {
     public function setOptionD($optionD) {
         $this->optionD = $optionD;
     }
-    
+
     /**
      * Get $optionD
      * 
@@ -176,7 +174,7 @@ class Questions {
     public function getOptionD() {
         return $this->optionD;
     }
-    
+
     /**
      * Set $answer
      * 
@@ -186,7 +184,7 @@ class Questions {
     public function setAnswer($answer) {
         $this->answer = $answer;
     }
-    
+
     /**
      * Get $answer
      * 
@@ -195,7 +193,7 @@ class Questions {
     public function getAnswer() {
         return $this->answer;
     }
-    
+
     /**
      * Set $categoryId
      * 
@@ -205,7 +203,7 @@ class Questions {
     public function setCategoryId($categoryId) {
         $this->categoryId = $categoryId;
     }
-    
+
     /**
      * Get $categoryId
      * 
@@ -214,9 +212,9 @@ class Questions {
     public function getCategoryId() {
         return $this->categoryId;
     }
-    
+
     public function __toString() {
         return $this->setCategoryId($categoryId);
     }
-}
 
+}

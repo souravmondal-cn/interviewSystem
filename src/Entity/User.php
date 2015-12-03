@@ -1,15 +1,15 @@
 <?php
 
 namespace Entity;
+
 /**
  * User
  * 
  * @Table(name = "users")
  * @Entity
  */
-
 class User {
-    
+
     /**
      * @var integer
      * 
@@ -18,49 +18,49 @@ class User {
      * @Generatedvalue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @var string
      * 
      * @column(name="username", type="string", length=100)
      */
     private $username;
-    
+
     /**
      * @var string
      * 
      * @column(name="email", type="string", length=100, nullable=false, unique = true)
      */
     private $email;
-    
+
     /**
      * @var string
      * 
      * @column(name="password", type="string", nullable=false)
      */
     private $password;
-    
+
     /**
      * @var string
      * 
      * @column(name="location", type="string", nullable=true)
      */
     private $location;
-    
+
     /**
      * @var string
      * 
      * @column(name="user_address", type="string", nullable=true)
      */
     private $user_address;
-    
-     /**
+
+    /**
      * @var boolean
      * 
      * @column(name="is_admin", type="boolean")
      */
     private $is_admin;
-    
+
     /**
      * Get id
      * 
@@ -69,7 +69,7 @@ class User {
     public function getId() {
         return $this->id;
     }
-    
+
     /**
      * Set username
      * 
@@ -79,7 +79,7 @@ class User {
     public function setUserName($username) {
         $this->username = $username;
     }
-    
+
     /**
      * Get username
      * 
@@ -88,7 +88,7 @@ class User {
     public function getUserName() {
         return $this->username;
     }
-    
+
     /**
      * Set email
      * 
@@ -98,7 +98,7 @@ class User {
     public function setEmail($email) {
         $this->email = $email;
     }
-    
+
     /**
      * Get email
      * 
@@ -107,7 +107,7 @@ class User {
     public function getEmail() {
         return $this->email;
     }
-    
+
     /**
      * Set password
      * 
@@ -117,7 +117,7 @@ class User {
     public function setPassword($password) {
         $this->password = $password;
     }
-    
+
     /**
      * Get password
      * 
@@ -126,7 +126,7 @@ class User {
     public function getPassword() {
         return $this->password;
     }
-    
+
     /**
      * Set location
      * 
@@ -136,7 +136,7 @@ class User {
     public function setLocation($location) {
         $this->location = $location;
     }
-    
+
     /**
      * Get location
      * 
@@ -145,7 +145,7 @@ class User {
     public function getLocation() {
         return $this->location;
     }
-    
+
     /**
      * Set user_address
      * 
@@ -155,7 +155,7 @@ class User {
     public function setUser_Address($user_address) {
         $this->user_address = $user_address;
     }
-    
+
     /**
      * Get user_address
      * 
@@ -164,6 +164,7 @@ class User {
     public function getUser_Address() {
         return $this->user_address;
     }
+
     /**
      * Set is_admin
      * 
@@ -173,7 +174,7 @@ class User {
     public function setIs_Admin($is_admin) {
         $this->is_admin = $is_admin;
     }
-    
+
     /**
      * Get is_admin
      * 
@@ -182,5 +183,5 @@ class User {
     public function getIs_admin() {
         return $this->is_admin;
     }
-}
 
+}

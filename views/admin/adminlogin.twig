@@ -6,31 +6,31 @@
         </title>
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     </head>
-    
+
     <body>
         <div class="container">
             <div class="row">
                 <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4"></div>
                 <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4" align="center">
-                <h2 class="form-signin-heading">Interview System</h2>
-                <h4>Admin section</h4>
-                <br>
-                <form method="post" name ="adminLoginForm" class="form-signin" id="logInForm" action="/adminlogin">
-                    <input type="email" id="loginEmail" name = "loginEmail"  class="form-control" placeholder="Email address" required autofocus>
-                    <input type="password" id="loginPassword" name = "loginPassword"  class="form-control" placeholder="Password" required>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-                </form>
-                <br>
-                {% for message in app.session.getFlashBag.get('alert_danger') %}
-                    <div class="alert alert-danger">
-                        <p>{{message}}</p>
-                    </div>
-                {%endfor%}
+                    <h2 class="form-signin-heading">Interview System</h2>
+                    <h4>Admin section</h4>
+                    <br>
+                    <form method="post" name ="adminLoginForm" class="form-signin" id="logInForm" action="/adminlogin">
+                        <input type="email" id="loginEmail" name = "loginEmail"  class="form-control" placeholder="Email address" required autofocus>
+                        <input type="password" id="loginPassword" name = "loginPassword"  class="form-control" placeholder="Password" required>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                    </form>
+                    <br>
+                    {% for message in app.session.getFlashBag.get('alert_danger') %}
+                        <div class="alert alert-danger">
+                            <p>{{message}}</p>
+                        </div>
+                    {%endfor%}
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4" align="center">
+                </div>
             </div>
         </div>
-        </div>
-        
+
     </body>
 </html>

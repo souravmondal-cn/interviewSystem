@@ -2,44 +2,44 @@
 
 {% block body %}
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
-    
+
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <h3>
             Examination
         </h3>
-    <br><br>
-    <span id="timer"></span>
-    <form action="/examsubmit" method="post" id="examNowForm" name="examNowForm">
-        <input type="hidden" name="qid" value="{{displayQuestion.qid}}">
-        <p>{{displayQuestion.question|striptags}} ?</p>
-        
-        <div class="form-group">
-            
-            <input type="radio" name="answer" value="option_a">
-            <label>Option A:</label><br>
-            {{displayQuestion.optionA|striptags}}
-        </div>
-        <div class="form-group">
-            <input type="radio" name="answer" value="option_b">
-            <label>Option B:</label><br>
-            {{displayQuestion.optionB|striptags}}
-        </div>
-        <div class="form-group">
-            <input type="radio" name="answer" value="option_c">
-            <label>Option C:</label><br>
-            {{displayQuestion.optionC|striptags}}
-        </div>
-        <div class="form-group">
-            <input type="radio" name="answer" value="option_d">
-            <label>Option D:</label><br>
-            {{displayQuestion.optionD|striptags}}
-        </div>
-        
-        <div class="form-group">
-            <button type="submit" name="examSubmit" value="examSubmit" class="btn btn-default">Submit</button>
-        </div>
-    </form>
-        
+        <br><br>
+        <span id="timer"></span>
+        <form action="/examsubmit" method="post" id="examNowForm" name="examNowForm">
+            <input type="hidden" name="qid" value="{{displayQuestion.qid}}">
+            <p>{{displayQuestion.question|striptags}} ?</p>
+
+            <div class="form-group">
+
+                <input type="radio" name="answer" value="option_a">
+                <label>Option A:</label><br>
+                {{displayQuestion.optionA|striptags}}
+            </div>
+            <div class="form-group">
+                <input type="radio" name="answer" value="option_b">
+                <label>Option B:</label><br>
+                {{displayQuestion.optionB|striptags}}
+            </div>
+            <div class="form-group">
+                <input type="radio" name="answer" value="option_c">
+                <label>Option C:</label><br>
+                {{displayQuestion.optionC|striptags}}
+            </div>
+            <div class="form-group">
+                <input type="radio" name="answer" value="option_d">
+                <label>Option D:</label><br>
+                {{displayQuestion.optionD|striptags}}
+            </div>
+
+            <div class="form-group">
+                <button type="submit" name="examSubmit" value="examSubmit" class="btn btn-default">Submit</button>
+            </div>
+        </form>
+
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
 {% endblock %}

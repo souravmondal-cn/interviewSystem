@@ -3,48 +3,48 @@
 {% block body %}
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">   
     </div>
-    
-    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-    <h3>
-    {{formHeading}}
-    </h3>
-    
-        <br><br>
-        
-    <form action="/addcategory" method="post">
-        
-        <div class="form-group">
-                    Subject category :
 
-                    <input type="hidden"  class="form-control" name="categoryId" value="{%if categoryDetails.cid is defined%}{{categoryDetails.cid}}{% endif %}">
-                    <select name="category" class="form-control" >
-                        <option>Choose parent category</option>
-                        <option value="0" {%if categoryDetails.parentId is defined and categoryDetails.parentId == "0"%}selected="selected"{% endif %}>None</option>
-                        {% for category in categories %} 
-                            <option value= "{{category.cid}}" {%if categoryDetails.parentId is defined and category.cid == categoryDetails.parentId %}selected{% endif %}>{{category.categoryName}}</option>
-                        {% endfor %}
-                    </select>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <h3>
+            {{formHeading}}
+        </h3>
+
+        <br><br>
+
+        <form action="/addcategory" method="post">
+
+            <div class="form-group">
+                Subject category :
+
+                <input type="hidden"  class="form-control" name="categoryId" value="{%if categoryDetails.cid is defined%}{{categoryDetails.cid}}{% endif %}">
+                <select name="category" class="form-control" >
+                    <option>Choose parent category</option>
+                    <option value="0" {%if categoryDetails.parentId is defined and categoryDetails.parentId == "0"%}selected="selected"{% endif %}>None</option>
+                    {% for category in categories %} 
+                        <option value= "{{category.cid}}" {%if categoryDetails.parentId is defined and category.cid == categoryDetails.parentId %}selected{% endif %}>{{category.categoryName}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                Category :
+                <input type="text" class="form-control" name="subcategory" value="{%if categoryDetails.categoryName is defined%}{{categoryDetails.categoryName}}{% endif %}" required="required">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" value="addCategory" class="btn btn-primary" >Submit</button>
+            </div>
+        </form>
+        <div align="center">
+            {% for message in app.session.getFlashBag.get('admin_message') %}
+                <p>{{message}}</p>
+            {%endfor%}
         </div>
-                    
-        <div class="form-group">
-                    Category :
-                    <input type="text" class="form-control" name="subcategory" value="{%if categoryDetails.categoryName is defined%}{{categoryDetails.categoryName}}{% endif %}" required="required">
-        </div>
-        
-        <div class="form-group">
-            <button type="submit" value="addCategory" class="btn btn-primary" >Submit</button>
-        </div>
-    </form>
-                    <div align="center">
-                        {% for message in app.session.getFlashBag.get('admin_message') %}
-                            <p>{{message}}</p>
-                        {%endfor%}
-                    </div>
-                    
-                    
-</div>
-                        
-<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">   
-</div>
-                        
+
+
+    </div>
+
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">   
+    </div>
+
 {% endblock %}

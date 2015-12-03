@@ -5,70 +5,70 @@
     </div>
 
     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-    <h3>
-    Question - answer setting
-    </h3>
-    
-    <div align='left'>
-        <a class="btn btn-primary" href="/questionupload">Add Question</a>
+        <h3>
+            Question - answer setting
+        </h3>
+
+        <div align='left'>
+            <a class="btn btn-primary" href="/questionupload">Add Question</a>
+        </div>
+
+        <br><br>
+        <table cellpadding="5" border="1" class="table table-striped table-bordered">
+            <thead>
+                <tr  class="info">
+                    <th>
+                        Question Id
+                    </th>
+
+                    <th>
+                        Question
+                    </th>
+
+                    <th>
+                        Question Category
+                    </th>
+
+                    <th>
+                        Edit question
+                    </th>
+                    <th>
+                        Delete question
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions %}
+                    <tr>
+                        <td>
+                            {{ question.qid }}
+                        </td>
+                        <td>
+                            {{ question.question|striptags }}
+                        </td>
+
+                        <td>
+                            {{ question.categoryId.categoryName }}
+                        </td>
+                        <td align="center">
+                            <a class="btn btn-info" href="/editQuestion/{{ question.qid }}">Edit</a> 
+                        </td>
+                        <td align="center">
+                            <a class="btn btn-danger" href="/deleteQuestion/{{ question.qid }}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        <div align="center" class="col-md-6">
+            {% for message in app.session.getFlashBag.get('admin_message') %}
+                <p>{{message}}</p>
+            {%endfor%}
+        </div>
     </div>
-    
-    <br><br>
-    <table cellpadding="5" border="1" class="table table-striped table-bordered">
-        <thead>
-        <tr  class="info">
-            <th>
-                Question Id
-            </th>
-            
-            <th>
-                Question
-            </th>
-            
-            <th>
-                Question Category
-            </th>
-            
-            <th>
-                Edit question
-            </th>
-            <th>
-                Delete question
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for question in questions %}
-            <tr>
-                <td>
-                    {{ question.qid }}
-                </td>
-                <td>
-                    {{ question.question|striptags }}
-                </td>
-                
-                <td>
-                    {{ question.categoryId.categoryName }}
-                </td>
-                <td align="center">
-                    <a class="btn btn-info" href="/editQuestion/{{ question.qid }}">Edit</a> 
-                </td>
-                <td align="center">
-                    <a class="btn btn-danger" href="/deleteQuestion/{{ question.qid }}">Delete</a>
-                </td>
-            </tr>
-        {% endfor %}
-        
-        </tbody>
-    </table>
-    
-    <div align="center" class="col-md-6">
-        {% for message in app.session.getFlashBag.get('admin_message') %}
-            <p>{{message}}</p>
-        {%endfor%}
+
+    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">   
     </div>
-</div>
-        
-<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">   
-</div>
-    {% endblock %}
+{% endblock %}
