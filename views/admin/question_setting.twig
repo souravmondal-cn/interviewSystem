@@ -1,68 +1,62 @@
 {% extends "admin/base.twig" %}
 
 {% block body %}
-    
-        <h3>
-            Question - answer setting
-        </h3>
 
-        <div align='left'>
-            <a class="btn btn-primary" href="/questionupload">Add Question</a>
-        </div>
+    <h3>
+        Question - answer setting
+    </h3>
 
-        <br><br>
-        <table cellpadding="5" border="1" class="table table-striped table-bordered">
-            <thead>
-                <tr  class="info">
-                    <th>
-                        Question Id
-                    </th>
+    <div align='left'>
+        <a class="btn btn-primary" href="/questionupload">Add Question</a>
+    </div>
 
-                    <th>
-                        Question
-                    </th>
+    <br><br>
+    <table cellpadding="5" border="1" class="table table-striped table-bordered">
+        <thead>
+            <tr  class="info">
+                <th>
+                    Question Id
+                </th>
 
-                    <th>
-                        Question Category
-                    </th>
+                <th>
+                    Question
+                </th>
 
-                    <th>
-                        Edit question
-                    </th>
-                    <th>
-                        Delete question
-                    </th>
+                <th>
+                    Question Category
+                </th>
+
+                <th>
+                    Edit question
+                </th>
+                <th>
+                    Delete question
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+                <tr>
+                    <td>
+                        {{ question.qid }}
+                    </td>
+                    <td>
+                        {{ question.question|striptags }}
+                    </td>
+
+                    <td>
+                        {{ question.categoryId.categoryName }}
+                    </td>
+                    <td align="center">
+                        <a class="btn btn-info" href="/editQuestion/{{ question.qid }}">Edit</a> 
+                    </td>
+                    <td align="center">
+                        <a class="btn btn-danger" href="/deleteQuestion/{{ question.qid }}">Delete</a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for question in questions %}
-                    <tr>
-                        <td>
-                            {{ question.qid }}
-                        </td>
-                        <td>
-                            {{ question.question|striptags }}
-                        </td>
+            {% endfor %}
 
-                        <td>
-                            {{ question.categoryId.categoryName }}
-                        </td>
-                        <td align="center">
-                            <a class="btn btn-info" href="/editQuestion/{{ question.qid }}">Edit</a> 
-                        </td>
-                        <td align="center">
-                            <a class="btn btn-danger" href="/deleteQuestion/{{ question.qid }}">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-
-            </tbody>
-        </table>
-
-        <div align="center" class="col-md-6">
-            {% for message in app.session.getFlashBag.get('admin_message') %}
-                <p>{{message}}</p>
-            {%endfor%}
-        </div>
+        </tbody>
+    </table>
 
 {% endblock %}

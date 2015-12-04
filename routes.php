@@ -53,3 +53,6 @@ $app->get("/examnow/{email}", "home.controller:examNow");
 $app->get("/displayQuestion", "home.controller:displayQuestion");
 $app->post("/examsubmit", "home.controller:examSubmit");
 $app->get("/examsubmit", "home.controller:forceSubmit");
+
+$app->get("/examdetail/{examId}", "admin.controller:viewExamDetail");
+$app->get("/setQualified/{examId}", "admin.controller:setQualified");

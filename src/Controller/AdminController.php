@@ -4,10 +4,10 @@ namespace Controller;
 
 use \Symfony\Component\HttpFoundation\Request;
 use \Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use \Entity\Questions;
-use \Entity\Category;
-use \Entity\User;
-use \Entity\Examination;
+use Entity\Questions;
+use Entity\Category;
+use Entity\User;
+use Entity\Examination;
 use DateTime;
 use \Doctrine\DBAL\Exception\NotNullConstraintViolationException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -566,6 +566,10 @@ class AdminController {
     }
 
     public function listExamHistory($email) {
+        if ($this->checkAdminSession() == FALSE) {
+            return $this->app->redirect("/admin");
+        }
+
         $entityManager = $this->app['doctrine'];
         $examRepository = $entityManager->getRepository('Entity\Examination');
         $examData = $examRepository->findBy(array('email' => $email));
@@ -604,6 +608,71 @@ class AdminController {
             echo '0';
             exit;
         }
+    }
+
+    public function viewExamDetail($examId) {
+        if ($this->checkAdminSession() == FALSE) {
+            return $this->app->redirect("/admin");
+        }
+
+        $entityManager = $this->app['doctrine'];
+        $examDetail = $entityManager->find('Entity\Examination', $examId);
+
+
+        $submitDetails = $examDetail->getSubmits();
+        $submitDetailsArray = json_decode($submitDetails);
+
+        foreach ($submitDetailsArray as $questionId => $checkedOption) {
+            $questionDetail = $entityManager->find('Entity\Questions', $questionId);
+
+            $isQualified = $examDetail->getIs_Qualified();
+            $totalQuestions = $examDetail->getTotal_Questions();
+            $totalAnswers = $examDetail->getCorrect_Answers();
+            $dataPercentage = ($totalAnswers / $totalQuestions) * 100;
+            $optionValueA = $questionDetail->getOptionA();
+            $optionValueB = $questionDetail->getOptionB();
+            $optionValueC = $questionDetail->getOptionC();
+            $optionValueD = $questionDetail->getOptionD();
+
+            if ($checkedOption == 'option_a') {
+                $submitAnswer = $optionValueA;
+            } elseif ($checkedOption == 'option_b') {
+                $submitAnswer = $optionValueB;
+            } elseif ($checkedOption == 'option_c') {
+                $submitAnswer = $optionValueC;
+            } elseif ($checkedOption == 'option_d') {
+                $submitAnswer = $optionValueD;
+            }
+
+            $examSubmitDetail[] = [
+                'submitQid' => $questionId,
+                'submitQuestion' => $questionDetail->getQuestion(),
+                'optionA' => $optionValueA,
+                'optionB' => $optionValueB,
+                'optionC' => $optionValueC,
+                'optionD' => $optionValueD,
+                'correctAnswer' => $questionDetail->getAnswer(),
+                'submitAnswer' => $submitAnswer,
+            ];
+        }
+
+        return $this->app['twig']->render('admin/examdetail.twig', [
+                    'examSubmitData' => $examSubmitDetail,
+                    'examId' => $examId,
+                    'totalQuestions' => $totalQuestions,
+                    'totalAnswers' => $totalAnswers,
+                    'dataPercentage' => $dataPercentage,
+                    'isQualified' => $isQualified]);
+    }
+
+    public function setQualified($examId) {
+        $entityManager = $this->app['doctrine'];
+        $examDetail = $entityManager->find('Entity\Examination', $examId);
+        $examDetail->setIs_Qualified(TRUE);
+        $entityManager->persist($examDetail);
+        $entityManager->flush();
+
+        return $this->app->redirect('/examdetail/' . $examId);
     }
 
 }

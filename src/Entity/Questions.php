@@ -134,7 +134,7 @@ class Questions {
      * @return string
      */
     public function getOptionB() {
-        return $this->optionC;
+        return $this->optionB;
     }
 
     /**
