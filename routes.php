@@ -1,7 +1,9 @@
 <?php
 
 use Controller\HomeController;
-use Controller\AdminController;
+use Controller\Admin\AdminController;
+use Controller\Admin\AdminSettingsController;
+use Controller\Admin\ExamController;
 
 $app['home.controller'] = $app->share(function() use ($app) {
     return new HomeController($app);
@@ -9,6 +11,14 @@ $app['home.controller'] = $app->share(function() use ($app) {
 
 $app['admin.controller'] = $app->share(function() use ($app) {
     return new AdminController($app);
+});
+
+$app['admin.settings'] = $app->share(function () use ($app) {
+    return new AdminSettingsController($app);
+});
+
+$app['exam.controller'] = $app->share(function () use ($app) {
+    return new ExamController($app);
 });
 
 $app->get("/", 'home.controller:login');
@@ -23,17 +33,17 @@ $app->post("/adminlogin", 'admin.controller:doLoginAdmin');
 $app->get("/adminpanel", 'admin.controller:adminPanel');
 $app->get("/adminlogout",'admin.controller:adminLogout');
 
-$app->get("/questionlisting","admin.controller:questionListing");
-$app->get("/questionupload","admin.controller:questionUpload");
-$app->post("/questionupload","admin.controller:doUpload");
-$app->get("/editQuestion/{id}", "admin.controller:editQuestion");
-$app->get("/deleteQuestion/{id}", "admin.controller:deleteQuestion");
+$app->get("/questionlisting","admin.settings:questionListing");
+$app->get("/questionupload","admin.settings:questionUpload");
+$app->post("/questionupload","admin.settings:doUpload");
+$app->get("/editQuestion/{id}", "admin.settings:editQuestion");
+$app->get("/deleteQuestion/{id}", "admin.settings:deleteQuestion");
 
-$app->get("/category","admin.controller:categorySetting");
-$app->get("/addcategory","admin.controller:addCategory");
-$app->post("/addcategory","admin.controller:doAddCategory");
-$app->get("/editCategory/{id}", "admin.controller:editCategory");
-$app->get("/deleteCategory/{id}", "admin.controller:deleteCategory");
+$app->get("/category","admin.settings:categorySetting");
+$app->get("/addcategory","admin.settings:addCategory");
+$app->post("/addcategory","admin.settings:doAddCategory");
+$app->get("/editCategory/{id}", "admin.settings:editCategory");
+$app->get("/deleteCategory/{id}", "admin.settings:deleteCategory");
 
 $app->get("/adminsetting","admin.controller:showAdminSettings");
 $app->get("/usersetting","admin.controller:showUserSettings");
@@ -42,17 +52,17 @@ $app->post("/adduser/{userType}", "admin.controller:doAddUser");
 $app->get("/edituser/{userType}/{id}", "admin.controller:editUserData");
 $app->get("/deleteuser/{userType}/{id}", "admin.controller:deleteUserData");
 
-$app->get("/examsetting","admin.controller:examSetting");
-$app->post("/examsetting","admin.controller:examGenerate");
-
 $app->post("/checkEmail/{email}","admin.controller:checkUserRegistration");
-$app->get("/viewHistory/{email}", "admin.controller:listExamHistory");
 $app->get("/viewfile/{filename}","admin.controller:downloadFile");
+
+$app->get("/examsetting","exam.controller:examSetting");
+$app->post("/examsetting","exam.controller:examGenerate");
+
+$app->get("/viewHistory/{email}", "exam.controller:listExamHistory");
+$app->get("/examdetail/{examId}", "exam.controller:viewExamDetail");
+$app->get("/setQualified/{examId}", "exam.controller:setQualified");
 
 $app->get("/examnow/{email}", "home.controller:examNow");
 $app->get("/displayQuestion", "home.controller:displayQuestion");
 $app->post("/examsubmit", "home.controller:examSubmit");
 $app->get("/examsubmit", "home.controller:forceSubmit");
-
-$app->get("/examdetail/{examId}", "admin.controller:viewExamDetail");
-$app->get("/setQualified/{examId}", "admin.controller:setQualified");

@@ -1,25 +1,18 @@
 tinymce.init({selector: 'textarea'});
 
 $(document).ready(function () {
-    $('.chart').easyPieChart({
-        //your configuration goes here
-    });
-
-    $('.nav-sidebar li').click(function () {
-        $(this).addClass('active');
-    });
 
     $('.table-striped').DataTable();
     $('#userHist').hide();
 
     var isAdmin = $("#isAdmin").val();
-    if (isAdmin == '1') {
+    if (isAdmin === '1') {
         $("#addressDiv").hide();
         $("#locationDiv").hide();
         $("#fileUploadDiv").hide();
     }
 
-    if (isAdmin == '0') {
+    if (isAdmin === '0') {
         $("#addressDiv").show();
         $("#locationDiv").show();
         $("#fileUploadDiv").show();
@@ -29,13 +22,13 @@ $(document).ready(function () {
 $("#isAdmin").change(function () {
     var isAdmin = $("#isAdmin").val();
 
-    if (isAdmin == '1') {
+    if (isAdmin === '1') {
         $("#addressDiv").hide();
         $("#locationDiv").hide();
         $("#fileUploadDiv").hide();
     }
 
-    if (isAdmin == '0') {
+    if (isAdmin === '0') {
         $("#addressDiv").show();
         $("#locationDiv").show();
         $("#fileUploadDiv").show();
@@ -48,7 +41,7 @@ $('#userEmail').blur(function () {
         url: '/checkEmail/' + email,
         method: 'post',
         success: function (data, status) {
-            if (data == '1') {
+            if (data === '1') {
                 $('#userEmailCheck').html(' &nbsp;&nbsp; Email id is already registered! &nbsp;');
                 $('#userHist').show();
                 $('#viewUserHistory').attr('href', '/viewHistory/' + email);
@@ -69,7 +62,7 @@ $('#userEmailId').blur(function () {
         url: '/checkEmail/' + emailId,
         method: 'post',
         success: function (data, status) {
-            if (data == '0') {
+            if (data === '0') {
                 $('#checkEmailForExam').html('this email id is not registered!');
                 $('#userEmailId').val('');
                 $('#userEmailId').focus();

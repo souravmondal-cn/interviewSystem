@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use Controller\Common\Common;
 use Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use \Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -34,12 +35,28 @@ class HomeController {
             $user->setEmail($postedUserData['userEmail']);
             $user->setPassword(md5($postedUserData['userPassword']));
             $user->setIs_Admin('0');
-
+            $user->setLocation($postedUserData['location']);
+            $user->setUser_Address($postedUserData['address']);
+            
             $entityManager = $this->app['doctrine'];
             $entityManager->persist($user);
             $entityManager->flush();
 
             $sessionData->getFlashBag()->add('alert_success', 'Registration successful');
+            
+            $uploadedFile = $request->files->get('uploadedFile');
+
+            if (!empty($uploadedFile)) {
+
+                $generatedUserData = $entityManager->getRepository('Entity\User')->findBy(array('email' => $postedUserData['userEmail']));
+                $generatedId = $generatedUserData[0]->getId();
+
+                /* @var $common Controller\Common\Common */
+                $common = new Common;
+                if ($common->newFileUpload($uploadedFile, $generatedId)) {
+                    $sessionData->getFlashBag()->add("alert_success", "File added successfully");
+                }
+            }
         } catch (UniqueConstraintViolationException $ex) {
             $sessionData->getFlashBag()->add('alert_danger', 'Sorry, this email id is already registered!');
             return $this->app->redirect("/register");
