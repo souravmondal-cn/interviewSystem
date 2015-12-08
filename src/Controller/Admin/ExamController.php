@@ -9,28 +9,9 @@ use Entity\Questions;
 use Entity\Category;
 use Entity\Examination;
 use DateTime;
+use Controller\Admin\Controller;
 
-
-class ExamController {
-
-    private $app;
-
-    public function __construct($app) {
-        $this->app = $app;
-    }
-
-    public function checkAdminSession() {
-        $sessionData = $this->app['session'];
-        $entityManager = $this->app['doctrine'];
-
-        $validAdminSession = $sessionData->get('loginAdminSession');
-
-        if (!empty($validAdminSession)) {
-            return true;
-        }
-
-        return false;
-    }
+class ExamController extends Controller {
 
     public function examSetting() {
         if ($this->checkAdminSession() == FALSE) {
@@ -129,7 +110,6 @@ class ExamController {
         $entityManager = $this->app['doctrine'];
         $examDetail = $entityManager->find('Entity\Examination', $examId);
 
-
         $emailId = $examDetail->getEmail();
         $submitDetails = $examDetail->getSubmits();
         if ($submitDetails == NULL) {
@@ -204,5 +184,5 @@ class ExamController {
 
         return $this->app['twig']->render('admin/examhistory.twig', array('examdata' => $examData, 'email' => $email));
     }
-    
+
 }

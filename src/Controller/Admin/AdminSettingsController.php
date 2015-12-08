@@ -6,27 +6,9 @@ use \Symfony\Component\HttpFoundation\Request;
 use \Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Entity\Questions;
 use Entity\Category;
+use Controller\Admin\Controller;
 
-class AdminSettingsController {
-
-    private $app;
-
-    public function __construct($app) {
-        $this->app = $app;
-    }
-
-    public function checkAdminSession() {
-        $sessionData = $this->app['session'];
-        $entityManager = $this->app['doctrine'];
-
-        $validAdminSession = $sessionData->get('loginAdminSession');
-
-        if (!empty($validAdminSession)) {
-            return true;
-        }
-
-        return false;
-    }
+class AdminSettingsController extends Controller {
 
     public function questionListing() {
         $sessionData = $this->app['session'];

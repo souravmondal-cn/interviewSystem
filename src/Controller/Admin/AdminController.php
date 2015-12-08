@@ -8,14 +8,9 @@ use Entity\User;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Controller\Admin\Controller;
 
-class AdminController {
-
-    private $app;
-
-    public function __construct($app) {
-        $this->app = $app;
-    }
+class AdminController extends Controller {
 
     public function loginAdmin() {
         return $this->app['twig']->render('admin/adminlogin.twig');
@@ -284,33 +279,6 @@ class AdminController {
         $sessionData = $this->app['session'];
         $sessionData->clear();
         return $this->app->redirect("/admin");
-    }
-
-    public function checkAdminSession() {
-        $sessionData = $this->app['session'];
-        $entityManager = $this->app['doctrine'];
-
-        $validAdminSession = $sessionData->get('loginAdminSession');
-
-        if (!empty($validAdminSession)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function checkUserRegistration($email) {
-        $entityManager = $this->app['doctrine'];
-        $userRepository = $entityManager->getRepository('Entity\User');
-        $user = $userRepository->findBy(array('email' => $email, 'is_admin' => '0'));
-
-        if (!empty($user)) {
-            echo '1';
-            exit;
-        } else {
-            echo '0';
-            exit;
-        }
     }
 
 }
