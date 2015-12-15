@@ -16,8 +16,8 @@
                 <input type='hidden' name='userPassword' id='userPassword' value='{% if userData.password is defined %}{{userData.password}}{% endif %}'>
                 <label for="isAdmin">Is admin?</label>
                 <select name="isAdmin" id="isAdmin" class="form-control">
-                    <option value="0" {% if userData.is_admin is defined and userData.is_admin == '0' %}selected='selected'{% endif %}>No</option>
-                    <option value="1" {% if userData.is_admin is defined and userData.is_admin == '1' %}selected='selected'{% endif %}>Yes</option>
+                    <option value="0" {% if userData.is_admin is defined and userData.is_admin == '0' or userType == 'User' %}selected='selected'{% endif %}>No</option>
+                    <option value="1" {% if userData.is_admin is defined and userData.is_admin == '1' or userType == 'Admin' %}selected='selected'{% endif %}>Yes</option>
                 </select>
             </div>
 

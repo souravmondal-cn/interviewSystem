@@ -14,5 +14,7 @@
 
         {% if examset is defined and examset == 'true' %}<img src="/assets/new.gif"> &nbsp;&nbsp; <a href = '/examnow/{{UserEmail}}'>Start examination</a>{% endif %}
 
-        </div>
-        {% endblock %}
+        {% if success is defined and success == 1%} <img src="/assets/new.gif"> &nbsp;&nbsp;  You are qualified for interview! &nbsp;&nbsp; <img src="/assets/new.gif"> {% endif %}
+
+            </div>
+            {% endblock %}
