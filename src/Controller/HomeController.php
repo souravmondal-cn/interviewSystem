@@ -20,20 +20,18 @@ class HomeController {
         return $this->app['twig']->render('login.twig');
     }
 
-    public function showRegistrationForm() {
+    public function getRegistrationForm() {
         return $this->app['twig']->render('registration.twig');
     }
 
-    public function registerNewUser(Request $request) {
-
+    public function registerUser(Request $request) {
+        
         $sessionUserData = $this->app['session'];
-        $postedUserData = $request->request->all();
-
         try {
             $user = new User();
-            $user->setUserName($postedUserData['userName']);
-            $user->setEmail($postedUserData['userEmail']);
-            $user->setPassword(md5($postedUserData['userPassword']));
+            $user->setUserName($request->request->get('userName'));
+            $user->setEmail($request->request->get('userEmail'));
+            $user->setPassword($request->request->get('userPassword'));
             $user->setIs_Admin('0');
             $user->setLocation($postedUserData['location']);
             $user->setUser_Address($postedUserData['address']);

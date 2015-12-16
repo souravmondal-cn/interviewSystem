@@ -13,7 +13,7 @@ class User {
     /**
      * @var integer
      * 
-     * @column(type="integer")
+     * @Column(type="integer")
      * @Id
      * @Generatedvalue(strategy="IDENTITY")
      */
@@ -22,166 +22,101 @@ class User {
     /**
      * @var string
      * 
-     * @column(name="username", type="string", length=100)
+     * @Column(type="string", length=30, nullable=false, unique = true)
      */
-    private $username;
+    private $userName;
 
     /**
      * @var string
      * 
-     * @column(name="email", type="string", length=100, nullable=false, unique = true)
+     * @Column(type="string", length=100, nullable=false, unique = true)
      */
-    private $email;
+    private $userEmail;
 
     /**
      * @var string
      * 
-     * @column(name="password", type="string", nullable=false)
+     * @Column(type="string", nullable=false)
      */
     private $password;
 
     /**
      * @var string
      * 
-     * @column(name="location", type="string", nullable=true)
+     * @Column(type="string", nullable=true)
      */
-    private $location;
+    private $officeLocation;
 
     /**
      * @var string
      * 
-     * @column(name="user_address", type="string", nullable=true)
+     * @Column(type="string", nullable=true)
      */
-    private $user_address;
+    private $userAddress;
 
     /**
      * @var boolean
      * 
-     * @column(name="is_admin", type="boolean")
+     * @Column(type="boolean", nullable=false)
      */
-    private $is_admin;
+    private $isAdmin = 0;
 
-    /**
-     * Get id
-     * 
-     * @return integer
-     */
     public function getId() {
         return $this->id;
     }
 
-    /**
-     * Set username
-     * 
-     * @param string $username
-     * @return username
-     */
-    public function setUserName($username) {
-        $this->username = $username;
-    }
-
-    /**
-     * Get username
-     * 
-     * @return string
-     */
     public function getUserName() {
-        return $this->username;
+        return $this->userName;
     }
 
-    /**
-     * Set email
-     * 
-     * @param string $email
-     * @return email
-     */
-    public function setEmail($email) {
-        $this->email = $email;
+    public function getUserEmail() {
+        return $this->userEmail;
     }
 
-    /**
-     * Get email
-     * 
-     * @return string
-     */
-    public function getEmail() {
-        return $this->email;
-    }
-
-    /**
-     * Set password
-     * 
-     * @param string $password
-     * @return password
-     */
-    public function setPassword($password) {
-        $this->password = $password;
-    }
-
-    /**
-     * Get password
-     * 
-     * @return string
-     */
     public function getPassword() {
         return $this->password;
     }
 
-    /**
-     * Set location
-     * 
-     * @param string $location
-     * @return location
-     */
-    public function setLocation($location) {
-        $this->location = $location;
+    public function getOfficeLocation() {
+        return $this->officeLocation;
     }
 
-    /**
-     * Get location
-     * 
-     * @return string
-     */
-    public function getLocation() {
-        return $this->location;
+    public function getUserAddress() {
+        return $this->userAddress;
     }
 
-    /**
-     * Set user_address
-     * 
-     * @param string $user_address
-     * @return user_address
-     */
-    public function setUser_Address($user_address) {
-        $this->user_address = $user_address;
+    public function getIsAdmin() {
+        return $this->isAdmin;
     }
 
-    /**
-     * Get user_address
-     * 
-     * @return string
-     */
-    public function getUser_Address() {
-        return $this->user_address;
+    public function setUserName($userName) {
+        $this->userName = $userName;
+        return $this;
     }
 
-    /**
-     * Set is_admin
-     * 
-     * @param boolean $is_admin
-     * @return is_admin
-     */
-    public function setIs_Admin($is_admin) {
-        $this->is_admin = $is_admin;
+    public function setUserEmail($userEmail) {
+        $this->userEmail = $userEmail;
+        return $this;
     }
 
-    /**
-     * Get is_admin
-     * 
-     * @return boolean
-     */
-    public function getIs_admin() {
-        return $this->is_admin;
+    public function setPassword($password) {
+        $this->password = md5($password);
+        return $this;
+    }
+
+    public function setOfficeLocation($officeLocation) {
+        $this->officeLocation = $officeLocation;
+        return $this;
+    }
+
+    public function setUserAddress($userAddress) {
+        $this->userAddress = $userAddress;
+        return $this;
+    }
+
+    public function setIsAdmin($isAdmin) {
+        $this->isAdmin = $isAdmin;
+        return $this;
     }
 
 }

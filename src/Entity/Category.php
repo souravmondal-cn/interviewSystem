@@ -13,75 +13,46 @@ class Category {
     /**
      * @var integer
      * 
-     * @column(name="cid", type="integer")
+     * @Column(type="integer")
      * @Id
      * @Generatedvalue(strategy="IDENTITY")
      */
-    private $cid;
+    private $id;
 
     /**
      * @var string
      * 
-     * @column(name="categoryName", type="string")
+     * @Column(type="string")
      */
     private $categoryName;
 
     /**
      * @var integer
      * 
-     * @column(name="parentId", type="integer")
+     * @Column(type="integer")
      */
     private $parentId;
 
-    /**
-     * Get cid
-     * 
-     * @return integer
-     */
-    public function getCId() {
-        return $this->cid;
+    public function getId() {
+        return $this->id;
     }
 
-    /**
-     * Set categoryName
-     * 
-     * @param string $categoryName
-     * @return categoryName
-     */
-    public function setCategoryName($categoryName) {
-        $this->categoryName = $categoryName;
-    }
-
-    /**
-     * Get categoryName
-     * 
-     * @return string
-     */
     public function getCategoryName() {
         return $this->categoryName;
     }
 
-    /**
-     * Set parentId
-     * 
-     * @param string $parentId
-     * @return parentId
-     */
-    public function setParentId($parentId) {
-        $this->parentId = $parentId;
-    }
-
-    /**
-     * Get parentId
-     * 
-     * @return integer
-     */
     public function getParentId() {
         return $this->parentId;
     }
 
-    public function __toString() {
-        return $this->getCategoryName();
+    public function setCategoryName($categoryName) {
+        $this->categoryName = $categoryName;
+        return $this;
+    }
+
+    public function setParentId($parentId) {
+        $this->parentId = $parentId;
+        return $this;
     }
 
 }

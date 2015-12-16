@@ -2,10 +2,9 @@
 
 namespace Controller\Admin;
 
-use \Symfony\Component\HttpFoundation\Request;
-use \Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Entity\User;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Controller\Admin\Controller;
@@ -75,39 +74,6 @@ class AdminController extends Controller {
 
     public function addAllUsers($userType) {
         return $this->app['twig']->render('admin/addallusers.twig', array('formHeading' => 'Add ', 'userType' => $userType));
-    }
-
-    public function newFileUpload($uploadedFile, $fileName) {
-
-        //Delete previous file of this user
-        $fs = new FileSystem();
-        if ($fs->exists('uploads/' . $fileName . '.docx')) {
-            $fileFullName = $fileName . '.docx';
-        } elseif ($fs->exists('uploads/' . $fileName . '.doc')) {
-            $fileFullName = $fileName . '.doc';
-        } else {
-            $fileFullName = $fileName . '.pdf';
-        }
-
-        if ($fs->exists('uploads/' . $fileFullName)) {
-            unlink('uploads/' . $fileFullName);
-        }
-        //delete block ends
-
-        $mimeType = $uploadedFile->getMimeType();
-        $allowedTypes = array(
-            'application/msword',
-            'application/pdf'
-        );
-
-        if (!in_array($mimeType, $allowedTypes)) {
-            $returnStatement = FALSE;
-        }
-
-        $uploadedFile->move('uploads/', $fileName . '.' . $uploadedFile->guessExtension());
-        $returnStatement = TRUE;
-
-        return $returnStatement;
     }
 
     public function doAddUser(Request $request, $userType) {

@@ -1,7 +1,7 @@
 <?php
 
-require_once './vendor/autoload.php';
-require_once './local-settings.php';
+require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/local-settings.php';
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;

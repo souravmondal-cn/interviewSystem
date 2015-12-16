@@ -13,254 +13,161 @@ class Examination {
     /**
      * @var integer
      * 
-     * @Column(name="examid", type="integer", unique=true)
+     * @Column(type="integer")
      * @Id
      * @Generatedvalue(strategy="IDENTITY")
      */
-    private $examid;
+    private $id;
+
+    /**
+     * @var \Entity\User
+     *
+     * @ManyToOne(targetEntity="Entity\User")
+     * @JoinColumns({
+     *   @JoinColumn(referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $user;
 
     /**
      * @var string
      * 
-     * @Column(name="email", type="string", length=100)
-     */
-    private $email;
-
-    /**
-     *  @var string
-     * 
-     * @Column(name="questions", type="string", nullable=false)
+     * @Column(type="json_array", nullable=false)
      */
     private $questions;
 
     /**
      * @var integer
      * 
-     * @Column(name="total_questions", type="integer")
+     * @Column(type="integer")
      */
-    private $total_questions;
+    private $totalQuestions;
 
     /**
      * @var string
      * 
-     * @Column(name="submits", type="string", nullable=true)
+     * @Column(type="json_array", nullable=true)
      */
-    private $submits;
+    private $usersInput;
 
     /**
      * @var integer
      * 
-     * @Column(name="correct_answers", type="integer", nullable=true)
+     * @Column(type="integer", nullable=true)
      */
-    private $correct_answers;
+    private $correctAnswersCount;
 
     /**
      *  @var integer
      * 
-     *  @Column(name="totaltime", type="integer", nullable=false)
+     *  @Column(type="integer", nullable=false)
      */
-    private $totaltime;
+    private $totalTime;
 
     /**
      * @var datetime
      * 
-     * @Column(name="date_created", type="datetime", nullable=true)
+     * @Column(type="datetime", nullable=true)
      */
-    private $date_created;
+    private $created;
 
     /**
      * @var datetime
      * 
-     * @Column(name="date_completed", type="datetime", nullable=true) 
+     * @Column(type="datetime", nullable=true) 
      */
-    private $date_completed;
+    private $completed;
 
     /**
      * @var boolean
      * 
-     * @Column(name="is_qualified", type="boolean") 
+     * @Column(type="boolean") 
      */
-    private $is_qualified = false;
+    private $isQualified = false;
 
-    /**
-     * Get examid
-     * 
-     * @return integer
-     */
-    public function getExamId() {
-        return $this->examid;
+    public function getId() {
+        return $this->id;
     }
 
-    /**
-     * Set email
-     * 
-     * @param string $email
-     * @return email
-     */
-    public function setEmail($email) {
-        $this->email = $email;
+    public function getUser() {
+        return $this->user;
     }
 
-    /**
-     * Get email
-     * 
-     * @return string
-     */
-    public function getEmail() {
-        return $this->email;
-    }
-
-    /**
-     * Set questions
-     * 
-     * @param string $questions
-     * @return questions
-     */
-    public function setQuestions($questions) {
-        $this->questions = $questions;
-    }
-
-    /**
-     * Get questions
-     * 
-     * @return string
-     */
     public function getQuestions() {
         return $this->questions;
     }
 
-    /**
-     * Set totaltime
-     * 
-     * @param string $totaltime
-     * @return integer
-     */
-    public function setTotalTime($totaltime) {
-        $this->totaltime = $totaltime;
+    public function getTotalQuestions() {
+        return $this->totalQuestions;
     }
 
-    /**
-     * Get totaltime
-     * 
-     * @return integer
-     */
+    public function getUsersInput() {
+        return $this->usersInput;
+    }
+
+    public function getCorrectAnswersCount() {
+        return $this->correctAnswersCount;
+    }
+
     public function getTotalTime() {
-        return $this->totaltime;
+        return $this->totalTime;
     }
 
-    /**
-     * set date_created
-     * 
-     * @param datetime $date_created
-     * @return date_created
-     */
-    public function setDate_Created($date_created) {
-
-        $this->date_created = $date_created;
+    public function getCreated() {
+        return $this->created;
     }
 
-    /**
-     * get date_created
-     * 
-     * @return datetime
-     */
-    public function getDate_Created() {
-        return $this->date_created;
+    public function getCompleted() {
+        return $this->completed;
     }
 
-    /**
-     * set date_completed
-     * 
-     * @param datetime $date_completed
-     * @return date_completed
-     */
-    public function setDate_Completed($date_completed) {
-        $this->date_completed = $date_completed;
+    public function getIsQualified() {
+        return $this->isQualified;
     }
 
-    /**
-     * get date_completed
-     * 
-     * @return datetime
-     */
-    public function getDate_Completed() {
-        return $this->date_completed;
+    public function setUser(\Entity\User $user) {
+        $this->user = $user;
+        return $this;
     }
 
-    /**
-     * Get submits
-     * 
-     * @return string
-     */
-    public function getSubmits() {
-        return $this->submits;
+    public function setQuestions($questions) {
+        $this->questions = $questions;
+        return $this;
     }
 
-    /**
-     * set submits
-     * 
-     * @param string $submits
-     * @return submits
-     */
-    public function setSubmits($submits) {
-        $this->submits = $submits;
+    public function setTotalQuestions($totalQuestions) {
+        $this->totalQuestions = $totalQuestions;
+        return $this;
     }
 
-    /**
-     * set is_qualified
-     * 
-     * @param boolean $is_qualified
-     * @return is_qualified
-     */
-    public function setIs_Qualified($is_qualified) {
-        $this->is_qualified = $is_qualified;
+    public function setUsersInput($usersInput) {
+        $this->usersInput = $usersInput;
+        return $this;
     }
 
-    /**
-     * get is_qualified
-     * 
-     * @return boolean
-     */
-    public function getIs_Qualified() {
-        return $this->is_qualified;
+    public function setCorrectAnswersCount($correctAnswersCount) {
+        $this->correctAnswersCount = $correctAnswersCount;
+        return $this;
     }
 
-    /**
-     * set total_questions
-     * 
-     * @param integer $total_questions
-     * @return total_questions
-     */
-    public function setTotal_Questions($total_questions) {
-        $this->total_questions = $total_questions;
+    public function setTotalTime($totalTime) {
+        $this->totalTime = $totalTime;
+        return $this;
     }
 
-    /**
-     * get total_questions
-     * 
-     * @return integer
-     */
-    public function getTotal_Questions() {
-        return $this->total_questions;
+    public function setCreated(datetime $created) {
+        $this->created = $created;
+        return $this;
     }
 
-    /**
-     * set correct_answers
-     * 
-     * @param integer $correct_answers
-     * @return correct_answers
-     */
-    public function setCorrect_Answers($correct_answers) {
-        $this->correct_answers = $correct_answers;
+    public function setCompleted(datetime $completed) {
+        $this->completed = $completed;
+        return $this;
     }
 
-    /**
-     * get correct_answers
-     * 
-     * @return integer
-     */
-    public function getCorrect_Answers() {
-        return $this->correct_answers;
+    public function setIsQualified($isQualified) {
+        $this->isQualified = $isQualified;
+        return $this;
     }
 
 }
