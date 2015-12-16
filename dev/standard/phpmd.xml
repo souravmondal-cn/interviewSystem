@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pmd version="0.0.1" timestamp="2009-12-19T22:17:18+01:00">
+    <rule ref="rulesets/unusedcode.xml" />
+    <rule ref="rulesets/codesize.xml">
+        <exclude name="TooManyMethods" />
+    </rule>
+    <rule ref="rulesets/cleancode.xml">
+        <exclude name="ElseExpression" />
+    </rule>
+    <rule ref="rulesets/controversial.xml" />
+    <rule ref="rulesets/design.xml" />
+    <rule ref="rulesets/naming.xml">
+        <exclude name="ShortVariable" />
+        <exclude name="LongVariable" />
+    </rule>
+    
+    <rule ref="rulesets/naming.xml/LongVariable">
+        <properties>
+            <property name="maximum" description="The variable length reporting threshold" value="30"/>
+        </properties>
+    </rule>
+    
+    <rule ref="rulesets/codesize.xml/TooManyMethods">
+        <priority>4</priority>
+        <properties>
+            <property name="maxmethods" value="15" />
+        </properties>
+    </rule>
+</pmd>
