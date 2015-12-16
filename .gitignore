@@ -2,3 +2,4 @@ vendor/
 nbproject/
 uploads/
 local-settings.php
+assets/bower

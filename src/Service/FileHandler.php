@@ -6,21 +6,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class FileHandler {
 
-    public function fileUpload($uploadedFile, $fileName) {
-
-        $fs = new Filesystem();
-        if ($fs->exists(UPLOAD_PATH . $fileName . '.docx')) {
-            $fileFullName = $fileName . '.docx';
-        } elseif ($fs->exists(UPLOAD_PATH . $fileName . '.doc')) {
-            $fileFullName = $fileName . '.doc';
-        } else {
-            $fileFullName = $fileName . '.pdf';
-        }
-
-        if ($fs->exists(UPLOAD_PATH . $fileFullName)) {
-            unlink(UPLOAD_PATH . $fileFullName);
-        }
-
+    public function fileUpload($uploadedFile, $fileName, $uploadpath) {
         $mimeType = $uploadedFile->getMimeType();
         $allowedTypes = array(
             'application/msword',
@@ -30,8 +16,13 @@ class FileHandler {
         if (!in_array($mimeType, $allowedTypes)) {
             return false;
         }
+        $fs = new Filesystem();
+        $fullFilePath = $uploadpath . $fileName;
+        if ($fs->exists(array($fullFilePath . '.docx', $fullFilePath . '.doc', $fullFilePath . '.pdf'))) {
+            unlink($fullFilePath . '.*');
+        }
 
-        $uploadedFile->move(UPLOAD_PATH, $fileName . '.' . $uploadedFile->guessExtension());
+        $uploadedFile->move($fullFilePath . '.' . $uploadedFile->getExtension());
         return true;
     }
 

@@ -2,21 +2,16 @@
 
 namespace Controller;
 
-use Controller\Common\Common;
 use Entity\User;
+use Controller\Controller;
+use Service\FileHandler;
 use Symfony\Component\HttpFoundation\Request;
-use \Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use \DateTime;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use DateTime;
 
-class HomeController {
+class UserController extends Controller {
 
-    private $app;
-
-    public function __construct($app) {
-        $this->app = $app;
-    }
-
-    public function login() {
+    public function getLoginFrom() {
         return $this->app['twig']->render('login.twig');
     }
 
@@ -25,68 +20,59 @@ class HomeController {
     }
 
     public function registerUser(Request $request) {
-        
-        $sessionUserData = $this->app['session'];
-        try {
-            $user = new User();
-            $user->setUserName($request->request->get('userName'));
-            $user->setEmail($request->request->get('userEmail'));
-            $user->setPassword($request->request->get('userPassword'));
-            $user->setIs_Admin('0');
-            $user->setLocation($postedUserData['location']);
-            $user->setUser_Address($postedUserData['address']);
 
-            $entityManager = $this->app['doctrine'];
+        $sessionUserData = $this->app['session'];
+        $user = new User();
+        $user->setUserName($request->request->get('userName'));
+        $user->setUserEmail($request->request->get('userEmail'));
+        $user->setPassword($request->request->get('userPassword'));
+        $user->setOfficeLocation($request->request->get('location'));
+        $user->setUserAddress($request->request->get('address'));
+
+        $entityManager = $this->app['doctrine'];
+        try {
             $entityManager->persist($user);
             $entityManager->flush();
-
             $sessionUserData->getFlashBag()->add('alert_success', 'Registration successful');
-
-            $uploadedFile = $request->files->get('uploadedFile');
-
-            if (!empty($uploadedFile)) {
-
-                $generatedUserData = $entityManager->getRepository('Entity\User')->findBy(array('email' => $postedUserData['userEmail']));
-                $generatedId = $generatedUserData[0]->getId();
-
-                /* @var $common Controller\Common\Common */
-                $common = new Common;
-                if ($common->newFileUpload($uploadedFile, $generatedId)) {
+            if (!empty($request->files->get('resumeFile'))) {
+                $fs = new FileHandler();
+                if ($fs->fileUpload($request->files->get('resumeFile'), $user->getId(), UPLOAD_PATH)) {
                     $sessionUserData->getFlashBag()->add("alert_success", "File added successfully");
                 }
             }
+            return $this->app->redirect("/login");
         } catch (UniqueConstraintViolationException $ex) {
             $sessionUserData->getFlashBag()->add('alert_danger', 'Sorry, this email id is already registered!');
             return $this->app->redirect("/register");
         }
-
-        return $this->app->redirect("/");
     }
 
     public function doLogin(Request $request) {
 
-        $postedLogInData = $request->request->all();
         $sessionUserData = $this->app['session'];
-
-        $loginDetails = array(
-            'email' => $postedLogInData['loginEmail'],
-            'password' => md5($postedLogInData['loginPassword']),
-            'is_admin' => '0'
-        );
-
         $entityManager = $this->app['doctrine'];
-        $loginInfo = $entityManager->getRepository('Entity\User')->findBy($loginDetails);
+
+        $loginInfo = $entityManager->getRepository('Entity\User')->findOneBy(array(
+            'userEmail' => $request->request->get('loginEmail'),
+            'password' => md5($request->request->get('loginPassword'))
+        ));
 
         if (empty($loginInfo)) {
-            $sessionUserData->getFlashBag()->add('alert_danger', 'Sorry, email id and password does not matched!');
-            return $this->app->redirect("/");
+            $sessionUserData->getFlashBag()->add(
+                    'alert_danger', 'Sorry, email and password does not match'
+            );
+            return $this->app->redirect("/login");
         }
 
-        $sessionUserData->set('loginSession', true);
-        $sessionUserData->set('loginEmail', $loginDetails['email']);
-        $sessionUserData->set('loggerName', $loginInfo[0]->getUserName());
+        $sessionUserData->set('loggedInUser', $loginInfo->getId());
+        return $this->app->redirect('/home');
+    }
 
-        return $this->app->redirect('/dashboard');
+    public function logout() {
+        $sessionUserData = $this->app['session'];
+        $sessionUserData->remove('loginSession');
+        $sessionUserData->clear();
+        return $this->app->redirect("/");
     }
 
     public function dashboard() {
@@ -305,13 +291,6 @@ class HomeController {
         $entityManager->flush();
         $sessionUserData->getFlashBag()->add('user_message', 'Examination finished');
         return $this->app->redirect('/dashboard');
-    }
-
-    public function logout() {
-        $sessionUserData = $this->app['session'];
-        $sessionUserData->remove('loginSession');
-        $sessionUserData->clear();
-        return $this->app->redirect("/");
     }
 
 }

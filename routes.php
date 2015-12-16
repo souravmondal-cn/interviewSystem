@@ -1,12 +1,15 @@
 <?php
 
-use Controller\HomeController;
-use Controller\Admin\AdminController;
+use Controller\FrontEnd\Home;
+use Controller\UserController;
 use Controller\Admin\AdminSettingsController;
 use Controller\Admin\ExamController;
 
-$app['home.controller'] = $app->share(function() use ($app) {
-    return new HomeController($app);
+$app['frontendHome.controller'] = $app->share(function() use ($app) {
+    return new Home($app);
+});
+$app['user.controller'] = $app->share(function() use ($app) {
+    return new UserController($app);
 });
 
 $app['admin.controller'] = $app->share(function() use ($app) {
@@ -21,12 +24,29 @@ $app['exam.controller'] = $app->share(function () use ($app) {
     return new ExamController($app);
 });
 
-$app->get("/", 'home.controller:login');
-$app->get("/register", 'home.controller:showRegistrationForm');
-$app->post("/register", 'home.controller:registerNewUser');
-$app->post("/login", 'home.controller:doLogin');
-$app->get("/dashboard", 'home.controller:dashboard');
+$app->get("/", 'frontendHome:home');
+
+$app->get("/login", 'user.controller:getLoginFrom');
+$app->post("/login", 'user.controller:doLogin');
+
+$app->get("/register", 'user.controller:getRegistrationForm');
+$app->post("/register", 'user.controller:registerUser');
+
 $app->get("/logout", 'home.controller:logout');
+
+
+
+
+
+
+
+
+
+
+
+
+$app->get("/dashboard", 'home.controller:dashboard');
+
 
 $app->get("/admin", 'admin.controller:loginAdmin');
 $app->post("/adminlogin", 'admin.controller:doLoginAdmin');

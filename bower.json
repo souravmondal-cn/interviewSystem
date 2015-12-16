@@ -1,0 +1,17 @@
+{
+  "name": "interviewSystem",
+  "version": "1.0.0",
+  "homepage": "https://github.com/souravmondal-cn/interviewSystem",
+  "authors": [
+    "Sourav Mondal <souravm@capitalnumbers.com>"
+  ],
+  "license": "proprietory",
+  "private": true,
+  "dependencies": {
+    "fontawesome": "~4.3.0",
+    "bootstrap": "~3.3.4",
+    "jquery-ui": "~1.11.4",
+    "DataTables" : "*",
+    "tinymce-dist": "*"
+  }
+}
