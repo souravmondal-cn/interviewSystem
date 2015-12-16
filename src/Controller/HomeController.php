@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use Controller\Common\Common;
 use Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use \Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -25,7 +26,7 @@ class HomeController {
 
     public function registerNewUser(Request $request) {
 
-        $sessionData = $this->app['session'];
+        $sessionUserData = $this->app['session'];
         $postedUserData = $request->request->all();
 
         try {
@@ -34,14 +35,30 @@ class HomeController {
             $user->setEmail($postedUserData['userEmail']);
             $user->setPassword(md5($postedUserData['userPassword']));
             $user->setIs_Admin('0');
+            $user->setLocation($postedUserData['location']);
+            $user->setUser_Address($postedUserData['address']);
 
             $entityManager = $this->app['doctrine'];
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $sessionData->getFlashBag()->add('alert_success', 'Registration successful');
+            $sessionUserData->getFlashBag()->add('alert_success', 'Registration successful');
+
+            $uploadedFile = $request->files->get('uploadedFile');
+
+            if (!empty($uploadedFile)) {
+
+                $generatedUserData = $entityManager->getRepository('Entity\User')->findBy(array('email' => $postedUserData['userEmail']));
+                $generatedId = $generatedUserData[0]->getId();
+
+                /* @var $common Controller\Common\Common */
+                $common = new Common;
+                if ($common->newFileUpload($uploadedFile, $generatedId)) {
+                    $sessionUserData->getFlashBag()->add("alert_success", "File added successfully");
+                }
+            }
         } catch (UniqueConstraintViolationException $ex) {
-            $sessionData->getFlashBag()->add('alert_danger', 'Sorry, this email id is already registered!');
+            $sessionUserData->getFlashBag()->add('alert_danger', 'Sorry, this email id is already registered!');
             return $this->app->redirect("/register");
         }
 
@@ -51,7 +68,7 @@ class HomeController {
     public function doLogin(Request $request) {
 
         $postedLogInData = $request->request->all();
-        $sessionData = $this->app['session'];
+        $sessionUserData = $this->app['session'];
 
         $loginDetails = array(
             'email' => $postedLogInData['loginEmail'],
@@ -63,29 +80,30 @@ class HomeController {
         $loginInfo = $entityManager->getRepository('Entity\User')->findBy($loginDetails);
 
         if (empty($loginInfo)) {
-            $sessionData->getFlashBag()->add('alert_danger', 'Sorry, email id and password does not matched!');
+            $sessionUserData->getFlashBag()->add('alert_danger', 'Sorry, email id and password does not matched!');
             return $this->app->redirect("/");
         }
 
-        $sessionData->set('loginSession', true);
-        $sessionData->set('loginEmail', $loginDetails['email']);
-        $sessionData->set('loggerName', $loginInfo[0]->getUserName());
+        $sessionUserData->set('loginSession', true);
+        $sessionUserData->set('loginEmail', $loginDetails['email']);
+        $sessionUserData->set('loggerName', $loginInfo[0]->getUserName());
 
         return $this->app->redirect('/dashboard');
     }
 
     public function dashboard() {
-        $sessionData = $this->app['session'];
+        $sessionUserData = $this->app['session'];
 
-        $validSession = $sessionData->get('loginSession');
-        $logInEmail = $sessionData->get('loginEmail');
-        $loggerName = $sessionData->get('loggerName');
+        $validSession = $sessionUserData->get('loginSession');
+        $logInEmail = $sessionUserData->get('loginEmail');
+        $loggerName = $sessionUserData->get('loggerName');
 
         if (empty($validSession)) {
             return $this->app->redirect("/");
         }
 
         $examData = $this->getExamdata($logInEmail);
+        $successData = $this->getExamSuccess($logInEmail);
 
         if (!empty($examData)) {
             $examset = 'true';
@@ -95,7 +113,8 @@ class HomeController {
 
         return $this->app['twig']->render('dashboard.twig', ['UserEmail' => $logInEmail,
                     'UserName' => $loggerName,
-                    'examset' => $examset
+                    'examset' => $examset,
+                    'success' => $successData
         ]);
     }
 
@@ -108,11 +127,28 @@ class HomeController {
         return $examData;
     }
 
+    public function getExamSuccess($emailId) {
+        $entityManager = $this->app['doctrine'];
+        $successData = $entityManager->getRepository('Entity\Examination')->findOneBy(
+                ['email' => $emailId], ['examid' => 'desc']
+        );
+
+        $isQualified = $successData->getIs_Qualified();
+
+        if (!empty($isQualified)) {
+            $success = TRUE;
+        } else {
+            $success = FALSE;
+        }
+
+        return $success;
+    }
+
     public function examNow($email) {
-        $sessionData = $this->app['session'];
+        $sessionUserData = $this->app['session'];
         $entityManager = $this->app['doctrine'];
 
-        $validSession = $sessionData->get('loginSession');
+        $validSession = $sessionUserData->get('loginSession');
         if (empty($validSession)) {
             return $this->app->redirect("/");
         }
@@ -121,7 +157,9 @@ class HomeController {
         $examdata = $this->getExamdata($email);
 
         if (empty($examdata)) {
-            $sessionData->getFlashBag()->add('user_message', 'Examination finished');
+            return $this->app->redirect('/dashboard');
+
+            $sessionUserData->getFlashBag()->add('user_message', 'Examination finished');
             return $this->app->redirect("/dashboard");
         }
         $getQuestions = $examdata[0]->getQuestions();
@@ -131,47 +169,49 @@ class HomeController {
         $totalQuestions = count($questions);
         $questionData = $questionRepository->findBy(['qid' => $questions]);
 
-        $sessionData->set('questionData', $questionData);
-        $sessionData->set('totalQuestions', $totalQuestions);
-        $sessionData->set('flag', 0);
-        $sessionData->set('examId', $examId);
-        $sessionData->set('validExam', TRUE);
-        $sessionData->set('totaltime', $totaltime);
+        $sessionUserData->set('questionData', $questionData);
+        $sessionUserData->set('totalQuestions', $totalQuestions);
+        $sessionUserData->set('flag', 0);
+        $sessionUserData->set('examId', $examId);
+        $sessionUserData->set('validExam', TRUE);
+        $sessionUserData->set('totaltime', $totaltime);
         return $this->app->redirect('/displayQuestion');
     }
 
     public function displayQuestion() {
-        $sessionData = $this->app['session'];
-        $totaltime = $sessionData->get('totaltime');
+        $sessionUserData = $this->app['session'];
+        $totaltime = $sessionUserData->get('totaltime');
         header("Refresh: $totaltime; url=/examsubmit");
 
-        $validExam = $sessionData->get('validExam');
+        $validExam = $sessionUserData->get('validExam');
         if ($validExam == FALSE) {
             return $this->app->redirect('/examsubmit');
         }
 
-        $sessionData->set('validExam', FALSE);
+        $sessionUserData->set('validExam', FALSE);
 
         $entityManager = $this->app['doctrine'];
         $questionRepository = $entityManager->getRepository('Entity\Questions');
 
 
-        $validSession = $sessionData->get('loginSession');
-        $logInEmail = $sessionData->get('loginEmail');
-        $loggerName = $sessionData->get('loggerName');
-        $totalQuestions = $sessionData->get('totalQuestions');
-        $questionData = $sessionData->get('questionData');
+        $validSession = $sessionUserData->get('loginSession');
+        $logInEmail = $sessionUserData->get('loginEmail');
+        $loggerName = $sessionUserData->get('loggerName');
+        $totalQuestions = $sessionUserData->get('totalQuestions');
+        $questionData = $sessionUserData->get('questionData');
 
-        $flag = $sessionData->get('flag');
+        $flag = $sessionUserData->get('flag');
 
         if ($flag == $totalQuestions) {
-            $sessionData->remove('questionData');
-            $sessionData->remove('totalQuestions');
-            $sessionData->remove('flag');
-            $sessionData->remove('examId');
-            $sessionData->remove('examId');
+            $qa = $sessionUserData->get('examQa');
 
-            $sessionData->getFlashBag()->add('user_message', 'Examination finished');
+            $sessionUserData->remove('questionData');
+            $sessionUserData->remove('totalQuestions');
+            $sessionUserData->remove('flag');
+            $sessionUserData->remove('examId');
+            $sessionUserData->remove('examId');
+
+            $sessionUserData->getFlashBag()->add('user_message', 'Examination finished');
             return $this->app->redirect('/dashboard');
         }
 
@@ -186,11 +226,11 @@ class HomeController {
 
     public function examSubmit(Request $request) {
         $entityManager = $this->app['doctrine'];
-        $sessionData = $this->app['session'];
-        $examId = $sessionData->get('examId');
+        $sessionUserData = $this->app['session'];
+        $examId = $sessionUserData->get('examId');
 
-        $questionData = $sessionData->get('questionData');
-        $flag = $sessionData->get('flag');
+        $questionData = $sessionUserData->get('questionData');
+        $flag = $sessionUserData->get('flag');
 
         $postedExamData = $request->request->all();
 
@@ -205,6 +245,21 @@ class HomeController {
         $examDetail = $entityManager->find('Entity\Examination', $examId);
 
         $questionDetail = $entityManager->find('Entity\Questions', $qid);
+
+        /* code block : exam question and respective answer submitted by user */
+        $qa[$qid] = $answer;
+
+        $qaa = $examDetail->getSubmits();
+        $json = json_encode($qa);
+        if ($qaa === '' || $qaa === NULL) {
+            $qaa = $json;
+        } else {
+            $qaa = rtrim($qaa, '}') . ',' . ltrim($json, '{');
+        }
+
+        $examDetail->setSubmits($qaa);
+        /* End code block : exam question and respective answer submitted by user */
+
         $originalAnswer = $questionDetail->getAnswer();
 
         if ($originalAnswer == $answer) {
@@ -218,45 +273,46 @@ class HomeController {
         $examDetail->setCorrect_Answers($newAnswers);
 
         unset($questionData[$flag]);
-        $sessionData->set('questionData', $questionData);
+        $sessionUserData->set('questionData', $questionData);
 
         $flagNew = $flag + 1;
-        $sessionData->set('flag', $flagNew);
+        $sessionUserData->set('flag', $flagNew);
 
         date_default_timezone_set("Asia/Calcutta");
         $examDetail->setDate_Completed(new DateTime());
         $entityManager->persist($examDetail);
         $entityManager->flush();
 
-        $sessionData->set('validExam', TRUE);
+        $sessionUserData->set('validExam', TRUE);
         return $this->app->redirect('/displayQuestion');
     }
 
     public function forceSubmit() {
         $entityManager = $this->app['doctrine'];
-        $sessionData = $this->app['session'];
-        $examId = $sessionData->get('examId');
+        $sessionUserData = $this->app['session'];
+        $examId = $sessionUserData->get('examId');
 
         if (empty($examId)) {
             return $this->app->redirect('/dashboard');
         }
-        $sessionData->remove('examId');
-        $sessionData->remove('totalQuestions');
-        $sessionData->remove('questionData');
-        $sessionData->remove('flag');
+        $sessionUserData->remove('examId');
+        $sessionUserData->remove('totalQuestions');
+        $sessionUserData->remove('questionData');
+        $sessionUserData->remove('flag');
 
         $examDetail = $entityManager->find('Entity\Examination', $examId);
         date_default_timezone_set("Asia/Calcutta");
         $examDetail->setDate_Completed(new DateTime());
         $entityManager->persist($examDetail);
         $entityManager->flush();
-        $sessionData->getFlashBag()->add('user_message', 'Examination finished');
+        $sessionUserData->getFlashBag()->add('user_message', 'Examination finished');
         return $this->app->redirect('/dashboard');
     }
 
     public function logout() {
-        $sessionData = $this->app['session'];
-        $sessionData->clear();
+        $sessionUserData = $this->app['session'];
+        $sessionUserData->remove('loginSession');
+        $sessionUserData->clear();
         return $this->app->redirect("/");
     }
 

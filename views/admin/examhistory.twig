@@ -1,79 +1,63 @@
 {% extends 'admin/base.twig' %}
 
 {% block body %}
-    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">   
-    </div>
 
-    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+    <h3>
+        Examination history
+    </h3>
+    <p>Email Id: {{email}}</p>
 
-        <h3>
-            Examination history
-        </h3>
-        <p>Email Id: {{email}}</p>
+    <br><br>
 
-        <br><br>
-
-        <table  cellpadding="5" border="1" class="table table-striped table-bordered table-responsive">
-            <thead>
-                <tr class="info">
-                    <th>
-                        Exam id
-                    </th>
-                    <th>
-                        Date of exam generated
-                    </th>
-                    <th>
-                        Date of exam completed
-                    </th>
-                    <th>
-                        Question numbers
-                    </th>
-                    <th>
-                        Total time
-                    </th>
-                    <th>
-                        Total questions
-                    </th>
-                    <th>
-                        Total correct answers
-                    </th>
-                    <th>
-                        Is qualified?
-                    </th>
+    <table  cellpadding="5" border="1" class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr class="info">
+                <th>
+                    Exam id
+                </th>
+                <th>
+                    Date of exam generated
+                </th>
+                <th>
+                    Date of exam completed
+                </th>
+                <th>
+                    Total questions
+                </th>
+                <th>
+                    Total correct answers
+                </th>
+                <th>
+                    Is qualified?
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for singledata in examdata %}
+                <tr>
+                    <td>
+                        <a href = '/examdetail/{{ singledata.examid }}'>{{singledata.examid}}</a>
+                    </td>
+                    <td>
+                        {%if singledata.date_created != null %}{{singledata.date_created|date('d-M-Y H:i:s')}}{% else %}N/A{% endif %}
+                    </td>
+                    <td>
+                        {%if singledata.date_completed != null %}{{singledata.date_completed|date('d-M-Y H:i:s')}}{% else %}N/A{% endif %}
+                    </td>
+                    <td>
+                        {%if singledata.total_questions is defined %}{{singledata.total_questions}}{% endif %}
+                    </td>
+                    <td>
+                        {%if singledata.correct_answers != '' %}{{singledata.correct_answers}}{% else %}N/A{% endif %}
+                    </td>
+                    <td>
+                        {%if singledata.is_qualified is defined and singledata.is_qualified == false %}No{% else %}Yes{% endif %}
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for singledata in examdata %}
-                    <tr>
-                        <td>
-                            {{singledata.examid}}
-                        </td>
-                        <td>
-                            {%if singledata.date_created != null %}{{singledata.date_created|date('d-M-Y H:i:s')}}{% else %}N/A{% endif %}
-                        </td>
-                        <td>
-                            {%if singledata.date_completed != null %}{{singledata.date_completed|date('d-M-Y H:i:s')}}{% else %}N/A{% endif %}
-                        </td>
-                        <td>
-                            {%if singledata.questions is defined %}{{singledata.questions}}{% endif %}
-                        </td>
-                        <td>
-                            {%if singledata.totaltime is defined %}{{singledata.totaltime}}{% endif %}
-                        </td>
-                        <td>
-                            {%if singledata.total_questions is defined %}{{singledata.total_questions}}{% endif %}
-                        </td>
-                        <td>
-                            {%if singledata.correct_answers is defined %}{{singledata.correct_answers}}{% else %}N/A{% endif %}
-                        </td>
-                        <td>
-                            {%if singledata.is_qualified is defined and singledata.is_qualified == false %}No{% else %}Yes{% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        <a href='#' class='btn btn-primary' onclick="history.go(-1);">Back to previous page</a>
-    </div>
+    <a href='/usersetting' class='btn btn-primary' >Back to user settings</a>
+</div>
 {% endblock %}

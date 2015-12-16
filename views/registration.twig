@@ -10,15 +10,38 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4"></div>
+                <div class="col-md-4 col-lg-4 col-sm-2"></div>
 
-                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                <div class="col-sm-8 col-md-4 col-lg-4">
                     <h1>New Registration</h1>
 
-                    <form action = "/register" method = "post">
-                        Name:<input type  = "text" name = "userName" class='form-control'>
-                        Email Id:<input type  = "email" name = "userEmail"  class='form-control'  required="required">
-                        Password:<input type  = "password" name = "userPassword" class='form-control'  required="required">
+                    <form action = "/register" method = "post" enctype="multipart/form-data">
+                        <label>Name:</label>
+                        <input type  = "text" name = "userName" class='form-control' required>
+                        
+                        <label>Email Id:</label>
+                        <input type  = "email" name = "userEmail"  class='form-control'  required="required">
+                        
+                        <label>Password:</label>
+                        <input type  = "password" name = "userPassword" class='form-control'  required="required">
+                        <label>Location:</label>
+                        <select id="location" name="location" class="form-control">
+                            <option value=''>
+                                Select office location
+                            </option>
+                            <option value='Kolkata Sector V' >Kolkata Sector V</option>
+                            <option value='Kolkata Kestopur' >Kolkata Kestopur</option>
+                            <option value='Chennai' >Chennai</option>
+                        </select>
+
+                        <label>Address:</label>
+                        <textarea id="user_address" name="address" class="form-control" rows="6">{% if userData.user_address is defined %}{{userData.user_address}}{% endif %}</textarea>
+
+                        <label>Upload resumé:</label>
+                        <span style="color:grey"> allowed file types: PDF, DOC & DOCX </span><br>
+                        <input type='file' name='uploadedFile' id='uploadedFile' required><br>
+                        
+                        
                         <button type = "submit" name = "New Registration" value = "Sign Up" class='btn btn-primary btn-lg btn-block'>Register</button>
                     </form>
 
@@ -28,9 +51,9 @@
                             <p>{{message}}</p>
                         </div>
                     {%endfor%}
-                    <a href='#' class='btn btn-default btn-block' onclick="history.go(-1);"> << </a>
+                    <a href='/' class='btn btn-default btn-block'> < </a>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4"></div>
+            <div class="col-md-4 col-lg-4 col-sm-2"></div>
     </body>
 </html>

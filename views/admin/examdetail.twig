@@ -1,0 +1,34 @@
+{% extends 'admin/base.twig' %}
+
+{% block body %}
+
+    <h3>Examination details :</h3>
+    <h5>Email ID: {{emailId}} </h5>
+    Total questions : {{totalQuestions}}<br>
+    Correct answers : {{totalAnswers}}<br>
+    Accuracy:{{dataPercentage|number_format(2,'.')}}%<br>
+    Is qualified? {% if isQualified == 0 %}No{% else %} Yes {% endif %}
+    <br><br>
+    <a href = '/setQualified/{{examId}}' class='btn btn-primary'>Set qualified</a>
+    <a href = '/viewHistory/{{emailId}}' class='btn btn-default'>Back to exam history</a>
+    <br><br>
+
+    {% for dataField in examSubmitData %}
+        <div class="col-xs-6 col-lg-6">
+            <h4>Question id: {{dataField.submitQid}}. </h4> &nbsp; {{dataField.submitQuestion|raw}}
+
+            <b>Option A:</b> {{dataField.optionA|raw}}
+
+            <b>Option B:</b> {{dataField.optionB|raw}}
+
+            <b>Option C:</b> {{dataField.optionC|raw}}
+
+            <b>Option D:</b> {{dataField.optionD|raw}}
+
+            Submit answer: {{dataField.submitAnswer|raw}}
+
+            Correct answer: {{dataField.correctAnswer|raw}}
+            <hr>
+        </div>
+    {% endfor %}
+{% endblock %}
