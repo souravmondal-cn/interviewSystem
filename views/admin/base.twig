@@ -37,13 +37,13 @@
             </div>
         </nav>
         <div class="container">
-            
+
             <div class="row row-offcanvas row-offcanvas-right"> 
-                
+
                 <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
-                    
-                {% include 'admin/sidebar.twig' %}
-                
+
+                    {% include 'admin/sidebar.twig' %}
+
                 </div>
                 <div class="col-xs-12 col-sm-9">
                     {% for message in app.session.getFlashBag.get('alert_danger') %}
@@ -61,24 +61,21 @@
                             <p>{{message}}</p>
                         </div>
                     {%endfor%}
-                    
+
                 {%block body %}{% endblock %}
-                    
-                </div>
+
             </div>
-    </div>
-    
-    <nav class="navbar navbar-default navbar-fixed-bottom">
-        <div class="container">
-            <p class="navbar-text navbar-left">Logged in as:</p>
-            <p class="navbar-text navbar-right">&copy; Capital Numbers {{"now"|date('Y')}}</p>
+
         </div>
-    </nav>
-          
+    </div>
+
+
+
     <!-- footer section -->
     <script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
     <script src='/assets/js/dataTables.bootstrap.min.js'></script>
     <script src="/assets/js/jq.js"></script>
+    <script src='/assets/js/easypiechart.js'></script>
     <script src='/assets/js/jquery.dataTables.min.js'></script>
     <script src= '/assets/js/admin_base_scripts.js'></script>
 </body>

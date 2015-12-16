@@ -12,7 +12,9 @@
             {%endfor%}
         </div>
 
-        {% if examset is defined and examset == 'true' %}<a href = '/examnow/{{UserEmail}}'>Start examination</a>{% endif %}
+        {% if examset is defined and examset == 'true' %}<img src="/assets/new.gif"> &nbsp;&nbsp; <a href = '/examnow/{{UserEmail}}'>Start examination</a>{% endif %}
 
-        </div>
-        {% endblock %}
+            {% if success is defined and success == 1%} <img src="/assets/new.gif"> <br> You are qualified for interview! <br> Please contact office... {% endif %}
+
+            </div>
+            {% endblock %}

@@ -1,78 +1,75 @@
 tinymce.init({selector: 'textarea'});
 
-    $(document).ready(function () {
-        $('.nav-sidebar li').click(function () {
-            $(this).addClass('active');
-        });
+$(document).ready(function () {
 
-        $('.table-striped').DataTable();
-        $('#userHist').hide();
+    $('.table-striped').DataTable();
+    $('#userHist').hide();
 
-        var isAdmin = $("#isAdmin").val();
-        if (isAdmin == '1') {
-            $("#addressDiv").hide();
-            $("#locationDiv").hide();
-            $("#fileUploadDiv").hide();
-        }
+    var isAdmin = $("#isAdmin").val();
+    if (isAdmin === '1') {
+        $("#addressDiv").hide();
+        $("#locationDiv").hide();
+        $("#fileUploadDiv").hide();
+    }
 
-        if (isAdmin == '0') {
-            $("#addressDiv").show();
-            $("#locationDiv").show();
-            $("#fileUploadDiv").show();
-        }
-    });
+    if (isAdmin === '0') {
+        $("#addressDiv").show();
+        $("#locationDiv").show();
+        $("#fileUploadDiv").show();
+    }
+});
 
-    $("#isAdmin").change(function () {
-        var isAdmin = $("#isAdmin").val();
+$("#isAdmin").change(function () {
+    var isAdmin = $("#isAdmin").val();
 
-        if (isAdmin == '1') {
-            $("#addressDiv").hide();
-            $("#locationDiv").hide();
-            $("#fileUploadDiv").hide();
-        }
+    if (isAdmin === '1') {
+        $("#addressDiv").hide();
+        $("#locationDiv").hide();
+        $("#fileUploadDiv").hide();
+    }
 
-        if (isAdmin == '0') {
-            $("#addressDiv").show();
-            $("#locationDiv").show();
-            $("#fileUploadDiv").show();
-        }
-    });
+    if (isAdmin === '0') {
+        $("#addressDiv").show();
+        $("#locationDiv").show();
+        $("#fileUploadDiv").show();
+    }
+});
 
-    $('#userEmail').blur(function () {
-        var email = $('#userEmail').val();
-        $.ajax({
-            url: '/checkEmail/' + email,
-            method: 'post',
-            success: function (data, status) {
-                if (data == '1') {
-                    $('#userEmailCheck').html(' &nbsp;&nbsp; Email id is already registered! &nbsp;');
-                    $('#userHist').show();
-                    $('#viewUserHistory').attr('href', '/viewHistory/' + email);
-                    $('#viewUserHistory').attr('class', 'btn btn-default');
-                    $('#userEmail').focus();
-                }
-                else {
-                    $('#userEmailCheck').html('');
-                    $('#userHist').hide();
-                }
+$('#userEmail').blur(function () {
+    var email = $('#userEmail').val();
+    $.ajax({
+        url: '/checkEmail/' + email,
+        method: 'post',
+        success: function (data, status) {
+            if (data === '1') {
+                $('#userEmailCheck').html(' &nbsp;&nbsp; Email id is already registered! &nbsp;');
+                $('#userHist').show();
+                $('#viewUserHistory').attr('href', '/viewHistory/' + email);
+                $('#viewUserHistory').attr('class', 'btn btn-default');
+                $('#userEmail').focus();
             }
-        });
-    });
-
-    $('#userEmailId').blur(function () {
-        var emailId = $('#userEmailId').val();
-        $.ajax({
-            url: '/checkEmail/' + emailId,
-            method: 'post',
-            success: function (data, status) {
-                if (data == '0') {
-                    $('#checkEmailForExam').html('this email id is not registered!');
-                    $('#userEmailId').val('');
-                    $('#userEmailId').focus();
-                }
-                else {
-                    $('#checkEmailForExam').html('');
-                }
+            else {
+                $('#userEmailCheck').html('');
+                $('#userHist').hide();
             }
-        });
+        }
     });
+});
+
+$('#userEmailId').blur(function () {
+    var emailId = $('#userEmailId').val();
+    $.ajax({
+        url: '/checkEmail/' + emailId,
+        method: 'post',
+        success: function (data, status) {
+            if (data === '0') {
+                $('#checkEmailForExam').html('this email id is not registered!');
+                $('#userEmailId').val('');
+                $('#userEmailId').focus();
+            }
+            else {
+                $('#checkEmailForExam').html('');
+            }
+        }
+    });
+});
