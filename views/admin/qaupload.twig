@@ -14,13 +14,13 @@
 
             <div class="form-group">
 
-                <input type="hidden" name="questionId" value="{%if questionDetails.qid is defined%}{{questionDetails.qid}}{% endif %}">
+                <input type="hidden" name="questionId" value="{%if questionDetails.id is defined%}{{questionDetails.id}}{% endif %}">
 
                 <label for="category">Question Category :</label>
                 <select name="category" id="category" class="form-control">
                     <option>Select question category</option>
                     {% for category in categories %}
-                        <option value= "{{category.cid}}" {% if questionDetails.categoryId.cid is defined and questionDetails.categoryId.cid == category.cid %}selected="selected"{% endif %}>{{category.categoryName}}</option>
+                        <option value= "{{category.id}}" {% if questionDetails.categoryId.id is defined and questionDetails.categoryId.id == category.id %}selected="selected"{% endif %}>{{category.categoryName}}</option>
 
                     {% endfor %}
                 </select>

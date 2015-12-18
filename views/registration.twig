@@ -23,21 +23,22 @@
                         <input type  = "email" name = "userEmail"  class='form-control'  required="required">
                         <label>Password:</label>
                         <input type  = "password" name = "userPassword" class='form-control'  required="required">
+                        <label>Upload resumé:</label>
+                        <span style="color:grey"> allowed file types: PDF, DOC & DOCX </span><br>
+                        <input type='file' name='resumeFile' id='resumeFile' class="form-control" required><br>
+                    </div>
+                    <div class="col-lg-6">
                         <label>Office Location:</label>
-                        <select id="location" name="location" class="form-control">
+                        <select id="location" name="officeLocation" class="form-control">
                             <option value=''>Select</option>
                             <option value='Kolkata Sector V'>Kolkata Sector V</option>
                             <option value='Kolkata Kestopur'>Kolkata Kestopur</option>
                             <option value='Chennai'>Chennai</option>
                         </select>
-                    </div>
-                    <div class="col-lg-6">
                         <label>Address:</label>
-                        <textarea id="user_address" name="address" class="form-control" rows="6">{% if userData.user_address is defined %}{{userData.user_address}}{% endif %}</textarea>
-                        <label>Upload resumé:</label>
-                        <span style="color:grey"> allowed file types: PDF, DOC & DOCX </span><br>
-                        <input type='file' name='resumeFile' id='resumeFile' required><br>
+                        <textarea id="userAddress" name="userAddress" class="form-control" rows="6">{% if userData.user_address is defined %}{{userData.user_address}}{% endif %}</textarea><br>
                         <button type = "submit" name = "New Registration" value = "Sign Up" class='btn btn-primary btn-block'>Register</button>
+                        
                     </div>
                     <div class="col-lg-12">
                         <a href='/login' class='btn btn-default btn-general'>Already User? Login</a>

@@ -35,16 +35,16 @@
             {% for category in categories %}
                 <tr>
                     <td>
-                        {{ category.cid }}
+                        {{ category.id }}
                     </td>
                     <td>
                         {{ category.categoryName }}
                     </td>
                     <td align="center">
-                        <a class="btn btn-info" href="/editCategory/{{ category.cid }}">Edit</a> 
+                        <a class="btn btn-info" href="/editCategory/{{ category.id }}">Edit</a> 
                     </td>
                     <td align="center">
-                        <a class="btn btn-danger" href="/deleteCategory/{{ category.cid }}">Delete</a>
+                        <a class="btn btn-danger" href="/deleteCategory/{{ category.id }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

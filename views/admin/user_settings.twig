@@ -47,16 +47,16 @@
                             {{singleUserData.id}}
                         </td>
                         <td>
-                            {{singleUserData.username}}
+                            {{singleUserData.userName}}
                         </td>
                         <td>
-                            <a href = '/viewHistory/{{singleUserData.email}}'>{{singleUserData.email}}</a>
+                            <a href = '/viewHistory/{{singleUserData.userEmail}}'>{{singleUserData.userEmail}}</a>
                         </td>
                         <td>
-                            {{singleUserData.location}}
+                            {{singleUserData.officeLocation}}
                         </td>
                         <td>
-                            {{singleUserData.user_address|striptags}}
+                            {{singleUserData.userAddress|striptags}}
                         </td>
                         <td>
                             <a class="btn btn-default" href="/viewfile/{{singleUserData.id}}" target="_blank">View resumé</a>

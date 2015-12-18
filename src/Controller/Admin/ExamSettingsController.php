@@ -5,13 +5,10 @@ namespace Controller\Admin;
 use \Symfony\Component\HttpFoundation\Request;
 use \Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use \Doctrine\DBAL\Exception\NotNullConstraintViolationException;
-use Entity\Questions;
-use Entity\Category;
 use Entity\Examination;
-use DateTime;
-use Controller\Admin\Controller;
+use Controller\Controller;
 
-class ExamController extends Controller {
+class ExamSettingsController extends Controller {
 
     public function examSetting() {
         if ($this->checkAdminSession() == FALSE) {
@@ -20,7 +17,7 @@ class ExamController extends Controller {
 
         $entiryManager = $this->app['doctrine'];
         $userEmailRepository = $entiryManager->getRepository('Entity\User');
-        $userDetails = $userEmailRepository->findBy(array('is_admin' => 0));
+        $userDetails = $userEmailRepository->findBy(array('isAdmin' => 0));
 
         $questionsRepository = $entiryManager->getRepository('Entity\Questions');
         $questionsDetails = $questionsRepository->findAll();
@@ -28,25 +25,24 @@ class ExamController extends Controller {
         $categoryDetails = array();
         //categoryId overlapped in the array key, so it seems distinctly selected
         foreach ($questionsDetails as $questionsDetail) {
-            $categoryDetails[$questionsDetail->getCategoryId()->getCId()] = $questionsDetail->getCategoryId()->getCategoryName();
+            $categoryDetails[$questionsDetail->getCategoryId()->getId()] = $questionsDetail->getCategoryId()->getCategoryName();
         }
 
         return $this->app['twig']->render('admin/examsetting.twig', array('userDetails' => $userDetails, 'categories' => $categoryDetails));
     }
 
     public function examGenerate(Request $request) {
-        $postedExamData = $request->request->all();
         $entityManager = $this->app['doctrine'];
         $sessionData = $this->app['session'];
 
-        if ($postedExamData['userEmailId'] == '' || $postedExamData['qNumbers'] == '' || empty($postedExamData['qCategory'])) {
+        if ($request->request->get('userEmailId') == '' || $request->request->get('qNumbers') == '' || empty($request->request->get('qCategory'))) {
             $sessionData->getFlashBag()->add('alert_danger', 'Please fill up every detail carefully!');
             return $this->app->redirect('/examsetting');
         }
 
-        $userEmail = $postedExamData['userEmailId'];
-        $qCategoryId = $postedExamData['qCategory'];
-        $qNumbers = $postedExamData['qNumbers'];
+        $userEmail = $request->request->get('userEmailId');
+        $qCategoryId = $request->request->get('qCategory');
+        $qNumbers = $request->request->get('qNumbers');
         $timeout = 60;
 
         $countCatNum = count($qCategoryId);
@@ -72,7 +68,7 @@ class ExamController extends Controller {
 //            $questions = $this->generateQuestions($cId, $qNumbers);
             $questions = $questionRepository->findBy(array('categoryId' => $cId), array(), $qNumbers);
             foreach ($questions as $question) {
-                $q[] = $question->getQId();
+                $q[] = $question->getId();
             }
         }
 
@@ -82,20 +78,21 @@ class ExamController extends Controller {
 
         try {
             $examination = new Examination();
-            $examination->setEmail($userEmail);
+            
+            $userRepository = $entityManager->getRepository('Entity\User');
+            $userDetail = $userRepository->findOneBy(array('userEmail' => $userEmail));
+            
+            $examination->setUserId($userDetail);
             $examination->setQuestions($allQuestionIds);
             $examination->setTotalTime($totalTimeInSeconds);
-            $examination->setTotal_Questions($totalQuestions);
-
-            date_default_timezone_set("Asia/Calcutta");
-            $examination->setDate_Created(new DateTime());
-
+            $examination->setTotalQuestions($totalQuestions);
             $entityManager->persist($examination);
             $entityManager->flush();
 
             $sessionData->getFlashBag()->add('alert_success', 'Examination set successful!');
-            return $this->app->redirect('/adminpanel');
+            return $this->app->redirect('/admin');
         } catch (NotNullConstraintViolationException $ex) {
+            
             $sessionData->getFlashBag()->add('alert_danger', 'Please fill up all fields');
             return $this->app->redirect('/examsetting');
         }

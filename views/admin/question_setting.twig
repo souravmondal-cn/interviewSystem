@@ -38,7 +38,7 @@
             {% for question in questions %}
                 <tr>
                     <td>
-                        {{ question.qid }}
+                        {{ question.id }}
                     </td>
                     <td>
                         {{ question.question|striptags }}
@@ -48,10 +48,10 @@
                         {{ question.categoryId.categoryName }}
                     </td>
                     <td align="center">
-                        <a class="btn btn-info" href="/editQuestion/{{ question.qid }}">Edit</a> 
+                        <a class="btn btn-info" href="/editQuestion/{{ question.id }}">Edit</a> 
                     </td>
                     <td align="center">
-                        <a class="btn btn-danger" href="/deleteQuestion/{{ question.qid }}">Delete</a>
+                        <a class="btn btn-danger" href="/deleteQuestion/{{ question.id }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -4,71 +4,50 @@ namespace Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Service\FileHandler;
 use Entity\User;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Controller\Admin\Controller;
+use Controller\Controller;
+use service\CheckAdmin;
+use Symfony\Component\Filesystem\Filesystem;
 
 class AdminController extends Controller {
 
-    public function loginAdmin() {
-        return $this->app['twig']->render('admin/adminlogin.twig');
-    }
-
-    public function doLoginAdmin(Request $request) {
-        $postedLogInData = $request->request->all();
-
-        $sessionData = $this->app['session'];
-
-        $loginDetails = array(
-            'email' => $postedLogInData['loginEmail'],
-            'password' => md5($postedLogInData['loginPassword']),
-            'is_admin' => '1'
-        );
-
-        $entityManager = $this->app['doctrine'];
-        $loginInfo = $entityManager->getRepository('Entity\User')->findBy($loginDetails);
-
-        if (empty($loginInfo)) {
-            $sessionData->getFlashBag()->add('alert_danger', 'Sorry, email id and password does not matched!');
-            return $this->app->redirect("/admin");
-        }
-
-        $sessionData->set('loginAdminSession', true);
-        $sessionData->set('loginAdminEmail', $loginDetails['email']);
-        $sessionData->getFlashBag()->add('alert_success', 'Welcome to admin panel');
-        return $this->app->redirect('/adminpanel');
+    public function getAdminLoginForm() {
+        return $this->app['twig']->render('login.twig', array('formName' => 'Admin'));
     }
 
     public function adminPanel() {
         $sessionData = $this->app['session'];
-        if ($this->checkAdminSession() == FALSE) {
-            return $this->app->redirect("/admin");
+        if ($this->checkAdminSession() === false) {
+            return $this->app->redirect("/admin/login");
         }
 
         $adminLogInEmail = $sessionData->get('loginAdminEmail');
+        $sessionData->getFlashBag()->add('alert_success', 'Welcome to admin panel');
         return $this->app['twig']->render('admin/adminpanel.twig', array('UserEmail' => $adminLogInEmail));
     }
 
     public function showAdminSettings() {
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() === false) {
             return $this->app->redirect("/admin");
         }
 
         $entityManager = $this->app['doctrine'];
         $userRepository = $entityManager->getRepository('Entity\User');
-        $user = $userRepository->findBy(array('is_admin' => '1'));
+        $user = $userRepository->findBy(array('isAdmin' => '1'));
         return $this->app['twig']->render('admin/admin_settings.twig', array('userData' => $user, 'pageHeading' => 'Admin'));
     }
 
     public function showUserSettings() {
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() === false) {
             return $this->app->redirect("/admin");
         }
 
         $entityManager = $this->app['doctrine'];
         $userRepository = $entityManager->getRepository('Entity\User');
-        $user = $userRepository->findBy(array('is_admin' => '0'));
+        $user = $userRepository->findBy(array('isAdmin' => '0'));
         return $this->app['twig']->render('admin/user_settings.twig', array('userData' => $user, 'pageHeading' => 'User'));
     }
 
@@ -85,12 +64,12 @@ class AdminController extends Controller {
         $prevPassword = $postedFormData['userPassword'];
         $newPassword = $postedFormData['password'];
 
-        if ($postedFormData['userName'] == '' || $postedFormData['userEmail'] == '' || $postedFormData['password'] == '' || $postedFormData['isAdmin'] == '') {
+        if ($postedFormData['userName'] === '' || $postedFormData['userEmail'] === '' || $postedFormData['password'] === '' || $postedFormData['isAdmin'] === '') {
             $sessionData->getFlashBag()->add("alert_danger", "No field should left blank");
             return $this->app->redirect("/adduser/" . $userType);
         }
 
-        if ($postedFormData['userId'] == '') {
+        if ($postedFormData['userId'] === '') {
 
             $user = new User();
             $sessionData->getFlashBag()->add("alert_success", $userType . " added successfully!");
@@ -102,32 +81,27 @@ class AdminController extends Controller {
 
         try {
             $user->setUserName($postedFormData['userName']);
-            $user->setEmail($postedFormData['userEmail']);
+            $user->setUserEmail($postedFormData['userEmail']);
 
-            $user->setIs_Admin($postedFormData['isAdmin']);
-            $user->setLocation($postedFormData['location']);
-            $user->setUser_Address($postedFormData['user_address']);
+            $user->setIsAdmin($postedFormData['isAdmin']);
+            $user->setOfficeLocation($postedFormData['officeLocation']);
+            $user->setUserAddress($postedFormData['userAddress']);
 
             if ($prevPassword != $newPassword) {
-                $user->setPassword(md5($postedFormData['password']));
+                $user->setPassword($postedFormData['password']);
             }
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $uploadedFile = $request->files->get('uploadedFile');
-
-            if ($userType != 'Admin' && !empty($uploadedFile)) {
-
-                $generatedUserData = $entityManager->getRepository('Entity\User')->findBy(array('email' => $postedFormData['userEmail']));
-                $generatedId = $generatedUserData[0]->getId();
-
-                if ($this->newFileUpload($uploadedFile, $generatedId)) {
+            if (null !== $request->files->get('resumeFile')) {
+                $fs = new FileHandler();
+                if ($fs->fileUpload($request->files->get('resumeFile'), $user->getId(), UPLOAD_PATH)) {
                     $sessionData->getFlashBag()->add("alert_success", "File added successfully");
                 }
             }
 
-            if ($userType == 'User') {
+            if ($userType === 'User') {
                 $reDirectUrl = "/usersetting";
             } else {
                 $reDirectUrl = "/adminsetting";
@@ -137,7 +111,7 @@ class AdminController extends Controller {
         } catch (UniqueConstraintViolationException $ex) {
             $sessionData->getFlashBag()->add("alert_danger", "Email id is already registered, unique required!");
 
-            $userData = ['is_admin' => $postedFormData['isAdmin'],
+            $userData = ['isAdmin' => $postedFormData['isAdmin'],
                 'username' => $postedFormData['userName'],
                 'email' => $postedFormData['userEmail'],
                 'location' => $postedFormData['location'],
@@ -152,7 +126,7 @@ class AdminController extends Controller {
     }
 
     public function editUserData($userType, $id) {
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() === false) {
             return $this->app->redirect("/admin");
         }
 
@@ -161,7 +135,6 @@ class AdminController extends Controller {
         $categories = $categoryRepository->findAll();
 
         $userDetails = $entityManager->find('Entity\User', $id);
-
         return $this->app['twig']->render('admin/addallusers.twig', array(
                     'userData' => $userDetails,
                     'formHeading' => 'Edit ',
@@ -174,27 +147,22 @@ class AdminController extends Controller {
 
         $userDetails = $entityManager->find('Entity\User', $id);
         $entityManager->remove($userDetails);
-
         $entityManager->flush();
 
-        //Delete previous file of this user
         $fs = new FileSystem();
-        if ($fs->exists('uploads/' . $id . '.docx')) {
-            $fileFullName = $id . '.docx';
-        } elseif ($fs->exists('uploads/' . $id . '.doc')) {
-            $fileFullName = $id . '.doc';
-        } else {
-            $fileFullName = $id . '.pdf';
-        }
 
-        if ($fs->exists('uploads/' . $fileFullName)) {
-            unlink('uploads/' . $fileFullName);
+        if ($fs->exists(UPLOAD_PATH.$id . '.docx')) {
+            $fullPath = UPLOAD_PATH.$id.'.docx';
+        } elseif ($fs->exists(UPLOAD_PATH.$id . '.doc')) {
+            $fullPath = UPLOAD_PATH.$id . '.doc';
+        } else {
+            $fullPath = UPLOAD_PATH.$id . '.pdf';
         }
-        //delete block ends
+        unlink($fullPath);
         
         $sessionData->getFlashBag()->add('alert_success', $userType . ' deleted from database');
 
-        if ($userType == 'User') {
+        if ($userType === 'User') {
             $redirectUrl = '/usersetting';
         } else {
             $redirectUrl = '/adminsetting';
@@ -215,24 +183,24 @@ class AdminController extends Controller {
 
     public function downloadFile($filename) {
         $sessionData = $this->app['session'];
-        $file = 'uploads/' . $filename;
-
-        // check if file exists
         $fs = new FileSystem();
+
+        $file = UPLOAD_PATH . $filename;
+
         if ($fs->exists($file . '.docx')) {
-            $filePath = $file . '.docx';
+            $fullPath = $file.'.docx';
         } elseif ($fs->exists($file . '.doc')) {
-            $filePath = $file . '.doc';
+            $fullPath = $file . '.doc';
         } else {
-            $filePath = $file . '.pdf';
+            $fullPath = $file . '.pdf';
         }
 
-        if (!$fs->exists($filePath)) {
+        if (!$fs->exists($fullPath)) {
             $sessionData->getFlashBag()->add('alert_danger', 'File not found!');
             return $this->app->redirect('/usersetting');
         }
-        // prepare BinaryFileResponse
-        $response = new BinaryFileResponse($filePath);
+
+        $response = new BinaryFileResponse($fullPath);
         $response->trustXSendfileTypeHeader();
         $response->setContentDisposition(
                 ResponseHeaderBag::DISPOSITION_INLINE, $filename, iconv('UTF-8', 'ASCII//TRANSLIT', $filename)

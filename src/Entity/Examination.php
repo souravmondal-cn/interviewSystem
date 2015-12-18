@@ -24,15 +24,15 @@ class Examination {
      *
      * @ManyToOne(targetEntity="Entity\User")
      * @JoinColumns({
-     *   @JoinColumn(referencedColumnName="id", nullable=false)
+     *   @JoinColumn(name="userId",referencedColumnName="id", nullable=false)
      * })
      */
-    private $user;
+    private $userId;
 
     /**
      * @var string
      * 
-     * @Column(type="json_array", nullable=false)
+     * @Column(type="text", nullable=false)
      */
     private $questions;
 
@@ -67,7 +67,7 @@ class Examination {
     /**
      * @var datetime
      * 
-     * @Column(type="datetime", nullable=true)
+     * @Column(type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private $created;
 
@@ -89,8 +89,8 @@ class Examination {
         return $this->id;
     }
 
-    public function getUser() {
-        return $this->user;
+    public function getUserId() {
+        return $this->userId;
     }
 
     public function getQuestions() {
@@ -125,8 +125,8 @@ class Examination {
         return $this->isQualified;
     }
 
-    public function setUser(\Entity\User $user) {
-        $this->user = $user;
+    public function setUserId(\Entity\User $userId) {
+        $this->userId = $userId;
         return $this;
     }
 
@@ -160,7 +160,7 @@ class Examination {
         return $this;
     }
 
-    public function setCompleted(datetime $completed) {
+    public function setCompleted($completed) {
         $this->completed = $completed;
         return $this;
     }

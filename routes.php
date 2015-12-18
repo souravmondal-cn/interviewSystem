@@ -2,8 +2,10 @@
 
 use Controller\FrontEnd\Home;
 use Controller\UserController;
+use Controller\Admin\AdminController;
 use Controller\Admin\AdminSettingsController;
-use Controller\Admin\ExamController;
+use Controller\Admin\ExamSettingsController;
+use Controller\FrontEnd\ExamController;
 
 $app['frontendHome.controller'] = $app->share(function() use ($app) {
     return new Home($app);
@@ -20,37 +22,28 @@ $app['admin.settings'] = $app->share(function () use ($app) {
     return new AdminSettingsController($app);
 });
 
+$app['exam.settings'] = $app->share(function () use ($app) {
+    return new ExamSettingsController($app);
+});
+
 $app['exam.controller'] = $app->share(function () use ($app) {
     return new ExamController($app);
 });
 
-$app->get("/", 'frontendHome:home');
+$app->get("/", 'frontendHome.controller:home');
 
 $app->get("/login", 'user.controller:getLoginFrom');
-$app->post("/login", 'user.controller:doLogin');
+$app->get("/admin/login", 'admin.controller:getAdminLoginForm');
+
+$app->post("/login", 'frontendHome.controller:doLogin');
 
 $app->get("/register", 'user.controller:getRegistrationForm');
 $app->post("/register", 'user.controller:registerUser');
 
-$app->get("/logout", 'home.controller:logout');
+$app->get("/logout", 'user.controller:logout');
+$app->get("/dashboard", 'user.controller:dashboard');
 
-
-
-
-
-
-
-
-
-
-
-
-$app->get("/dashboard", 'home.controller:dashboard');
-
-
-$app->get("/admin", 'admin.controller:loginAdmin');
-$app->post("/adminlogin", 'admin.controller:doLoginAdmin');
-$app->get("/adminpanel", 'admin.controller:adminPanel');
+$app->get("/admin", 'admin.controller:adminPanel');
 $app->get("/adminlogout",'admin.controller:adminLogout');
 
 $app->get("/questionlisting","admin.settings:questionListing");
@@ -75,14 +68,14 @@ $app->get("/deleteuser/{userType}/{id}", "admin.controller:deleteUserData");
 $app->post("/checkEmail/{email}","admin.controller:checkUserRegistration");
 $app->get("/viewfile/{filename}","admin.controller:downloadFile");
 
-$app->get("/examsetting","exam.controller:examSetting");
-$app->post("/examsetting","exam.controller:examGenerate");
+$app->get("/examsetting","exam.settings:examSetting");
+$app->post("/examsetting","exam.settings:examGenerate");
 
-$app->get("/viewHistory/{email}", "exam.controller:listExamHistory");
-$app->get("/examdetail/{examId}", "exam.controller:viewExamDetail");
-$app->get("/setQualified/{examId}", "exam.controller:setQualified");
+$app->get("/viewHistory/{email}", "exam.settings:listExamHistory");
+$app->get("/examdetail/{examId}", "exam.settings:viewExamDetail");
+$app->get("/setQualified/{examId}", "exam.settings:setQualified");
 
-$app->get("/examnow/{email}", "home.controller:examNow");
-$app->get("/displayQuestion", "home.controller:displayQuestion");
-$app->post("/examsubmit", "home.controller:examSubmit");
-$app->get("/examsubmit", "home.controller:forceSubmit");
+$app->get("/examstart/{userId}", "exam.controller:examStart");
+$app->get("/displayQuestion", "exam.controller:displayQuestion");
+$app->post("/examsubmit", "exam.controller:examSubmit");
+$app->get("/examsubmit", "exam.controller:forceSubmit");

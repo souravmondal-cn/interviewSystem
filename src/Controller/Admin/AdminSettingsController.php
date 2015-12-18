@@ -2,11 +2,11 @@
 
 namespace Controller\Admin;
 
-use \Symfony\Component\HttpFoundation\Request;
-use \Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Entity\Questions;
 use Entity\Category;
-use Controller\Admin\Controller;
+use Controller\Controller;
 
 class AdminSettingsController extends Controller {
 
