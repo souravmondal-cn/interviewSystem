@@ -118,6 +118,7 @@ class ExamSettingsController extends Controller {
     }
 
     public function viewExamDetail($examId) {
+        
         if ($this->checkAdminSession() == FALSE) {
             return $this->app->redirect("/admin");
         }
