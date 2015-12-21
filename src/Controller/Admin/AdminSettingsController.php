@@ -53,8 +53,6 @@ class AdminSettingsController extends Controller {
         $sessionData = $this->app['session'];
         $entityManager = $this->app['doctrine'];
 
-//        $adminLogInEmail = $sessionData->get('loginAdminEmail');
-
         if (
                 $postedData['addquestion'] == '' ||
                 $postedData['opta'] == '' ||

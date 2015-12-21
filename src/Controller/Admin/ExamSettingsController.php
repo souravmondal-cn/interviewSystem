@@ -134,7 +134,7 @@ class ExamSettingsController extends Controller {
         $submitDetails = $examDetail->getUsersInput();
         if ($submitDetails == null) {
             $sessionData->getFlashBag()->add('alert_info', 'Examination not completed. No details found');
-            return $this->app->redirect('/viewHistory/' . $userId);
+            return $this->app->redirect('/viewHistory/' . $emailId);
         }
 
         $submitDetailsArray = json_decode($submitDetails);
