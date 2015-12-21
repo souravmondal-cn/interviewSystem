@@ -65,14 +65,14 @@ class Examination {
     private $totalTime;
 
     /**
-     * @var datetime
+     * @var \DateTime
      * 
      * @Column(type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private $created;
 
     /**
-     * @var datetime
+     * @var \DateTime
      * 
      * @Column(type="datetime", nullable=true) 
      */
@@ -85,6 +85,12 @@ class Examination {
      */
     private $isQualified = false;
 
+    public function __construct() {
+        
+        date_default_timezone_set("Asia/Kolkata");
+        $this->created = new \DateTime();
+    }
+    
     public function getId() {
         return $this->id;
     }

@@ -42,12 +42,12 @@ class ExamSettingsController extends Controller {
 
         $userEmail = $request->request->get('userEmailId');
         $qCategoryId = $request->request->get('qCategory');
-        $qNumbers = $request->request->get('qNumbers');
-        $timeout = 60;
-
         $countCatNum = count($qCategoryId);
+        $qNumbers = $request->request->get('qNumbers');
+        $timeout = QUESTION_TIMEOUT;
 
-        if ($countCatNum > 5 || $countCatNum < 3) {
+        if ($countCatNum > MAX_CATEGORY || $countCatNum < MIN_CATEGORY) {
+
             $sessionData->getFlashBag()->add('alert_danger', 'Minimum three and maximum five categories should be selected!');
             return $this->app->redirect('/examsetting');
         }
@@ -57,9 +57,11 @@ class ExamSettingsController extends Controller {
 
         $questions = array();
         foreach ($qCategoryId as $cId) {
+
             $countQuestion = $questionRepository->findBycategoryId($cId);
             $countQNumbers = count($countQuestion);
             if ($qNumbers > $countQNumbers) {
+
                 $sessionData->getFlashBag()->add('alert_danger', 'Not enough questions to generate exam!');
                 return $this->app->redirect('/examsetting');
             }
@@ -68,33 +70,50 @@ class ExamSettingsController extends Controller {
 //            $questions = $this->generateQuestions($cId, $qNumbers);
             $questions = $questionRepository->findBy(array('categoryId' => $cId), array(), $qNumbers);
             foreach ($questions as $question) {
-                $q[] = $question->getId();
+                $questionIdsArray[] = $question->getId();
             }
         }
 
-        $totalQuestions = count($q);
+        $totalQuestions = count($questionIdsArray);
         $totalTimeInSeconds = $totalQuestions * $timeout;
-        $allQuestionIds = implode(',', $q);
 
+        if ($this->setValidDataForExamination(
+                        $userEmail, $questionIdsArray, $totalTimeInSeconds, $totalQuestions)) {
+
+            return $this->app->redirect('/admin');
+        } else {
+
+            return $this->app->redirect('/examsetting');
+        }
+    }
+
+    public function setValidDataForExamination(
+    $userEmail, $questionIdsArray, $totalTimeInSeconds, $totalQuestions) {
+
+        $entityManager = $this->app['doctrine'];
+        $sessionData = $this->app['session'];
+
+        $questionIds = implode(',', $questionIdsArray);
+        $examination = new Examination();
+
+        $userRepository = $entityManager->getRepository('Entity\User');
+        $userDetail = $userRepository->findOneBy(array('userEmail' => $userEmail));
+
+        $examination->setUserId($userDetail);
+        $examination->setQuestions($questionIds);
+        $examination->setTotalTime($totalTimeInSeconds);
+        $examination->setTotalQuestions($totalQuestions);
         try {
-            $examination = new Examination();
-            
-            $userRepository = $entityManager->getRepository('Entity\User');
-            $userDetail = $userRepository->findOneBy(array('userEmail' => $userEmail));
-            
-            $examination->setUserId($userDetail);
-            $examination->setQuestions($allQuestionIds);
-            $examination->setTotalTime($totalTimeInSeconds);
-            $examination->setTotalQuestions($totalQuestions);
+
             $entityManager->persist($examination);
             $entityManager->flush();
 
             $sessionData->getFlashBag()->add('alert_success', 'Examination set successful!');
-            return $this->app->redirect('/admin');
+            return true;
         } catch (NotNullConstraintViolationException $ex) {
-            
+
             $sessionData->getFlashBag()->add('alert_danger', 'Please fill up all fields');
-            return $this->app->redirect('/examsetting');
+            return false;
         }
     }
 
@@ -107,11 +126,12 @@ class ExamSettingsController extends Controller {
         $entityManager = $this->app['doctrine'];
         $examDetail = $entityManager->find('Entity\Examination', $examId);
 
-        $emailId = $examDetail->getEmail();
-        $submitDetails = $examDetail->getSubmits();
+        $userId = $examDetail->getUserId()->getId();
+        $emailId = $examDetail->getUserId()->getUserEmail();
+        $submitDetails = $examDetail->getUsersInput();
         if ($submitDetails == NULL) {
             $sessionData->getFlashBag()->add('alert_info', 'Examination not completed. No details found');
-            return $this->app->redirect('/viewHistory/' . $emailId);
+            return $this->app->redirect('/viewHistory/' . $userId);
         }
 
         $submitDetailsArray = json_decode($submitDetails);
@@ -119,9 +139,9 @@ class ExamSettingsController extends Controller {
         foreach ($submitDetailsArray as $questionId => $checkedOption) {
             $questionDetail = $entityManager->find('Entity\Questions', $questionId);
 
-            $isQualified = $examDetail->getIs_Qualified();
-            $totalQuestions = $examDetail->getTotal_Questions();
-            $totalAnswers = $examDetail->getCorrect_Answers();
+            $isQualified = $examDetail->getIsQualified();
+            $totalQuestions = $examDetail->getTotalQuestions();
+            $totalAnswers = $examDetail->getCorrectAnswersCount();
             $dataPercentage = ($totalAnswers / $totalQuestions) * 100;
             $optionValueA = $questionDetail->getOptionA();
             $optionValueB = $questionDetail->getOptionB();
@@ -152,6 +172,7 @@ class ExamSettingsController extends Controller {
 
         return $this->app['twig']->render('admin/examdetail.twig', [
                     'examSubmitData' => $examSubmitDetail,
+                    'userId' => $userId,
                     'emailId' => $emailId,
                     'examId' => $examId,
                     'totalQuestions' => $totalQuestions,
@@ -163,23 +184,24 @@ class ExamSettingsController extends Controller {
     public function setQualified($examId) {
         $entityManager = $this->app['doctrine'];
         $examDetail = $entityManager->find('Entity\Examination', $examId);
-        $examDetail->setIs_Qualified(TRUE);
+        $examDetail->setIsQualified(TRUE);
         $entityManager->persist($examDetail);
         $entityManager->flush();
 
         return $this->app->redirect('/examdetail/' . $examId);
     }
 
-    public function listExamHistory($email) {
+    public function listExamHistory($userId) {
         if ($this->checkAdminSession() == FALSE) {
             return $this->app->redirect("/admin");
         }
 
         $entityManager = $this->app['doctrine'];
+        $emailId = $entityManager->find('Entity\User', $userId)->getUserEmail();
         $examRepository = $entityManager->getRepository('Entity\Examination');
-        $examData = $examRepository->findBy(array('email' => $email));
+        $examData = $examRepository->findBy(array('userId' => $userId));
 
-        return $this->app['twig']->render('admin/examhistory.twig', array('examdata' => $examData, 'email' => $email));
+        return $this->app['twig']->render('admin/examhistory.twig', array('examdata' => $examData, 'email' => $emailId));
     }
 
 }

@@ -153,7 +153,7 @@ class ExamController extends Controller {
         $newQuestionPointer = $questionPointer + 1;
         $sessionUserData->set('questionPointer', $newQuestionPointer);
 
-        date_default_timezone_set("Asia/Calcutta");
+        date_default_timezone_set("Asia/Kolkata");
         $examDetail->setCompleted(new DateTime());
         $entityManager->persist($examDetail);
         $entityManager->flush();
@@ -242,7 +242,7 @@ class ExamController extends Controller {
         $this->removeExamDetailsFromSession();
 
         $examDetail = $entityManager->find('Entity\Examination', $examId);
-        date_default_timezone_set("Asia/Calcutta");
+        date_default_timezone_set("Asia/Kolkata");
         $examDetail->setCompleted(new DateTime());
         $entityManager->persist($examDetail);
         $entityManager->flush();

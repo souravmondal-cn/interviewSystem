@@ -36,22 +36,22 @@
             {% for singledata in examdata %}
                 <tr>
                     <td>
-                        <a href = '/examdetail/{{ singledata.examid }}'>{{singledata.examid}}</a>
+                        <a href = '/examdetail/{{ singledata.id }}'>{{singledata.id}}</a>
                     </td>
                     <td>
-                        {%if singledata.date_created != null %}{{singledata.date_created|date('d-M-Y H:i:s')}}{% else %}N/A{% endif %}
+                        {%if singledata.created != null %}{{singledata.created|date('d-M-Y H:i:s')}}{% else %}N/A{% endif %}
                     </td>
                     <td>
-                        {%if singledata.date_completed != null %}{{singledata.date_completed|date('d-M-Y H:i:s')}}{% else %}N/A{% endif %}
+                        {%if singledata.completed != null %}{{singledata.completed|date('d-M-Y H:i:s')}}{% else %}N/A{% endif %}
                     </td>
                     <td>
-                        {%if singledata.total_questions is defined %}{{singledata.total_questions}}{% endif %}
+                        {%if singledata.totalQuestions is defined %}{{singledata.totalQuestions}}{% endif %}
                     </td>
                     <td>
-                        {%if singledata.correct_answers != '' %}{{singledata.correct_answers}}{% else %}N/A{% endif %}
+                        {%if singledata.correctAnswersCount != '' %}{{singledata.correctAnswersCount}}{% else %}N/A{% endif %}
                     </td>
                     <td>
-                        {%if singledata.is_qualified is defined and singledata.is_qualified == false %}No{% else %}Yes{% endif %}
+                        {%if singledata.isQualified is defined and singledata.isQualified == false %}No{% else %}Yes{% endif %}
                     </td>
                 </tr>
             {% endfor %}
