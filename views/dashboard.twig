@@ -7,8 +7,10 @@
             Welcome to dashboard!
         </h3>
         <div align="center">
-            {% for message in app.session.getFlashBag.get('user_message') %}
-                <p>{{message}}</p>
+            {% for message in app.session.getFlashBag.get('alert_success') %}
+                <div  class="alert alert-success">
+                    <p>{{message}}</p>
+                </div>
             {%endfor%}
         </div>
 
@@ -16,5 +18,5 @@
 
             {% if success is defined and success == 1%} <img src="/assets/new.gif"> <br> You are qualified for interview! <br> Please contact office... {% endif %}
 
-            </div>
-            {% endblock %}
+        </div>
+        {% endblock %}

@@ -25,7 +25,6 @@ class AdminController extends Controller {
         }
 
         $adminLogInEmail = $sessionData->get('loginAdminEmail');
-        $sessionData->getFlashBag()->add('alert_success', 'Welcome to admin panel');
         return $this->app['twig']->render('admin/adminpanel.twig', array('UserEmail' => $adminLogInEmail));
     }
 

@@ -60,6 +60,7 @@ class Home extends Controller {
             if (!empty($isAdmin) && $isAdmin == 1) {
 
                 $sessionData->set('adminSession', true);
+                $sessionData->getFlashBag()->add('alert_success', 'Welcome to admin panel');
                 $returnRoute = '/admin';
             } else {
 
