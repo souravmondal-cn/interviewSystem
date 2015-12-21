@@ -44,13 +44,13 @@
                 {% for singleUserData in userData %}
                     <tr>
                         <td>
-                            <a href = '/viewHistory/{{singleUserData.id}}'>{{singleUserData.id}}</a>
+                            {{singleUserData.id}}
                         </td>
                         <td>
                             {{singleUserData.userName}}
                         </td>
                         <td>
-                            {{singleUserData.userEmail}}
+                            <a href = '/viewHistory/{{singleUserData.userEmail}}'>{{singleUserData.userEmail}}</a>
                         </td>
                         <td>
                             {{singleUserData.officeLocation}}

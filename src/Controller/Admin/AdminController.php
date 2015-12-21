@@ -64,12 +64,17 @@ class AdminController extends Controller {
         $prevPassword = $postedFormData['userPassword'];
         $newPassword = $postedFormData['password'];
 
-        if ($postedFormData['userName'] === '' || $postedFormData['userEmail'] === '' || $postedFormData['password'] === '' || $postedFormData['isAdmin'] === '') {
+        if (
+                $postedFormData['userName'] == '' ||
+                $postedFormData['userEmail'] == '' ||
+                $postedFormData['password'] == '' ||
+                $postedFormData['isAdmin'] == ''
+        ) {
             $sessionData->getFlashBag()->add("alert_danger", "No field should left blank");
             return $this->app->redirect("/adduser/" . $userType);
         }
 
-        if ($postedFormData['userId'] === '') {
+        if ($postedFormData['userId'] == '') {
 
             $user = new User();
             $sessionData->getFlashBag()->add("alert_success", $userType . " added successfully!");
@@ -96,16 +101,10 @@ class AdminController extends Controller {
 
             if (null !== $request->files->get('resumeFile')) {
                 $fs = new FileHandler();
-                if ($fs->fileUpload($request->files->get('resumeFile'), $user->getId(), UPLOAD_PATH)) {
-                    $sessionData->getFlashBag()->add("alert_success", "File added successfully");
-                }
+                $fs->fileUpload($request->files->get('resumeFile'), $user->getId(), UPLOAD_PATH);
             }
 
-            if ($userType === 'User') {
-                $reDirectUrl = "/usersetting";
-            } else {
-                $reDirectUrl = "/adminsetting";
-            }
+            $reDirectUrl = "/".strtolower($userType)."setting";
 
             return $this->app->redirect($reDirectUrl);
         } catch (UniqueConstraintViolationException $ex) {
@@ -131,8 +130,6 @@ class AdminController extends Controller {
         }
 
         $entityManager = $this->app['doctrine'];
-        $categoryRepository = $entityManager->getRepository('Entity\User');
-        $categories = $categoryRepository->findAll();
 
         $userDetails = $entityManager->find('Entity\User', $id);
         return $this->app['twig']->render('admin/addallusers.twig', array(
@@ -151,15 +148,15 @@ class AdminController extends Controller {
 
         $fs = new FileSystem();
 
-        if ($fs->exists(UPLOAD_PATH.$id . '.docx')) {
-            $fullPath = UPLOAD_PATH.$id.'.docx';
-        } elseif ($fs->exists(UPLOAD_PATH.$id . '.doc')) {
-            $fullPath = UPLOAD_PATH.$id . '.doc';
+        if ($fs->exists(UPLOAD_PATH . $id . '.docx')) {
+            $fullPath = UPLOAD_PATH . $id . '.docx';
+        } elseif ($fs->exists(UPLOAD_PATH . $id . '.doc')) {
+            $fullPath = UPLOAD_PATH . $id . '.doc';
         } else {
-            $fullPath = UPLOAD_PATH.$id . '.pdf';
+            $fullPath = UPLOAD_PATH . $id . '.pdf';
         }
         unlink($fullPath);
-        
+
         $sessionData->getFlashBag()->add('alert_success', $userType . ' deleted from database');
 
         if ($userType === 'User') {
@@ -171,16 +168,6 @@ class AdminController extends Controller {
         return $this->app->redirect($redirectUrl);
     }
 
-//    public function generateQuestions($categoryId,$limit) {
-//        $resultSetMapping = new ResultSetMapping();
-//        $entityManager = $this->app['doctrine'];
-//        $query = $entityManager->createNativeQuery('select * from questions where categoryId = ?  order by rand limit ?', $resultSetMapping);
-//        $query->setParameter(1,$categoryId);
-//        $query->setParameter(2,$limit);
-//        $result = $query->getResult();
-//        return $result;
-//    }
-
     public function downloadFile($filename) {
         $sessionData = $this->app['session'];
         $fs = new FileSystem();
@@ -188,7 +175,7 @@ class AdminController extends Controller {
         $file = UPLOAD_PATH . $filename;
 
         if ($fs->exists($file . '.docx')) {
-            $fullPath = $file.'.docx';
+            $fullPath = $file . '.docx';
         } elseif ($fs->exists($file . '.doc')) {
             $fullPath = $file . '.doc';
         } else {
@@ -203,7 +190,9 @@ class AdminController extends Controller {
         $response = new BinaryFileResponse($fullPath);
         $response->trustXSendfileTypeHeader();
         $response->setContentDisposition(
-                ResponseHeaderBag::DISPOSITION_INLINE, $filename, iconv('UTF-8', 'ASCII//TRANSLIT', $filename)
+            ResponseHeaderBag::DISPOSITION_INLINE,
+            $filename,
+            iconv('UTF-8', 'ASCII//TRANSLIT', $filename)
         );
 
         return $response;

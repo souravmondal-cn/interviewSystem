@@ -11,7 +11,7 @@ use Controller\Controller;
 class ExamSettingsController extends Controller {
 
     public function examSetting() {
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() == false) {
             return $this->app->redirect("/admin");
         }
 
@@ -35,7 +35,11 @@ class ExamSettingsController extends Controller {
         $entityManager = $this->app['doctrine'];
         $sessionData = $this->app['session'];
 
-        if ($request->request->get('userEmailId') == '' || $request->request->get('qNumbers') == '' || empty($request->request->get('qCategory'))) {
+        if (
+            $request->request->get('userEmailId') == '' ||
+            $request->request->get('qNumbers') == '' ||
+            empty($request->request->get('qCategory'))
+        ) {
             $sessionData->getFlashBag()->add('alert_danger', 'Please fill up every detail carefully!');
             return $this->app->redirect('/examsetting');
         }
@@ -66,8 +70,6 @@ class ExamSettingsController extends Controller {
                 return $this->app->redirect('/examsetting');
             }
 
-//            manual native query select * from questions where categoryId = 23  order by rand() limit 3
-//            $questions = $this->generateQuestions($cId, $qNumbers);
             $questions = $questionRepository->findBy(array('categoryId' => $cId), array(), $qNumbers);
             foreach ($questions as $question) {
                 $questionIdsArray[] = $question->getId();
@@ -77,14 +79,14 @@ class ExamSettingsController extends Controller {
         $totalQuestions = count($questionIdsArray);
         $totalTimeInSeconds = $totalQuestions * $timeout;
 
-        if ($this->setValidDataForExamination(
-                        $userEmail, $questionIdsArray, $totalTimeInSeconds, $totalQuestions)) {
-
-            return $this->app->redirect('/admin');
-        } else {
-
-            return $this->app->redirect('/examsetting');
-        }
+        $this->setValidDataForExamination(
+            $userEmail,
+            $questionIdsArray,
+            $totalTimeInSeconds,
+            $totalQuestions
+        );
+        
+        return $this->app->redirect('/admin');
     }
 
     public function setValidDataForExamination(
@@ -109,17 +111,17 @@ class ExamSettingsController extends Controller {
             $entityManager->flush();
 
             $sessionData->getFlashBag()->add('alert_success', 'Examination set successful!');
-            return true;
         } catch (NotNullConstraintViolationException $ex) {
 
             $sessionData->getFlashBag()->add('alert_danger', 'Please fill up all fields');
-            return false;
         }
+        
+        return;
     }
 
     public function viewExamDetail($examId) {
         
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() == false) {
             return $this->app->redirect("/admin");
         }
 
@@ -130,7 +132,7 @@ class ExamSettingsController extends Controller {
         $userId = $examDetail->getUserId()->getId();
         $emailId = $examDetail->getUserId()->getUserEmail();
         $submitDetails = $examDetail->getUsersInput();
-        if ($submitDetails == NULL) {
+        if ($submitDetails == null) {
             $sessionData->getFlashBag()->add('alert_info', 'Examination not completed. No details found');
             return $this->app->redirect('/viewHistory/' . $userId);
         }
@@ -185,20 +187,22 @@ class ExamSettingsController extends Controller {
     public function setQualified($examId) {
         $entityManager = $this->app['doctrine'];
         $examDetail = $entityManager->find('Entity\Examination', $examId);
-        $examDetail->setIsQualified(TRUE);
+        $examDetail->setIsQualified(true);
         $entityManager->persist($examDetail);
         $entityManager->flush();
 
         return $this->app->redirect('/examdetail/' . $examId);
     }
 
-    public function listExamHistory($userId) {
-        if ($this->checkAdminSession() == FALSE) {
+    public function listExamHistory($emailId) {
+        if ($this->checkAdminSession() == false) {
             return $this->app->redirect("/admin");
         }
 
         $entityManager = $this->app['doctrine'];
-        $emailId = $entityManager->find('Entity\User', $userId)->getUserEmail();
+        
+        $userDetails = $entityManager->getRepository('Entity\User')->findOneBy(['userEmail' => $emailId]);
+        $userId = $userDetails->getId();
         $examRepository = $entityManager->getRepository('Entity\Examination');
         $examData = $examRepository->findBy(array('userId' => $userId));
 

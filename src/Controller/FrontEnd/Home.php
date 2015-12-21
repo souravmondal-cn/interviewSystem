@@ -18,9 +18,8 @@ class Home extends Controller {
         ));
 
         if (empty($loginInfo)) {
-            $sessionUserData->getFlashBag()->add(
-                    'alert_danger', 'Sorry, email and password does not match'
-            );
+            
+            $sessionUserData->getFlashBag()->add('alert_danger', 'Sorry, email and password does not match');
             return $this->app->redirect("/login");
         }
 

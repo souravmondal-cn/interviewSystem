@@ -30,6 +30,7 @@ class Controller {
 
         $validUserSession = $sessionData->get('userSession');
         if (!empty($validUserSession)) {
+            
             return true;
         }
 
@@ -42,11 +43,11 @@ class Controller {
         $user = $userRepository->findBy(array('userEmail' => $email, 'isAdmin' => '0'));
 
         if (!empty($user)) {
-            echo '1';
-            exit;
+            
+            return true;
         } else {
-            echo '0';
-            exit;
+            
+            return false;
         }
     }
 

@@ -71,7 +71,7 @@ $app->get("/viewfile/{filename}","admin.controller:downloadFile");
 $app->get("/examsetting","exam.settings:examSetting");
 $app->post("/examsetting","exam.settings:examGenerate");
 
-$app->get("/viewHistory/{userId}", "exam.settings:listExamHistory");
+$app->get("/viewHistory/{emailId}", "exam.settings:listExamHistory");
 $app->get("/examdetail/{examId}", "exam.settings:viewExamDetail");
 $app->get("/setQualified/{examId}", "exam.settings:setQualified");
 

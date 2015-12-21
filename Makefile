@@ -13,6 +13,6 @@ phpcs: vendor
 	./vendor/bin/phpcs --extensions=php --standard=dev/standard -s src/
 
 phpmd: vendor
-	./vendor/bin/phpmd app/ text dev/standard/phpmd.xml
+	./vendor/bin/phpmd src/ text dev/standard/phpmd.xml
 
 codestyle: phpcs phpmd

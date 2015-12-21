@@ -10,9 +10,11 @@ class ExamController extends Controller {
 
     public function getExamData($id) {
         $entityManager = $this->app['doctrine'];
-        $examData = $entityManager->getRepository('Entity\Examination')->findOneBy(array(
-            'userId' => $id,
-            'completed' => null)
+        $examData = $entityManager->getRepository('Entity\Examination')->findOneBy(
+            array(
+                'userId' => $id,
+                'completed' => null
+            )
         );
         return $examData;
     }
@@ -23,7 +25,8 @@ class ExamController extends Controller {
         $success = false;
 
         $successData = $entityManager->getRepository('Entity\Examination')->findOneBy(
-                ['userId' => $examId], ['id' => 'desc']
+            ['userId' => $examId],
+            ['id' => 'desc']
         );
 
         if (!empty($successData)) {
@@ -95,8 +98,6 @@ class ExamController extends Controller {
     public function displayQuestion() {
 
         $sessionData = $this->app['session'];
-        $entityManager = $this->app['doctrine'];
-
         $validExam = $sessionData->get('validExam');
         $totaltime = $sessionData->get('totaltime');
         header("Refresh: $totaltime; url=/examsubmit");
@@ -109,7 +110,6 @@ class ExamController extends Controller {
 
         $logInEmail = $sessionData->get('loginEmail');
         $loggerName = $sessionData->get('loggerName');
-        $totalQuestions = $sessionData->get('totalQuestions');
         $questionData = $sessionData->get('questionData');
         $questionPointer = $sessionData->get('questionPointer');
 
@@ -158,7 +158,7 @@ class ExamController extends Controller {
         $entityManager->persist($examDetail);
         $entityManager->flush();
 
-        $sessionUserData->set('validExam', TRUE);
+        $sessionUserData->set('validExam', true);
         return $this->app->redirect('/displayQuestion');
     }
 
@@ -170,7 +170,7 @@ class ExamController extends Controller {
         $previousSubmits = $examDetail->getUsersInput();
 
         $json = json_encode($usersSubmit);
-        if ($previousSubmits == '' || $previousSubmits == NULL) {
+        if ($previousSubmits == '' || $previousSubmits == null) {
             $jsonData = $json;
         } else {
             $jsonData = rtrim($previousSubmits, '}') . ',' . ltrim($json, '{');

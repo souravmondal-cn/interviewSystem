@@ -12,7 +12,7 @@ class AdminSettingsController extends Controller {
 
     public function questionListing() {
         $sessionData = $this->app['session'];
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() == false) {
             return $this->app->redirect("/admin");
         }
 
@@ -27,7 +27,7 @@ class AdminSettingsController extends Controller {
 
     public function questionUpload() {
         $sessionData = $this->app['session'];
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() == false) {
             return $this->app->redirect("/admin");
         }
 
@@ -37,7 +37,14 @@ class AdminSettingsController extends Controller {
         $categoryRepository = $entityManager->getRepository('Entity\Category');
         $categories = $categoryRepository->findAll();
 
-        return $this->app['twig']->render('admin/qaupload.twig', array('UserEmail' => $adminLogInEmail, 'categories' => $categories, 'formHeading' => 'Question and answer upload'));
+        return $this->app['twig']->render(
+            'admin/qaupload.twig',
+            array(
+                'UserEmail' => $adminLogInEmail,
+                'categories' => $categories,
+                'formHeading' => 'Question and answer upload'
+            )
+        );
     }
 
     public function doUpload(Request $request) {
@@ -48,7 +55,13 @@ class AdminSettingsController extends Controller {
 
 //        $adminLogInEmail = $sessionData->get('loginAdminEmail');
 
-        if ($postedData['addquestion'] == '' || $postedData['opta'] == '' || $postedData['optc'] == '' || $postedData['optd'] == '' || $postedData['correct'] == '') {
+        if (
+                $postedData['addquestion'] == '' ||
+                $postedData['opta'] == '' ||
+                $postedData['optc'] == '' ||
+                $postedData['optd'] == '' ||
+                $postedData['correct'] == ''
+        ) {
 
             $sessionData->getFlashBag()->add('alert_danger', 'No field should be blank, please fillup correctly.');
 
@@ -73,8 +86,8 @@ class AdminSettingsController extends Controller {
             $question->setOptionD($postedData['optd']);
             $question->setAnswer($postedData['correct']);
 
-            $QuestionCategory = $entityManager->getRepository('Entity\Category')->find($postedData['category']);
-            $question->setCategoryId($QuestionCategory);
+            $questionCategory = $entityManager->getRepository('Entity\Category')->find($postedData['category']);
+            $question->setCategoryId($questionCategory);
 
             $entityManager->persist($question);
             $entityManager->flush();
@@ -87,7 +100,7 @@ class AdminSettingsController extends Controller {
     }
 
     public function editQuestion($id) {
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() == false) {
             return $this->app->redirect("/admin");
         }
 
@@ -97,7 +110,14 @@ class AdminSettingsController extends Controller {
 
         $questionDetails = $entityManager->find('Entity\Questions', $id);
 
-        return $this->app['twig']->render('admin/qaupload.twig', array('categories' => $categories, 'questionDetails' => $questionDetails, 'formHeading' => 'Question and answer edit'));
+        return $this->app['twig']->render(
+            'admin/qaupload.twig',
+            array(
+                'categories' => $categories,
+                'questionDetails' => $questionDetails,
+                'formHeading' => 'Question and answer edit'
+                )
+        );
     }
 
     public function deleteQuestion($id) {
@@ -115,7 +135,7 @@ class AdminSettingsController extends Controller {
     }
 
     public function categorySetting() {
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() == false) {
             return $this->app->redirect("/admin");
         }
 
@@ -127,11 +147,17 @@ class AdminSettingsController extends Controller {
         $result = $categoryRepository->findAll();
         $categories = $result;
 
-        return $this->app['twig']->render('admin/category_setting.twig', array('UserEmail' => $adminLogInEmail, 'categories' => $categories));
+        return $this->app['twig']->render(
+            'admin/category_setting.twig',
+            array(
+                'UserEmail' => $adminLogInEmail,
+                'categories' => $categories
+            )
+        );
     }
 
     public function addCategory() {
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() == false) {
             return $this->app->redirect("/admin");
         }
 
@@ -142,7 +168,14 @@ class AdminSettingsController extends Controller {
         $categoryRepository = $entityManager->getRepository('Entity\Category');
         $categories = $categoryRepository->findAll();
 
-        return $this->app['twig']->render('admin/addcategory.twig', array('UserEmail' => $adminLogInEmail, 'categories' => $categories, 'formHeading' => 'Add Category'));
+        return $this->app['twig']->render(
+            'admin/addcategory.twig',
+            array(
+                'UserEmail' => $adminLogInEmail,
+                'categories' => $categories,
+                'formHeading' => 'Add Category'
+            )
+        );
     }
 
     public function doAddCategory(Request $request) {
@@ -177,7 +210,7 @@ class AdminSettingsController extends Controller {
     }
 
     public function editCategory($id) {
-        if ($this->checkAdminSession() == FALSE) {
+        if ($this->checkAdminSession() == false) {
             return $this->app->redirect("/admin");
         }
 

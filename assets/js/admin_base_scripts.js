@@ -41,7 +41,7 @@ $('#userEmail').blur(function () {
         url: '/checkEmail/' + email,
         method: 'post',
         success: function (data, status) {
-            if (data === '1') {
+            if (data == true) {
                 $('#userEmailCheck').html(' &nbsp;&nbsp; Email id is already registered! &nbsp;');
                 $('#userHist').show();
                 $('#viewUserHistory').attr('href', '/viewHistory/' + email);
