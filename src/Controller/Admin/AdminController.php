@@ -6,15 +6,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Service\FileHandler;
 use Entity\User;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Controller\Controller;
-use service\CheckAdmin;
-use Symfony\Component\Filesystem\Filesystem;
 
 class AdminController extends Controller {
 
     public function getAdminLoginForm() {
+        
         return $this->app['twig']->render('login.twig', array('formName' => 'Admin'));
     }
 
@@ -40,6 +37,7 @@ class AdminController extends Controller {
     }
 
     public function showUserSettings() {
+        
         if ($this->checkAdminSession() === false) {
             return $this->app->redirect("/admin");
         }
@@ -50,7 +48,8 @@ class AdminController extends Controller {
         return $this->app['twig']->render('admin/user_settings.twig', array('userData' => $user, 'pageHeading' => 'User'));
     }
 
-    public function addAllUsers($userType) {
+    public function getAddUserForm($userType) {
+        
         return $this->app['twig']->render('admin/addallusers.twig', array('formHeading' => 'Add ', 'userType' => $userType));
     }
 
@@ -83,18 +82,19 @@ class AdminController extends Controller {
             $sessionData->getFlashBag()->add('alert_info', $userType . ' details edited successfully');
         }
 
+
+        $user->setUserName($postedFormData['userName']);
+        $user->setUserEmail($postedFormData['userEmail']);
+
+        $user->setIsAdmin($postedFormData['isAdmin']);
+        $user->setOfficeLocation($postedFormData['officeLocation']);
+        $user->setUserAddress($postedFormData['userAddress']);
+
+        if ($prevPassword != $newPassword) {
+            $user->setPassword($postedFormData['password']);
+        }
+        
         try {
-            $user->setUserName($postedFormData['userName']);
-            $user->setUserEmail($postedFormData['userEmail']);
-
-            $user->setIsAdmin($postedFormData['isAdmin']);
-            $user->setOfficeLocation($postedFormData['officeLocation']);
-            $user->setUserAddress($postedFormData['userAddress']);
-
-            if ($prevPassword != $newPassword) {
-                $user->setPassword($postedFormData['password']);
-            }
-
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -103,17 +103,18 @@ class AdminController extends Controller {
                 $fs->fileUpload($request->files->get('resumeFile'), $user->getId(), UPLOAD_PATH);
             }
 
-            $reDirectUrl = "/".strtolower($userType)."setting";
+            $reDirectUrl = "/" . strtolower($userType) . "setting";
 
             return $this->app->redirect($reDirectUrl);
         } catch (UniqueConstraintViolationException $ex) {
+
             $sessionData->getFlashBag()->add("alert_danger", "Email id is already registered, unique required!");
 
             $userData = ['isAdmin' => $postedFormData['isAdmin'],
-                'username' => $postedFormData['userName'],
-                'email' => $postedFormData['userEmail'],
-                'location' => $postedFormData['location'],
-                'user_address' => $postedFormData['user_address'],
+                'userName' => $postedFormData['userName'],
+                'userEmail' => $postedFormData['userEmail'],
+                'officeLocation' => $postedFormData['location'],
+                'userAddress' => $postedFormData['user_address'],
                 'password' => $postedFormData['password']
             ];
             return $this->app['twig']->render('admin/addallusers.twig', array(
@@ -124,6 +125,7 @@ class AdminController extends Controller {
     }
 
     public function editUserData($userType, $id) {
+        
         if ($this->checkAdminSession() === false) {
             return $this->app->redirect("/admin");
         }
@@ -138,6 +140,7 @@ class AdminController extends Controller {
     }
 
     public function deleteUserData($userType, $id) {
+        
         $sessionData = $this->app['session'];
         $entityManager = $this->app['doctrine'];
 
@@ -145,56 +148,28 @@ class AdminController extends Controller {
         $entityManager->remove($userDetails);
         $entityManager->flush();
 
-        $fs = new FileSystem();
-
-        if ($fs->exists(UPLOAD_PATH . $id . '.docx')) {
-            $fullPath = UPLOAD_PATH . $id . '.docx';
-        } elseif ($fs->exists(UPLOAD_PATH . $id . '.doc')) {
-            $fullPath = UPLOAD_PATH . $id . '.doc';
-        } else {
-            $fullPath = UPLOAD_PATH . $id . '.pdf';
-        }
-        unlink($fullPath);
-
+        $fileHandler = new FileHandler();
+        $fileHandler->deleteExistingFile($id, UPLOAD_PATH);
+        
         $sessionData->getFlashBag()->add('alert_success', $userType . ' deleted from database');
-
-        if ($userType === 'User') {
-            $redirectUrl = '/usersetting';
-        } else {
-            $redirectUrl = '/adminsetting';
-        }
+        $redirectUrl = "/" . strtolower($userType) . "setting";
 
         return $this->app->redirect($redirectUrl);
     }
 
     public function downloadFile($filename) {
-        $sessionData = $this->app['session'];
-        $fs = new FileSystem();
-
-        $file = UPLOAD_PATH . $filename;
-
-        if ($fs->exists($file . '.docx')) {
-            $fullPath = $file . '.docx';
-        } elseif ($fs->exists($file . '.doc')) {
-            $fullPath = $file . '.doc';
-        } else {
-            $fullPath = $file . '.pdf';
-        }
-
-        if (!$fs->exists($fullPath)) {
-            $sessionData->getFlashBag()->add('alert_danger', 'File not found!');
+        
+        $fileHandler = new FileHandler();
+        
+        $fileResponse = $fileHandler->downloadExistingFile($filename, UPLOAD_PATH);
+        if (!$fileResponse) {
+            
             return $this->app->redirect('/usersetting');
+        } else {
+            
+            return $fileResponse;
         }
-
-        $response = new BinaryFileResponse($fullPath);
-        $response->trustXSendfileTypeHeader();
-        $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_INLINE,
-            $filename,
-            iconv('UTF-8', 'ASCII//TRANSLIT', $filename)
-        );
-
-        return $response;
+        
     }
 
     public function adminLogout() {

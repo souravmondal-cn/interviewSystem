@@ -60,7 +60,7 @@ $app->get("/deleteCategory/{id}", "admin.settings:deleteCategory");
 
 $app->get("/adminsetting","admin.controller:showAdminSettings");
 $app->get("/usersetting","admin.controller:showUserSettings");
-$app->get("/adduser/{userType}", "admin.controller:addAllUsers");
+$app->get("/adduser/{userType}", "admin.controller:getAddUserForm");
 $app->post("/adduser/{userType}", "admin.controller:doAddUser");
 $app->get("/edituser/{userType}/{id}", "admin.controller:editUserData");
 $app->get("/deleteuser/{userType}/{id}", "admin.controller:deleteUserData");
