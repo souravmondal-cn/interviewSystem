@@ -2,51 +2,46 @@
 
 {% block body %}
 
-    <div class="col-xs-12 col-lg-8">
+    <br>
 
-        <h3>
-            Examination Setting
-        </h3>
-        <br>
-
-        <div align="center">
-            {% for message in app.session.getFlashBag.get('admin_message') %}
-                <p>{{message}}</p>
-            {%endfor%}
-        </div>
-
-        <form action="/examsetting" method="post">
-
-            <div class="form-group">
-                <label for="userEmailId">User Email :</label>
-                <input type="email" name="userEmailId" id="userEmailId" class="form-control" required="required">
-                <span id='checkEmailForExam' style='color:red'>
-
-                </span>
-            </div>
-            <br>
-            <div class="form-group">
-                <label>Question category :</label>
-                <br>{% set i = 0 %}
-                {% for key,value in categories %}
-                    {{value}} &nbsp;&nbsp;&nbsp; : <input type="checkbox" name="qCategory[]" id="qCategory[]" value="{{key}}">&nbsp;&nbsp;&nbsp;
-                    {% set i = i+1 %} {% if i%3 == 0 %}<br>{% endif %}
-                {% endfor %}
-            </div>
-            <br>
-            <div class="form-group">
-                <label>Set number of total questions from each category :</label>
-                <input type="number" min="1" max="10" name="qNumbers" id="qNumbers"  class="form-control" required="required">
-            </div>
-            <br>
-            <div class="form-group">
-                <label>Timeout for each question :</label>
-                <span style='color:gray'>60 Seconds</span>
-            </div>
-            <br>
-            <div class="form-group">
-                <button type="submit" name="examGen" id="examGen" class="btn btn-primary">Generate Exam</button>  
-            </div>
-        </form>
+    <div align="center">
+        {% for message in app.session.getFlashBag.get('admin_message') %}
+            <p>{{message}}</p>
+        {%endfor%}
     </div>
+
+    <form action="/examsetting" method="post">
+
+        <div class="form-group">
+            <label for="userEmailId">User Email :</label>
+            <input type="email" name="userEmailId" id="userEmailId" class="form-control" required="required">
+            <span id='checkEmailForExam' style='color:red'>
+
+            </span>
+        </div>
+        <br>
+        <div class="form-group">
+            <label>Question category :</label>
+            <br>{% set i = 0 %}
+            {% for key,value in categories %}
+                {{value}} &nbsp;&nbsp;&nbsp; : <input type="checkbox" name="qCategory[]" id="qCategory[]" value="{{key}}">&nbsp;&nbsp;&nbsp;
+                {% set i = i+1 %} {% if i%3 == 0 %}<br>{% endif %}
+            {% endfor %}
+        </div>
+        <br>
+        <div class="form-group">
+            <label>Set number of total questions from each category :</label>
+            <input type="number" min="1" max="10" name="qNumbers" id="qNumbers"  class="form-control" required="required">
+        </div>
+        <br>
+        <div class="form-group">
+            <label>Timeout for each question :</label>
+            <span style='color:gray'>60 Seconds</span>
+        </div>
+        <br>
+        <div class="form-group">
+            <button type="submit" name="examGen" id="examGen" class="btn btn-primary">Generate Exam</button>  
+        </div>
+    </form>
+
 {% endblock %}

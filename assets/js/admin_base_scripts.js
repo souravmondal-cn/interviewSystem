@@ -62,7 +62,7 @@ $('#userEmailId').blur(function () {
         url: '/checkEmail/' + emailId,
         method: 'post',
         success: function (data, status) {
-            if (data === '0') {
+            if (data != '1') {
                 $('#checkEmailForExam').html('this email id is not registered!');
                 $('#userEmailId').val('');
                 $('#userEmailId').focus();

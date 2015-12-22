@@ -1,73 +1,65 @@
 {% extends "admin/base.twig" %}
 
 {% block body %}
-    
-    <div class="col-xs-12 col-lg-8">
-        
-        <h3>
-            {{formHeading}}
-        </h3>
 
-        <br><br>
+    <br><br>
 
-        <form action="/questionupload" method="post" class="form-horizontal">
+    <form action="/questionupload" method="post" class="form-horizontal">
 
-            <div class="form-group">
+        <div class="form-group">
 
-                <input type="hidden" name="questionId" value="{%if questionDetails.id is defined%}{{questionDetails.id}}{% endif %}">
+            <input type="hidden" name="questionId" value="{%if questionDetails.id is defined%}{{questionDetails.id}}{% endif %}">
 
-                <label for="category">Question Category :</label>
-                <select name="category" id="category" class="form-control">
-                    <option>Select question category</option>
-                    {% for category in categories %}
-                        <option value= "{{category.id}}" {% if questionDetails.categoryId.id is defined and questionDetails.categoryId.id == category.id %}selected="selected"{% endif %}>{{category.categoryName}}</option>
+            <label for="category">Question Category :</label>
+            <select name="category" id="category" class="form-control">
+                <option>Select question category</option>
+                {% for category in categories %}
+                    <option value= "{{category.id}}" {% if questionDetails.categoryId.id is defined and questionDetails.categoryId.id == category.id %}selected="selected"{% endif %}>{{category.categoryName}}</option>
 
-                    {% endfor %}
-                </select>
+                {% endfor %}
+            </select>
 
-            </div>
+        </div>
 
-            <div class="form-group">
-                <label for="addquestion">Question :</label>
-                <textarea name="addquestion" id="addquestion"  class="form-control">{% if questionDetails.question is defined %}{{questionDetails.question}}{%endif%}</textarea>
-            </div>
+        <div class="form-group">
+            <label for="addquestion">Question :</label>
+            <textarea name="addquestion" id="addquestion"  class="form-control">{% if questionDetails.question is defined %}{{questionDetails.question}}{%endif%}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label for="opta">Option A:</label>
-                <textarea name="opta" id="opta" class="form-control">{% if questionDetails.optionA is defined %}{{questionDetails.optionA}}{%endif%}</textarea>
-            </div>
+        <div class="form-group">
+            <label for="opta">Option A:</label>
+            <textarea name="opta" id="opta" class="form-control">{% if questionDetails.optionA is defined %}{{questionDetails.optionA}}{%endif%}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label for="optb">Option B:</label>
-                <textarea name="optb" id="optb" class="form-control">{% if questionDetails.optionB is defined %}{{questionDetails.optionB}}{%endif%}</textarea>
-            </div>
+        <div class="form-group">
+            <label for="optb">Option B:</label>
+            <textarea name="optb" id="optb" class="form-control">{% if questionDetails.optionB is defined %}{{questionDetails.optionB}}{%endif%}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label for="optc">Option C:</label>
-                <textarea name="optc" id="optc" class="form-control">{% if questionDetails.optionC is defined %}{{questionDetails.optionC}}{%endif%}</textarea>
-            </div>
+        <div class="form-group">
+            <label for="optc">Option C:</label>
+            <textarea name="optc" id="optc" class="form-control">{% if questionDetails.optionC is defined %}{{questionDetails.optionC}}{%endif%}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label for="optd">Option D:</label>
-                <textarea name="optd" id="optd" class="form-control">{% if questionDetails.optionD is defined %}{{questionDetails.optionD}}{%endif%}</textarea>
-            </div>
+        <div class="form-group">
+            <label for="optd">Option D:</label>
+            <textarea name="optd" id="optd" class="form-control">{% if questionDetails.optionD is defined %}{{questionDetails.optionD}}{%endif%}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label for="correct">Correct option</label>
-                <select name="correct" id="correct" class="form-control" required="required">
-                    <option value=""> Select correct option </option>
-                    <option value="option_a" {% if questionDetails.answer is defined and questionDetails.answer == "option_a" %}selected="selected"{%endif%}>A</option>
-                    <option value="option_b" {% if questionDetails.answer is defined and questionDetails.answer == "option_b" %}selected="selected"{%endif%}>B</option>
-                    <option value="option_c" {% if questionDetails.answer is defined and questionDetails.answer == "option_c" %}selected="selected"{%endif%}>C</option>
-                    <option value="option_d" {% if questionDetails.answer is defined and questionDetails.answer == "option_d" %}selected="selected"{%endif%}>D</option>
-                </select>
-            </div>
+        <div class="form-group">
+            <label for="correct">Correct option</label>
+            <select name="correct" id="correct" class="form-control" required="required">
+                <option value=""> Select correct option </option>
+                <option value="option_a" {% if questionDetails.answer is defined and questionDetails.answer == "option_a" %}selected="selected"{%endif%}>A</option>
+                <option value="option_b" {% if questionDetails.answer is defined and questionDetails.answer == "option_b" %}selected="selected"{%endif%}>B</option>
+                <option value="option_c" {% if questionDetails.answer is defined and questionDetails.answer == "option_c" %}selected="selected"{%endif%}>C</option>
+                <option value="option_d" {% if questionDetails.answer is defined and questionDetails.answer == "option_d" %}selected="selected"{%endif%}>D</option>
+            </select>
+        </div>
 
-            <div class="form-group">
-                <button type="submit" value="addQuestion" class="btn btn-primary" >Submit</button>
-            </div>
-        </form>
-
-    </div>
+        <div class="form-group">
+            <button type="submit" value="addQuestion" class="btn btn-primary" >Submit</button>
+        </div>
+    </form>
 
 {% endblock %}

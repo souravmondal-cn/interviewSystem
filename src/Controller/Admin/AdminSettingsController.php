@@ -22,7 +22,7 @@ class AdminSettingsController extends Controller {
 
         $questions = $questionRepository->findAll();
 
-        return $this->app['twig']->render('admin/question_setting.twig', array('UserEmail' => $adminLogInEmail, 'questions' => $questions));
+        return $this->app['twig']->render('admin/question_setting.twig', array('UserEmail' => $adminLogInEmail, 'questions' => $questions, 'pageTitle' => 'Question Settings'));
     }
 
     public function questionUpload() {
@@ -42,7 +42,8 @@ class AdminSettingsController extends Controller {
             array(
                 'UserEmail' => $adminLogInEmail,
                 'categories' => $categories,
-                'formHeading' => 'Question and answer upload'
+                'formHeading' => 'Question and answer upload',
+                'pageTitle' => 'Question - Answer Upload'
             )
         );
     }
@@ -113,7 +114,8 @@ class AdminSettingsController extends Controller {
             array(
                 'categories' => $categories,
                 'questionDetails' => $questionDetails,
-                'formHeading' => 'Question and answer edit'
+                'formHeading' => 'Question and answer edit',
+                'pageTitle' => 'Question - Answer Edit'
                 )
         );
     }
@@ -149,7 +151,8 @@ class AdminSettingsController extends Controller {
             'admin/category_setting.twig',
             array(
                 'UserEmail' => $adminLogInEmail,
-                'categories' => $categories
+                'categories' => $categories,
+                'pageTitle' => 'Category Settings'
             )
         );
     }
@@ -171,7 +174,8 @@ class AdminSettingsController extends Controller {
             array(
                 'UserEmail' => $adminLogInEmail,
                 'categories' => $categories,
-                'formHeading' => 'Add Category'
+                'formHeading' => 'Add Category',
+                'pageTitle' => 'Add Category'
             )
         );
     }
@@ -219,7 +223,7 @@ class AdminSettingsController extends Controller {
 
         $categoryDetails = $entityManager->find('Entity\Category', $id);
 
-        $details = ['categories' => $categories, 'categoryDetails' => $categoryDetails, 'formHeading' => 'Edit Category'];
+        $details = ['categories' => $categories, 'categoryDetails' => $categoryDetails, 'formHeading' => 'Edit Category', 'pageTitle' => 'Edit Category'];
         return $this->app['twig']->render('admin/addcategory.twig', $details);
     }
 

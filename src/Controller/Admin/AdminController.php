@@ -22,7 +22,7 @@ class AdminController extends Controller {
         }
 
         $adminLogInEmail = $sessionData->get('loginAdminEmail');
-        return $this->app['twig']->render('admin/adminpanel.twig', array('UserEmail' => $adminLogInEmail));
+        return $this->app['twig']->render('admin/adminpanel.twig', array('UserEmail' => $adminLogInEmail, 'pageTitle' => 'Admin Panel'));
     }
 
     public function showAdminSettings() {
@@ -33,7 +33,7 @@ class AdminController extends Controller {
         $entityManager = $this->app['doctrine'];
         $userRepository = $entityManager->getRepository('Entity\User');
         $user = $userRepository->findBy(array('isAdmin' => '1'));
-        return $this->app['twig']->render('admin/admin_settings.twig', array('userData' => $user, 'pageHeading' => 'Admin'));
+        return $this->app['twig']->render('admin/admin_settings.twig', array('userData' => $user, 'pageHeading' => 'Admin', 'pageTitle' => 'Admin Settings'));
     }
 
     public function showUserSettings() {
@@ -45,12 +45,12 @@ class AdminController extends Controller {
         $entityManager = $this->app['doctrine'];
         $userRepository = $entityManager->getRepository('Entity\User');
         $user = $userRepository->findBy(array('isAdmin' => '0'));
-        return $this->app['twig']->render('admin/user_settings.twig', array('userData' => $user, 'pageHeading' => 'User'));
+        return $this->app['twig']->render('admin/user_settings.twig', array('userData' => $user, 'pageHeading' => 'User', 'pageTitle' => 'User Settings'));
     }
 
     public function getAddUserForm($userType) {
         
-        return $this->app['twig']->render('admin/addallusers.twig', array('formHeading' => 'Add ', 'userType' => $userType));
+        return $this->app['twig']->render('admin/addallusers.twig', array('formHeading' => 'Add ', 'userType' => $userType, 'pageTitle' => 'Add '.$userType));
     }
 
     public function doAddUser(Request $request, $userType) {
@@ -120,7 +120,8 @@ class AdminController extends Controller {
             return $this->app['twig']->render('admin/addallusers.twig', array(
                         'userData' => $userData,
                         'formHeading' => 'Edit ',
-                        'userType' => $userType));
+                        'userType' => $userType,
+                        'pageTitle' => 'Add '.$userType));
         }
     }
 
@@ -136,7 +137,8 @@ class AdminController extends Controller {
         return $this->app['twig']->render('admin/addallusers.twig', array(
                     'userData' => $userDetails,
                     'formHeading' => 'Edit ',
-                    'userType' => $userType));
+                    'userType' => $userType,
+                    'pageTitle' => 'Edit '.$userType));
     }
 
     public function deleteUserData($userType, $id) {

@@ -28,7 +28,7 @@ class ExamSettingsController extends Controller {
             $categoryDetails[$questionsDetail->getCategoryId()->getId()] = $questionsDetail->getCategoryId()->getCategoryName();
         }
 
-        return $this->app['twig']->render('admin/examsetting.twig', array('userDetails' => $userDetails, 'categories' => $categoryDetails));
+        return $this->app['twig']->render('admin/examsetting.twig', array('userDetails' => $userDetails, 'categories' => $categoryDetails, 'pageTitle' => 'Exam Settings'));
     }
 
     public function examGenerate(Request $request) {
@@ -181,7 +181,8 @@ class ExamSettingsController extends Controller {
                     'totalQuestions' => $totalQuestions,
                     'totalAnswers' => $totalAnswers,
                     'dataPercentage' => $dataPercentage,
-                    'isQualified' => $isQualified]);
+                    'isQualified' => $isQualified,
+                    'pageTitle' => 'Examination Detail']);
     }
 
     public function setQualified($examId) {
@@ -206,7 +207,7 @@ class ExamSettingsController extends Controller {
         $examRepository = $entityManager->getRepository('Entity\Examination');
         $examData = $examRepository->findBy(array('userId' => $userId));
 
-        return $this->app['twig']->render('admin/examhistory.twig', array('examdata' => $examData, 'email' => $emailId));
+        return $this->app['twig']->render('admin/examhistory.twig', array('examdata' => $examData, 'email' => $emailId, 'pageTitle' => 'Examination History'));
     }
 
 }

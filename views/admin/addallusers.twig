@@ -2,74 +2,68 @@
 
 {% block body %}
 
-    <div class="col-xs-12 col-lg-8"> 
-        <h3>
-            {{formHeading}}{{userType}}
-        </h3>
-        <br><br>
+    <br>
 
-        <form action="/adduser/{{userType}}" method="post" enctype="multipart/form-data" id='addUserForm'>
+    <form action="/adduser/{{userType}}" method="post" enctype="multipart/form-data" id='addUserForm'>
 
-            <div class="form-group">
-                <input type="hidden" name="userId" id="userId" value="{% if userData.id is defined %}{{userData.id}}{% endif %}">
-                <input type='hidden' name='userPassword' id='userPassword' value='{% if userData.password is defined %}{{userData.password}}{% endif %}'>
-                <label for="isAdmin">Is admin?</label>
-                <select name="isAdmin" id="isAdmin" class="form-control">
-                    <option value="0" {% if userData.isAdmin is defined and userData.isAdmin == '0' or userType == 'User' %}selected='selected'{% endif %}>No</option>
-                    <option value="1" {% if userData.isAdmin is defined and userData.isAdmin == '1' or userType == 'Admin' %}selected='selected'{% endif %}>Yes</option>
-                </select>
-            </div>
+        <div class="form-group">
+            <input type="hidden" name="userId" id="userId" value="{% if userData.id is defined %}{{userData.id}}{% endif %}">
+            <input type='hidden' name='userPassword' id='userPassword' value='{% if userData.password is defined %}{{userData.password}}{% endif %}'>
+            <label for="isAdmin">Is admin?</label>
+            <select name="isAdmin" id="isAdmin" class="form-control">
+                <option value="0" {% if userData.isAdmin is defined and userData.isAdmin == '0' or userType == 'User' %}selected='selected'{% endif %}>No</option>
+                <option value="1" {% if userData.isAdmin is defined and userData.isAdmin == '1' or userType == 'Admin' %}selected='selected'{% endif %}>Yes</option>
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="userEmail">Email Address</label>
-                <input type="email" id="userEmail" name="userEmail" class="form-control" value='{% if userData.userEmail is defined %}{{userData.userEmail}}{% endif %}' required="required">
+        <div class="form-group">
+            <label for="userEmail">Email Address</label>
+            <input type="email" id="userEmail" name="userEmail" class="form-control" value='{% if userData.userEmail is defined %}{{userData.userEmail}}{% endif %}' required="required">
 
-                <span id='userHist'>
-                    <a id="viewUserHistory">View history</a>
-                </span>
+            <span id='userHist'>
+                <a id="viewUserHistory">View history</a>
+            </span>
 
-                <span id='userEmailCheck' style='color:red'></span>
+            <span id='userEmailCheck' style='color:red'></span>
 
-            </div>
+        </div>
 
-            <div class="form-group">
-                <label for="userName">Name</label>
-                <input type="text" id="userName" name="userName" class="form-control" value='{% if userData.userName is defined %}{{userData.userName}}{% endif %}'>
-            </div>
+        <div class="form-group">
+            <label for="userName">Name</label>
+            <input type="text" id="userName" name="userName" class="form-control" value='{% if userData.userName is defined %}{{userData.userName}}{% endif %}'>
+        </div>
 
-            <div class="form-group" id="locationDiv">
-                <label for="officeLocation">Location</label>
-                <select id="officeLocation" name="officeLocation" class="form-control">
-                    <option value=''>
-                        Select office location
-                    </option>
-                    <option value='Kolkata Sector V' {% if userData.officeLocation is defined and userData.officeLocation == 'Kolkata Sector V' %}selected='selected'{% endif %}>Kolkata Sector V</option>
-                    <option value='Kolkata Kestopur' {% if userData.officeLocation is defined and userData.officeLocation == 'Kolkata Kestopur' %}selected='selected'{% endif %}>Kolkata Kestopur</option>
-                    <option value='Chennai' {% if userData.officeLocation is defined and userData.officeLocation == 'Chennai' %}selected='selected'{% endif %}>Chennai</option>
-                </select>
-            </div>
+        <div class="form-group" id="locationDiv">
+            <label for="officeLocation">Location</label>
+            <select id="officeLocation" name="officeLocation" class="form-control">
+                <option value=''>
+                    Select office location
+                </option>
+                <option value='Kolkata Sector V' {% if userData.officeLocation is defined and userData.officeLocation == 'Kolkata Sector V' %}selected='selected'{% endif %}>Kolkata Sector V</option>
+                <option value='Kolkata Kestopur' {% if userData.officeLocation is defined and userData.officeLocation == 'Kolkata Kestopur' %}selected='selected'{% endif %}>Kolkata Kestopur</option>
+                <option value='Chennai' {% if userData.officeLocation is defined and userData.officeLocation == 'Chennai' %}selected='selected'{% endif %}>Chennai</option>
+            </select>
+        </div>
 
-            <div class="form-group" id="addressDiv">
-                <label for="userAddress">Address</label>
-                <textarea id="userAddress" name="userAddress" class="form-control" rows="6">{% if userData.userAddress is defined %}{{userData.userAddress}}{% endif %}</textarea>
-            </div>
+        <div class="form-group" id="addressDiv">
+            <label for="userAddress">Address</label>
+            <textarea id="userAddress" name="userAddress" class="form-control" rows="6">{% if userData.userAddress is defined %}{{userData.userAddress}}{% endif %}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control" value='{% if userData.password is defined %}{{userData.password}}{% endif %}' required="required">
-            </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" value='{% if userData.password is defined %}{{userData.password}}{% endif %}' required="required">
+        </div>
 
-            <div class="form-group" id='fileUploadDiv'>
-                <label for='resumeFile'>Upload resume </label>
-                <span style="color:grey">(  allowed file types: PDF, DOC & DOCX  )</span>
-                <input type='file' name='resumeFile' id='resumeFile'>
-            </div>
+        <div class="form-group" id='fileUploadDiv'>
+            <label for='resumeFile'>Upload resume </label>
+            <span style="color:grey">(  allowed file types: PDF, DOC & DOCX  )</span>
+            <input type='file' name='resumeFile' id='resumeFile'>
+        </div>
 
-            <div class="form-group">
-                <button type="submit" value="addUser" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
-
-    </div>
+        <div class="form-group">
+            <button type="submit" value="addUser" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
 
 {% endblock %}
