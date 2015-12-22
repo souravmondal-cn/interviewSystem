@@ -52,10 +52,6 @@ class ExamController extends Controller {
 
         $examData = $this->getExamData($userId);
 
-//        echo '<pre>';
-//        echo $examData->getQuestions();
-//        exit;
-        
         if (empty($examData)) {
 
             $sessionUserData->getFlashBag()->add('user_message', 'Examination Over');
@@ -64,9 +60,7 @@ class ExamController extends Controller {
 
         $getQuestions = $examData->getQuestions();
         $questions = explode(',', $getQuestions);
-//        echo '<pre>';
-//        print_r($questions);
-//        exit;
+
         $questionRepository = $entityManager->getRepository('Entity\Questions');
         $questionDetails = $questionRepository->findBy(['id' => $questions]);
 
