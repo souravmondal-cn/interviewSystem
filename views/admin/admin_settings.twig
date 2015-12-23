@@ -20,10 +20,7 @@
                     Email Id
                 </th>
                 <th>
-                    Edit user details
-                </th>
-                <th>
-                    Delete user
+                    Action
                 </th>
             </tr>
         </thead>
@@ -39,11 +36,9 @@
                     <td>
                         {{singleUserData.userEmail}}
                     </td>
-                    <td align="center">
-                        <a class="btn btn-info" href='/edituser/{{pageHeading}}/{{singleUserData.id}}'>Edit</a>
-                    </td>
-                    <td align="center">
-                        <a class="btn btn-danger" href='/deleteuser/{{pageHeading}}/{{singleUserData.id}}'>Delete</a>
+                    <td>
+                        <a class="btn blue btn-outline" href='/edituser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a>
+                        <a class="btn red btn-outline" href='/deleteuser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-user-times"></i></a>
                     </td>
                 </tr>
             {% endfor %}

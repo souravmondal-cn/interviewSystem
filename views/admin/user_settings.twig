@@ -54,15 +54,15 @@
                     <td>
                         {{singleUserData.userAddress|striptags}}
                     </td>
-                    <td>
-                        <a class="btn purple btn-outline" href="/viewfile/{{singleUserData.id}}" target="_blank"><i class="fa fa-download"></i></a>
+                    <td align="center">
+                        <a class="btn purple btn-outline" href="/viewfile/{{singleUserData.id}}" target="_blank" data-toggle="tootltip" data-placement="bottom" title="Download">Download &nbsp; <i class="fa fa-download"></i></a>
                     </td>
                     <td align="center">
-                        <a class="btn blue btn-outline" href='/edituser/{{pageHeading}}/{{singleUserData.id}}'><i class="fa fa-pencil-square-o"></i></a>
-                        <a class="btn red btn-outline" href='/deleteuser/{{pageHeading}}/{{singleUserData.id}}'><i class="fa fa-user-times"></i></a>
+                        <a class="btn blue btn-outline" href='/edituser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a>
+                        <a class="btn red btn-outline" href='/deleteuser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-user-times"></i></a>
                     </td>
-                    <td>
-                        <a class="btn blue btn-outline" href = '/viewHistory/{{singleUserData.userEmail}}' alt="View Exam of this user"><i class="fa fa-eye"></i></a>
+                    <td align="center">
+                        <a class="btn green btn-outline" href = '/viewHistory/{{singleUserData.userEmail}}' data-toggle="tootltip" data-placement="bottom" title="View exams of this user">View &nbsp; <i class="fa fa-eye"></i></a>
                     </td>
                 </tr>
             {% endfor %}

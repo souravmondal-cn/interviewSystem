@@ -23,10 +23,7 @@
                 </th>
 
                 <th>
-                    Edit question
-                </th>
-                <th>
-                    Delete question
+                    Action
                 </th>
             </tr>
         </thead>
@@ -43,11 +40,9 @@
                     <td>
                         {{ question.categoryId.categoryName }}
                     </td>
-                    <td align="center">
-                        <a class="btn btn-info" href="/editQuestion/{{ question.id }}">Edit</a> 
-                    </td>
-                    <td align="center">
-                        <a class="btn btn-danger" href="/deleteQuestion/{{ question.id }}">Delete</a>
+                    <td>
+                        <a class="btn blue btn-outline" href="/editQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a> 
+                        <a class="btn red btn-outline" href="/deleteQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
             {% endfor %}

@@ -103,9 +103,7 @@ class AdminController extends Controller {
                 $fs->fileUpload($request->files->get('resumeFile'), $user->getId(), UPLOAD_PATH);
             }
 
-            $reDirectUrl = "/" . strtolower($userType) . "setting";
-
-            return $this->app->redirect($reDirectUrl);
+            return $this->app->redirect("/adduser/" . $userType);
         } catch (UniqueConstraintViolationException $ex) {
 
             $sessionData->getFlashBag()->add("alert_danger", "Email id is already registered, unique required!");

@@ -22,10 +22,8 @@
                     Category Name
                 </th>
                 <th>
-                    Edit category
+                    Action
                 </th>
-                <th>
-                    Delete category
             </tr>
         </thead>
         <tbody>
@@ -37,11 +35,9 @@
                     <td>
                         {{ category.categoryName }}
                     </td>
-                    <td align="center">
-                        <a class="btn btn-info" href="/editCategory/{{ category.id }}">Edit</a> 
-                    </td>
-                    <td align="center">
-                        <a class="btn btn-danger" href="/deleteCategory/{{ category.id }}">Delete</a>
+                    <td>
+                        <a class="btn blue btn-outline" href="/editCategory/{{ category.id }}" data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a> 
+                        <a class="btn red btn-outline" href="/deleteCategory/{{ category.id }}" data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-trash"></i></i></a>
                     </td>
                 </tr>
             {% endfor %}
