@@ -33,7 +33,14 @@ class AdminController extends Controller {
         $entityManager = $this->app['doctrine'];
         $userRepository = $entityManager->getRepository('Entity\User');
         $user = $userRepository->findBy(array('isAdmin' => '1'));
-        return $this->app['twig']->render('admin/admin_settings.twig', array('userData' => $user, 'pageHeading' => 'Admin', 'pageTitle' => 'Admin Settings'));
+        return $this->app['twig']->render(
+            'admin/admin_settings.twig',
+            array(
+                'userData' => $user,
+                'pageHeading' => 'Admin',
+                'pageTitle' => 'Admin Settings'
+            )
+        );
     }
 
     public function showUserSettings() {
