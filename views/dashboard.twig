@@ -4,7 +4,7 @@
     <div align="center">
 
         <h3>
-            Welcome to dashboard!
+            Welcome {{UserName}} &nbsp;!
         </h3>
         <div align="center">
             {% for message in app.session.getFlashBag.get('alert_success') %}
