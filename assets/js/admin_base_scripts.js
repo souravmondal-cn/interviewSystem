@@ -2,7 +2,7 @@ tinymce.init({selector: 'textarea'});
 
 $(document).ready(function () {
 
-    $('.table-striped').DataTable();
+    $('.table').DataTable();
     $('#userHist').hide();
 
     var isAdmin = $("#isAdmin").val();

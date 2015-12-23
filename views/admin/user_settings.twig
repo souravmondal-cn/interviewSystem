@@ -3,11 +3,11 @@
 {% block body %}
     
         <div align="left">
-            <a class="btn btn-primary" href="/adduser/{{pageHeading}}">Add {{pageHeading}}</a>
+            <a class="btn green" href="/adduser/{{pageHeading}}">Add {{pageHeading}} &nbsp;<i class="fa fa-plus"></i></a>
         </div>
 
         <br><br>
-        <table cellpadding="5" border="1" class="table table-striped table-hover table-bordered" id='userTable'>
+        <table cellpadding="5" border="1" class="table table-striped table-hover table-bordered">
             <thead>
                 <tr class="info">
                     <th>
@@ -55,13 +55,13 @@
                             {{singleUserData.userAddress|striptags}}
                         </td>
                         <td>
-                            <a class="btn btn-default" href="/viewfile/{{singleUserData.id}}" target="_blank">View resumé</a>
+                            <a class="btn purple btn-outline" href="/viewfile/{{singleUserData.id}}" target="_blank">View resumé</a>
                         </td>
                         <td align="center">
-                            <a class="btn btn-info" href='/edituser/{{pageHeading}}/{{singleUserData.id}}'>Edit</a>
+                            <a class="btn blue btn-outline" href='/edituser/{{pageHeading}}/{{singleUserData.id}}'>Edit</a>
                         </td>
                         <td align="center">
-                            <a class="btn btn-danger" href='/deleteuser/{{pageHeading}}/{{singleUserData.id}}'>Delete</a>
+                            <a class="btn red btn-outline" href='/deleteuser/{{pageHeading}}/{{singleUserData.id}}'>Delete</a>
                         </td>
                     </tr>
                 {% endfor %}

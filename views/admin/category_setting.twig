@@ -3,7 +3,7 @@
 {% block body %}
 
     <div align='left'>
-        <a class="btn btn-primary" href="/addcategory">Add Category</a>
+        <a class="btn green" href="/addcategory">Add Category &nbsp;<i class="fa fa-plus"></i></a>
     </div>
     <div align="center" class="col-md-6">
         {% for message in app.session.getFlashBag.get('admin_message') %}
