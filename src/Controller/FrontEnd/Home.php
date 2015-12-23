@@ -33,10 +33,8 @@ class Home extends Controller {
         $loggerId = $sessionData->get('loggedInId');
 
         if (empty($loggerId)) {
-
-            $route = '/login';
+            $route = BASEPATH.'/login';
         } else {
-
             $route = $this->checkLoggerId($loggerId);
         }
 
