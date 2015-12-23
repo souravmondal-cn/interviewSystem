@@ -16,3 +16,6 @@ phpmd: vendor
 	./vendor/bin/phpmd src/ text dev/standard/phpmd.xml
 
 codestyle: phpcs phpmd
+
+dbmigrate:
+	./vendor/bin/doctrine migrations:migrate --no-interaction
