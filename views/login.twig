@@ -2,8 +2,8 @@
 <html lang="en">
     <head>
         <title>Interview System - Login</title>
-        <link href="/assets/bower/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-        <link href="/assets/css/signin.css" rel="stylesheet" type="text/css"/>
+        <link href="{{ constant('BASEPATH') }}/assets/bower/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="{{ constant('BASEPATH') }}/assets/css/signin.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <div class="container">
@@ -17,14 +17,14 @@
                     <p>{{message}}</p>
                 </div>
             {%endfor%}
-            <form method="post" name ="logInForm" class="form-signin" id="logInForm" action="/login">
+            <form method="post" name ="logInForm" class="form-signin" id="logInForm" action="{{ constant('BASEPATH') }}/login">
                 {% if formName is defined and formName == 'Admin' %}<h3>Admin Section</h3>{% endif %}
                 <h4 class="form-signin-heading">Please sign in</h4>
                 <input type="email" id="loginEmail" name = "loginEmail" placeholder="Email address" class="form-control">
                 <input type="password" id="loginPassword" name = "loginPassword" placeholder="Password" class="form-control">
                 <button class="btn btn-primary btn-block" type="submit">Sign in</button>
                 {% if formName is defined and formName == 'User' %}
-                    <a href="/register" class="btn btn-block btn-general">New user registration</a>
+                    <a href="{{ constant('BASEPATH') }}/register" class="btn btn-block btn-general">New user registration</a>
                 {% endif %}
             </form>
         </div>

@@ -14,9 +14,9 @@
             {%endfor%}
         </div>
 
-        {% if examset is defined and examset == 'true' %}<img src="/assets/new.gif"> &nbsp;&nbsp; <a href = '/examstart/{{UserId}}'>Start examination</a>{% endif %}
+        {% if examset is defined and examset == 'true' %}<img src="{{ constant('BASEPATH') }}/assets/new.gif"> &nbsp;&nbsp; <a href = '{{ constant('BASEPATH') }}/examstart/{{UserId}}'>Start examination</a>{% endif %}
 
-            {% if success is defined and success == 1%} <img src="/assets/new.gif"> <br> You are qualified for interview! <br> Please contact office... {% endif %}
+            {% if success is defined and success == 1%} <img src="{{ constant('BASEPATH') }}/assets/new.gif"> <br> You are qualified for interview! <br> Please contact office... {% endif %}
 
         </div>
         {% endblock %}

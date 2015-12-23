@@ -33,7 +33,7 @@
             {% for singledata in examdata %}
                 <tr>
                     <td>
-                        <a href = '/examdetail/{{ singledata.id }}'>{{singledata.id}}</a>
+                        <a href = '{{ constant('BASEPATH') }}/examdetail/{{ singledata.id }}'>{{singledata.id}}</a>
                     </td>
                     <td>
                         {%if singledata.created != null %}{{singledata.created|date('d-M-Y H:i:s')}}{% else %}N/A{% endif %}
@@ -55,6 +55,6 @@
         </tbody>
     </table>
 
-    <a href='/usersetting' class='btn btn-primary' >Back to user settings</a>
+    <a href='{{ constant('BASEPATH') }}/usersetting' class='btn btn-primary' >Back to user settings</a>
 </div>
 {% endblock %}

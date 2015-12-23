@@ -12,7 +12,7 @@ class ExamSettingsController extends Controller {
 
     public function examSetting() {
         if ($this->checkAdminSession() == false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entiryManager = $this->app['doctrine'];
@@ -41,7 +41,7 @@ class ExamSettingsController extends Controller {
             empty($request->request->get('qCategory'))
         ) {
             $sessionData->getFlashBag()->add('alert_danger', 'Please fill up every detail carefully!');
-            return $this->app->redirect('/examsetting');
+            return $this->app->redirect(BASEPATH.'/examsetting');
         }
 
         $userEmail = $request->request->get('userEmailId');
@@ -53,7 +53,7 @@ class ExamSettingsController extends Controller {
         if ($countCatNum > MAX_CATEGORY || $countCatNum < MIN_CATEGORY) {
 
             $sessionData->getFlashBag()->add('alert_danger', 'Minimum three and maximum five categories should be selected!');
-            return $this->app->redirect('/examsetting');
+            return $this->app->redirect(BASEPATH.'/examsetting');
         }
 
         /* @var $questionRepository \Entity\Questions */
@@ -67,7 +67,7 @@ class ExamSettingsController extends Controller {
             if ($qNumbers > $countQNumbers) {
 
                 $sessionData->getFlashBag()->add('alert_danger', 'Not enough questions to generate exam!');
-                return $this->app->redirect('/examsetting');
+                return $this->app->redirect(BASEPATH.'/examsetting');
             }
 
             $questions = $questionRepository->findBy(array('categoryId' => $cId), array(), $qNumbers);
@@ -86,7 +86,7 @@ class ExamSettingsController extends Controller {
             $totalQuestions
         );
         
-        return $this->app->redirect('/admin');
+        return $this->app->redirect(BASEPATH.'/admin');
     }
 
     public function setValidDataForExamination(
@@ -122,7 +122,7 @@ class ExamSettingsController extends Controller {
     public function viewExamDetail($examId) {
         
         if ($this->checkAdminSession() == false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $sessionData = $this->app['session'];
@@ -134,7 +134,7 @@ class ExamSettingsController extends Controller {
         $submitDetails = $examDetail->getUsersInput();
         if ($submitDetails == null) {
             $sessionData->getFlashBag()->add('alert_info', 'Examination not completed. No details found');
-            return $this->app->redirect('/viewHistory/' . $emailId);
+            return $this->app->redirect(BASEPATH.'/viewHistory/' . $emailId);
         }
 
         $submitDetailsArray = json_decode($submitDetails);
@@ -192,12 +192,12 @@ class ExamSettingsController extends Controller {
         $entityManager->persist($examDetail);
         $entityManager->flush();
 
-        return $this->app->redirect('/examdetail/' . $examId);
+        return $this->app->redirect(BASEPATH.'/examdetail/' . $examId);
     }
 
     public function listExamHistory($emailId) {
         if ($this->checkAdminSession() == false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entityManager = $this->app['doctrine'];

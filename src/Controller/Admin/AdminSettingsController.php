@@ -13,7 +13,7 @@ class AdminSettingsController extends Controller {
     public function questionListing() {
         $sessionData = $this->app['session'];
         if ($this->checkAdminSession() == false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $adminLogInEmail = $sessionData->get('loginAdminEmail');
@@ -28,7 +28,7 @@ class AdminSettingsController extends Controller {
     public function questionUpload() {
         $sessionData = $this->app['session'];
         if ($this->checkAdminSession() == false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entityManager = $this->app['doctrine'];
@@ -64,7 +64,7 @@ class AdminSettingsController extends Controller {
 
             $sessionData->getFlashBag()->add('alert_danger', 'No field should be blank, please fillup correctly.');
 
-            return $this->app->redirect("/questionupload");
+            return $this->app->redirect(BASEPATH."/questionupload");
         }
 
         if ($postedData['questionId'] != '') {
@@ -90,17 +90,17 @@ class AdminSettingsController extends Controller {
 
             $entityManager->persist($question);
             $entityManager->flush();
-            return $this->app->redirect("/questionlisting");
+            return $this->app->redirect(BASEPATH."/questionlisting");
         } catch (UniqueConstraintViolationException $ex) {
             $sessionData = $this->app['session'];
             $sessionData->getFlashBag()->add('alert_danger', 'Unique value required');
-            return $this->app->redirect("/questionlisting");
+            return $this->app->redirect(BASEPATH."/questionlisting");
         }
     }
 
     public function editQuestion($id) {
         if ($this->checkAdminSession() == false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entityManager = $this->app['doctrine'];
@@ -131,12 +131,12 @@ class AdminSettingsController extends Controller {
 
         $sessionData->getFlashBag()->add('alert_success', 'Question deleted successfully');
 
-        return $this->app->redirect('/questionlisting');
+        return $this->app->redirect(BASEPATH.'/questionlisting');
     }
 
     public function categorySetting() {
         if ($this->checkAdminSession() == false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entityManager = $this->app['doctrine'];
@@ -159,7 +159,7 @@ class AdminSettingsController extends Controller {
 
     public function addCategory() {
         if ($this->checkAdminSession() == false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entityManager = $this->app['doctrine'];
@@ -187,7 +187,7 @@ class AdminSettingsController extends Controller {
 
         if ($postedData['category'] == 'Choose parent category' || $postedData['category'] == '' || $postedData['subcategory'] == '') {
             $sessionData->getFlashBag()->add('alert_danger', 'No field should be blank, please fillup correctly');
-            return $this->app->redirect('/addcategory');
+            return $this->app->redirect(BASEPATH.'/addcategory');
         }
 
         if ($postedData['categoryId'] == '') {
@@ -205,15 +205,15 @@ class AdminSettingsController extends Controller {
             $entityManager->flush();
         } catch (UniqueConstraintViolationException $ex) {
             $sessionData->getFlashBag()->add('alert_danger', 'Something went wrong!');
-            return $this->app->redirect('/addcategory');
+            return $this->app->redirect(BASEPATH.'/addcategory');
         }
 
-        return $this->app->redirect('/category');
+        return $this->app->redirect(BASEPATH.'/category');
     }
 
     public function editCategory($id) {
         if ($this->checkAdminSession() == false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entityManager = $this->app['doctrine'];
@@ -240,7 +240,7 @@ class AdminSettingsController extends Controller {
         if (!empty($checkCategory)) {
             $sessionData->getFlashBag()->add('alert_danger', 'Category has sub categories!');
 
-            return $this->app->redirect('/category');
+            return $this->app->redirect(BASEPATH.'/category');
         }
 
         $categoryDetails = $entityManager->find('Entity\Category', $id);
@@ -250,7 +250,7 @@ class AdminSettingsController extends Controller {
 
         $sessionData->getFlashBag()->add('alert_success', 'Category deleted successfully');
 
-        return $this->app->redirect('/category');
+        return $this->app->redirect(BASEPATH.'/category');
     }
 
 }

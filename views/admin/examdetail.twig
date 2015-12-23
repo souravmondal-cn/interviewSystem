@@ -8,8 +8,8 @@
     Accuracy:{{dataPercentage|number_format(2,'.')}}%<br>
     Is qualified? {% if isQualified == 0 %}No{% else %} Yes {% endif %}
     <br><br>
-    <a href = '/setQualified/{{examId}}' class='btn btn-primary'>Set qualified</a>
-    <a href = '/viewHistory/{{emailId}}' class='btn btn-default'>Back to exam history</a>
+    <a href = '{{ constant('BASEPATH') }}/setQualified/{{examId}}' class='btn btn-primary'>Set qualified</a>
+    <a href = '{{ constant('BASEPATH') }}/viewHistory/{{emailId}}' class='btn btn-default'>Back to exam history</a>
     <br><br>
 
     {% for dataField in examSubmitData %}

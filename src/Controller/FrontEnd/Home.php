@@ -20,11 +20,11 @@ class Home extends Controller {
         if (empty($loginInfo)) {
             
             $sessionUserData->getFlashBag()->add('alert_danger', 'Sorry, email and password does not match');
-            return $this->app->redirect("/login");
+            return $this->app->redirect(BASEPATH."/login");
         }
 
         $sessionUserData->set('loggedInId', $loginInfo->getId());
-        return $this->app->redirect('/');
+        return $this->app->redirect(BASEPATH.'/');
     }
 
     public function home() {
@@ -50,7 +50,7 @@ class Home extends Controller {
 
         if (empty($userDetails)) {
 
-            $returnRoute = '/login';
+            $returnRoute = BASEPATH.'/login';
         } else {
 
             $isAdmin = $userDetails->getIsAdmin();
@@ -59,11 +59,11 @@ class Home extends Controller {
 
                 $sessionData->set('adminSession', true);
                 $sessionData->getFlashBag()->add('alert_success', 'Welcome to admin panel');
-                $returnRoute = '/admin';
+                $returnRoute = BASEPATH.'/admin';
             } else {
 
                 $sessionData->set('userSession', true);
-                $returnRoute = '/dashboard';
+                $returnRoute = BASEPATH.'/dashboard';
             }
         }
 

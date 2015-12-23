@@ -47,7 +47,7 @@ class ExamController extends Controller {
 
         $validSession = $sessionUserData->get('userSession');
         if (empty($validSession)) {
-            return $this->app->redirect("/dashboard");
+            return $this->app->redirect(BASEPATH."/dashboard");
         }
 
         $examData = $this->getExamData($userId);
@@ -55,7 +55,7 @@ class ExamController extends Controller {
         if (empty($examData)) {
 
             $sessionUserData->getFlashBag()->add('user_message', 'Examination Over');
-            return $this->app->redirect("/dashboard");
+            return $this->app->redirect(BASEPATH."/dashboard");
         }
 
         $getQuestions = $examData->getQuestions();
@@ -66,7 +66,7 @@ class ExamController extends Controller {
 
         $this->setExamDetailsToSession($examData, $questionDetails);
 
-        return $this->app->redirect('/displayQuestion');
+        return $this->app->redirect(BASEPATH.'/displayQuestion');
     }
 
     public function setExamDetailsToSession($examData, $questionDetails) {
@@ -97,7 +97,7 @@ class ExamController extends Controller {
         header("Refresh: $totaltime; url=/examsubmit");
 
         if ($validExam == false) {
-            return $this->app->redirect('/examsubmit');
+            return $this->app->redirect(BASEPATH.'/examsubmit');
         }
 
         $sessionData->set('validExam', false);
@@ -108,7 +108,7 @@ class ExamController extends Controller {
         $questionPointer = $sessionData->get('questionPointer');
 
         if (!$this->checkQuestionPointerStatus()) {
-            return $this->app->redirect('/dashboard');
+            return $this->app->redirect(BASEPATH.'/dashboard');
         }
 
         $displayQuestion = $questionData[$questionPointer];
@@ -153,7 +153,7 @@ class ExamController extends Controller {
         $entityManager->flush();
 
         $sessionUserData->set('validExam', true);
-        return $this->app->redirect('/displayQuestion');
+        return $this->app->redirect(BASEPATH.'/displayQuestion');
     }
 
     public function getUsersInputAsJsonData($usersSubmit, $examId) {
@@ -230,7 +230,7 @@ class ExamController extends Controller {
         $examId = $sessionUserData->get('examId');
 
         if (empty($examId)) {
-            return $this->app->redirect('/dashboard');
+            return $this->app->redirect(BASEPATH.'/dashboard');
         }
 
         $this->removeExamDetailsFromSession();
@@ -241,7 +241,7 @@ class ExamController extends Controller {
         $entityManager->persist($examDetail);
         $entityManager->flush();
         $sessionUserData->getFlashBag()->add('user_message', 'Examination finished');
-        return $this->app->redirect('/dashboard');
+        return $this->app->redirect(BASEPATH.'/dashboard');
     }
 
 }

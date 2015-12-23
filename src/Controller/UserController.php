@@ -43,11 +43,11 @@ class UserController extends Controller {
             }
 
             $sessionUserData->getFlashBag()->add('alert_success', 'Registration successful');
-            return $this->app->redirect("/login");
+            return $this->app->redirect(BASEPATH."/login");
         } catch (UniqueConstraintViolationException $ex) {
 
             $sessionUserData->getFlashBag()->add('alert_danger', 'Sorry, this email id is already registered!');
-            return $this->app->redirect("/register");
+            return $this->app->redirect(BASEPATH."/register");
         }
     }
 
@@ -57,7 +57,7 @@ class UserController extends Controller {
         $entityManager = $this->app['doctrine'];
 
         if ($this->checkUserSession() === false) {
-            return $this->app->redirect("/login");
+            return $this->app->redirect(BASEPATH."/login");
         }
 
         $loggedInId = $sessionUserData->get('loggedInId');
@@ -91,7 +91,7 @@ class UserController extends Controller {
         $sessionUserData = $this->app['session'];
         $sessionUserData->remove('loginSession');
         $sessionUserData->clear();
-        return $this->app->redirect("/");
+        return $this->app->redirect(BASEPATH."/");
     }
 
 }

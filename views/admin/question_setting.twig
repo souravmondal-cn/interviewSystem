@@ -3,7 +3,7 @@
 {% block body %}
 
     <div align='left'>
-        <a class="btn green" href="/questionupload">Add Question &nbsp;<i class="fa fa-plus"></i></a>
+        <a class="btn green" href="{{ constant('BASEPATH') }}/questionupload">Add Question &nbsp;<i class="fa fa-plus"></i></a>
     </div>
 
     <br><br>
@@ -41,8 +41,8 @@
                         {{ question.categoryId.categoryName }}
                     </td>
                     <td>
-                        <a class="btn blue btn-outline" href="/editQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a> 
-                        <a class="btn red btn-outline" href="/deleteQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-trash"></i></a>
+                        <a class="btn blue btn-outline" href="{{ constant('BASEPATH') }}/editQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a> 
+                        <a class="btn red btn-outline" href="{{ constant('BASEPATH') }}/deleteQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
             {% endfor %}

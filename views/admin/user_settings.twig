@@ -3,7 +3,7 @@
 {% block body %}
 
     <div align="left">
-        <a class="btn green" href="/adduser/{{pageHeading}}">Add {{pageHeading}} &nbsp;<i class="fa fa-plus"></i></a>
+        <a class="btn green" href="{{ constant('BASEPATH') }}/adduser/{{pageHeading}}">Add {{pageHeading}} &nbsp;<i class="fa fa-plus"></i></a>
     </div>
 
     <br><br>
@@ -46,7 +46,7 @@
                         {{singleUserData.userName}}
                     </td>
                     <td>
-                        <a href = '/viewHistory/{{singleUserData.userEmail}}'>{{singleUserData.userEmail}}</a>
+                        <a href = '{{ constant('BASEPATH') }}/viewHistory/{{singleUserData.userEmail}}'>{{singleUserData.userEmail}}</a>
                     </td>
                     <td>
                         {{singleUserData.officeLocation}}
@@ -55,14 +55,14 @@
                         {{singleUserData.userAddress|striptags}}
                     </td>
                     <td align="center">
-                        <a class="btn purple btn-outline" href="/viewfile/{{singleUserData.id}}" target="_blank" data-toggle="tootltip" data-placement="bottom" title="Download">Download &nbsp; <i class="fa fa-download"></i></a>
+                        <a class="btn purple btn-outline" href="{{ constant('BASEPATH') }}/viewfile/{{singleUserData.id}}" target="_blank" data-toggle="tootltip" data-placement="bottom" title="Download">Download &nbsp; <i class="fa fa-download"></i></a>
                     </td>
                     <td align="center">
-                        <a class="btn blue btn-outline" href='/edituser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a>
-                        <a class="btn red btn-outline" href='/deleteuser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-user-times"></i></a>
+                        <a class="btn blue btn-outline" href='{{ constant('BASEPATH') }}/edituser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a>
+                        <a class="btn red btn-outline" href='{{ constant('BASEPATH') }}/deleteuser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-user-times"></i></a>
                     </td>
                     <td align="center">
-                        <a class="btn green btn-outline" href = '/viewHistory/{{singleUserData.userEmail}}' data-toggle="tootltip" data-placement="bottom" title="View exams of this user">View &nbsp; <i class="fa fa-eye"></i></a>
+                        <a class="btn green btn-outline" href = '{{ constant('BASEPATH') }}/viewHistory/{{singleUserData.userEmail}}' data-toggle="tootltip" data-placement="bottom" title="View exams of this user">View &nbsp; <i class="fa fa-eye"></i></a>
                     </td>
                 </tr>
             {% endfor %}

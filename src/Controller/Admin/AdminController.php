@@ -18,7 +18,7 @@ class AdminController extends Controller {
     public function adminPanel() {
         $sessionData = $this->app['session'];
         if ($this->checkAdminSession() === false) {
-            return $this->app->redirect("/admin/login");
+            return $this->app->redirect(BASEPATH."/admin/login");
         }
 
         $adminLogInEmail = $sessionData->get('loginAdminEmail');
@@ -27,7 +27,7 @@ class AdminController extends Controller {
 
     public function showAdminSettings() {
         if ($this->checkAdminSession() === false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entityManager = $this->app['doctrine'];
@@ -39,7 +39,7 @@ class AdminController extends Controller {
     public function showUserSettings() {
         
         if ($this->checkAdminSession() === false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entityManager = $this->app['doctrine'];
@@ -69,7 +69,7 @@ class AdminController extends Controller {
                 $postedFormData['isAdmin'] == ''
         ) {
             $sessionData->getFlashBag()->add("alert_danger", "No field should left blank");
-            return $this->app->redirect("/adduser/" . $userType);
+            return $this->app->redirect(BASEPATH."/adduser/" . $userType);
         }
 
         if ($postedFormData['userId'] == '') {
@@ -103,7 +103,7 @@ class AdminController extends Controller {
                 $fs->fileUpload($request->files->get('resumeFile'), $user->getId(), UPLOAD_PATH);
             }
 
-            return $this->app->redirect("/adduser/" . $userType);
+            return $this->app->redirect(BASEPATH."/adduser/" . $userType);
         } catch (UniqueConstraintViolationException $ex) {
 
             $sessionData->getFlashBag()->add("alert_danger", "Email id is already registered, unique required!");
@@ -126,7 +126,7 @@ class AdminController extends Controller {
     public function editUserData($userType, $id) {
         
         if ($this->checkAdminSession() === false) {
-            return $this->app->redirect("/admin");
+            return $this->app->redirect(BASEPATH."/admin");
         }
 
         $entityManager = $this->app['doctrine'];
@@ -154,7 +154,7 @@ class AdminController extends Controller {
         $sessionData->getFlashBag()->add('alert_success', $userType . ' deleted from database');
         $redirectUrl = "/" . strtolower($userType) . "setting";
 
-        return $this->app->redirect($redirectUrl);
+        return $this->app->redirect(BASEPATH.$redirectUrl);
     }
 
     public function downloadFile($filename) {
@@ -164,7 +164,7 @@ class AdminController extends Controller {
         $fileResponse = $fileHandler->downloadExistingFile($filename, UPLOAD_PATH);
         if (!$fileResponse) {
             
-            return $this->app->redirect('/usersetting');
+            return $this->app->redirect(BASEPATH.'/usersetting');
         } else {
             
             return $fileResponse;
@@ -175,7 +175,7 @@ class AdminController extends Controller {
     public function adminLogout() {
         $sessionData = $this->app['session'];
         $sessionData->clear();
-        return $this->app->redirect("/admin");
+        return $this->app->redirect(BASEPATH."/admin");
     }
 
 }

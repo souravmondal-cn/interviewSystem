@@ -9,7 +9,7 @@
         </h3>
         <br><br>
         <span id="timer"></span>
-        <form action="/examsubmit" method="post" id="examNowForm" name="examNowForm">
+        <form action="{{ constant('BASEPATH') }}/examsubmit" method="post" id="examNowForm" name="examNowForm">
             <input type="hidden" name="qid" value="{{displayQuestion.id}}">
             <p>{{displayQuestion.question|striptags}} ?</p>
 
