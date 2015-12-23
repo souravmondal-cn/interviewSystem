@@ -1,9 +1,7 @@
 {% extends "admin/base.twig" %}
 
 {% block body %}
-
     <br>
-
     <div align="center">
         {% for message in app.session.getFlashBag.get('admin_message') %}
             <p>{{message}}</p>
@@ -21,7 +19,7 @@
         </div>
         <br>
         <div class="form-group">
-            <label>Question category :</label>
+            <label>Choose Question category (Min {{ constant('MIN_CATEGORY') }} category and Maximum {{ constant('MAX_CATEGORY') }} category)</label>
             <br>{% set i = 0 %}
             {% for key,value in categories %}
                 {{value}} &nbsp;&nbsp;&nbsp; : <input type="checkbox" name="qCategory[]" id="qCategory[]" value="{{key}}">&nbsp;&nbsp;&nbsp;

@@ -1,77 +1,78 @@
 {% extends "admin/base.twig" %}
 
 {% block body %}
-    
-        <div align="left">
-            <a class="btn green" href="/adduser/{{pageHeading}}">Add {{pageHeading}} &nbsp;<i class="fa fa-plus"></i></a>
-        </div>
 
-        <br><br>
-        <table cellpadding="5" border="1" class="table table-striped table-hover table-bordered">
-            <thead>
-                <tr class="info">
-                    <th>
-                        User Id
-                    </th>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Email Id
-                    </th>
-                    <th>
-                        Location
-                    </th>
-                    <th>
-                        Address
-                    </th>
-                    <th>
-                        Resumé
-                    </th>
-                    <th>
-                        Edit user data
-                    </th>
-                    <th>
-                        Delete user data
-                    </th>
+    <div align="left">
+        <a class="btn green" href="/adduser/{{pageHeading}}">Add {{pageHeading}} &nbsp;<i class="fa fa-plus"></i></a>
+    </div>
+
+    <br><br>
+    <table cellpadding="5" border="1" class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr class="info">
+                <th>
+                    User Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email Id
+                </th>
+                <th>
+                    Location
+                </th>
+                <th>
+                    Address
+                </th>
+                <th>
+                    Resume
+                </th>
+                <th>
+                    Action
+                </th>
+                <th>
+                    Exam
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for singleUserData in userData %}
+                <tr>
+                    <td>
+                        {{singleUserData.id}}
+                    </td>
+                    <td>
+                        {{singleUserData.userName}}
+                    </td>
+                    <td>
+                        <a href = '/viewHistory/{{singleUserData.userEmail}}'>{{singleUserData.userEmail}}</a>
+                    </td>
+                    <td>
+                        {{singleUserData.officeLocation}}
+                    </td>
+                    <td>
+                        {{singleUserData.userAddress|striptags}}
+                    </td>
+                    <td>
+                        <a class="btn purple btn-outline" href="/viewfile/{{singleUserData.id}}" target="_blank"><i class="fa fa-download"></i></a>
+                    </td>
+                    <td align="center">
+                        <a class="btn blue btn-outline" href='/edituser/{{pageHeading}}/{{singleUserData.id}}'><i class="fa fa-pencil-square-o"></i></a>
+                        <a class="btn red btn-outline" href='/deleteuser/{{pageHeading}}/{{singleUserData.id}}'><i class="fa fa-user-times"></i></a>
+                    </td>
+                    <td>
+                        <a class="btn blue btn-outline" href = '/viewHistory/{{singleUserData.userEmail}}' alt="View Exam of this user"><i class="fa fa-eye"></i></a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for singleUserData in userData %}
-                    <tr>
-                        <td>
-                            {{singleUserData.id}}
-                        </td>
-                        <td>
-                            {{singleUserData.userName}}
-                        </td>
-                        <td>
-                            <a href = '/viewHistory/{{singleUserData.userEmail}}'>{{singleUserData.userEmail}}</a>
-                        </td>
-                        <td>
-                            {{singleUserData.officeLocation}}
-                        </td>
-                        <td>
-                            {{singleUserData.userAddress|striptags}}
-                        </td>
-                        <td>
-                            <a class="btn purple btn-outline" href="/viewfile/{{singleUserData.id}}" target="_blank">View resumé</a>
-                        </td>
-                        <td align="center">
-                            <a class="btn blue btn-outline" href='/edituser/{{pageHeading}}/{{singleUserData.id}}'>Edit</a>
-                        </td>
-                        <td align="center">
-                            <a class="btn red btn-outline" href='/deleteuser/{{pageHeading}}/{{singleUserData.id}}'>Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        {% for message in app.session.getFlashBag.get('admin_message') %}
-            <div align="center">
-                <p>{{message}}</p>
-            </div>
-        {%endfor%}
+    {% for message in app.session.getFlashBag.get('admin_message') %}
+        <div align="center">
+            <p>{{message}}</p>
+        </div>
+    {%endfor%}
 
 {% endblock %}
