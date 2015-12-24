@@ -123,17 +123,17 @@
                 <div class="row">    
                     <div class="col-xs-12 col-sm-12">
                         {% for message in app.session.getFlashBag.get('alert_danger') %}
-                            <div class="alert alert-danger" align='center'>
+                            <div class="alert alert-danger" align="center">
                                 <p>{{message}}</p>
                             </div>
                         {%endfor%}
                         {% for message in app.session.getFlashBag.get('alert_success') %}
-                            <div class="alert alert-success alert-dismissible">
+                            <div class="alert alert-success"  align="center">
                                 <p>{{message}}</p>
                             </div>
                         {%endfor%}
                         {% for message in app.session.getFlashBag.get('alert_info') %}
-                            <div class="alert alert-info alert-dismissable" align='center'>
+                            <div class="alert alert-info alert-dismissable" align="center">
                                 <p>{{message}}</p>
                             </div>
                         {%endfor%}
@@ -162,6 +162,7 @@
 <script src="../assets/global/plugins/excanvas.min.js"></script> 
 <![endif]-->
 <!-- BEGIN CORE PLUGINS -->
+<script> var basepath = '{{ constant('BASEPATH') }}'; </script>
 <script src="{{ constant('BASEPATH') }}/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="{{ constant('BASEPATH') }}/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="{{ constant('BASEPATH') }}/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>

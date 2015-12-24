@@ -52,7 +52,7 @@ class ExamSettingsController extends Controller {
 
         if ($countCatNum > MAX_CATEGORY || $countCatNum < MIN_CATEGORY) {
 
-            $sessionData->getFlashBag()->add('alert_danger', 'Minimum three and maximum five categories should be selected!');
+            $sessionData->getFlashBag()->add('alert_danger', 'Minimum '.MIN_CATEGORY.' and maximum '.MAX_CATEGORY.' categories should be selected!');
             return $this->app->redirect(BASEPATH.'/examsetting');
         }
 

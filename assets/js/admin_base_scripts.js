@@ -38,13 +38,13 @@ $("#isAdmin").change(function () {
 $('#userEmail').blur(function () {
     var email = $('#userEmail').val();
     $.ajax({
-        url: '/checkEmail/' + email,
+        url: basepath+'/checkEmail/' + email,
         method: 'post',
         success: function (data, status) {
             if (data == true) {
                 $('#userEmailCheck').html(' &nbsp;&nbsp; Email id is already registered! &nbsp;');
                 $('#userHist').show();
-                $('#viewUserHistory').attr('href', '/viewHistory/' + email);
+                $('#viewUserHistory').attr('href', basepath+'/viewHistory/' + email);
                 $('#viewUserHistory').attr('class', 'btn btn-default');
                 $('#userEmail').focus();
             }
@@ -59,7 +59,7 @@ $('#userEmail').blur(function () {
 $('#userEmailId').blur(function () {
     var emailId = $('#userEmailId').val();
     $.ajax({
-        url: '/checkEmail/' + emailId,
+        url: basepath+'/checkEmail/' + emailId,
         method: 'post',
         success: function (data, status) {
             if (data != '1') {
