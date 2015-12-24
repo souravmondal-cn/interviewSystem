@@ -55,6 +55,8 @@ class AdminSettingsController extends Controller {
         $entityManager = $this->app['doctrine'];
 
         if (
+                $postedData['category'] == ''||
+                $postedData['difficultyLevel'] == ''||
                 $postedData['addquestion'] == '' ||
                 $postedData['opta'] == '' ||
                 $postedData['optc'] == '' ||
@@ -78,6 +80,7 @@ class AdminSettingsController extends Controller {
         }
 
         try {
+            $question->setDifficultyLevel($postedData['difficultyLevel']);
             $question->setQuestion($postedData['addquestion']);
             $question->setOptionA($postedData['opta']);
             $question->setOptionB($postedData['optb']);

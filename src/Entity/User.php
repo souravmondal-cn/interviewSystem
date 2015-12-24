@@ -61,6 +61,13 @@ class User {
      */
     private $isAdmin = 0;
 
+    /**
+     * @var boolean
+     * 
+     * @Column(type="boolean", nullable=false)
+     */
+    private $allowAccess = 0;
+    
     public function getId() {
         return $this->id;
     }
@@ -89,6 +96,10 @@ class User {
         return $this->isAdmin;
     }
 
+    public function getAllowAccess() {
+        return $this->allowAccess;
+    }
+    
     public function setUserName($userName) {
         $this->userName = $userName;
         return $this;
@@ -119,4 +130,8 @@ class User {
         return $this;
     }
 
+    public function setAllowAccess($allowAccess) {
+        $this->allowAccess = $allowAccess;
+        return $this;
+    }
 }

@@ -11,16 +11,16 @@
         <thead>
             <tr class="info">
                 <th>
-                    User Id
-                </th>
-                <th>
                     Name
                 </th>
                 <th>
                     Email Id
                 </th>
                 <th>
-                    Location
+                    Access
+                </th>
+                <th>
+                    Office location
                 </th>
                 <th>
                     Address
@@ -40,29 +40,33 @@
             {% for singleUserData in userData %}
                 <tr>
                     <td>
-                        {{singleUserData.id}}
-                    </td>
-                    <td>
                         {{singleUserData.userName}}
                     </td>
                     <td>
                         <a href = '{{ constant('BASEPATH') }}/viewHistory/{{singleUserData.userEmail}}'>{{singleUserData.userEmail}}</a>
                     </td>
                     <td>
+                        
+                                <div class="bootstrap-switch-container">
+                                    <input type="checkbox" name="allowAccess" id="userPermission" class="make-switch" data-on-text="Yes" data-off-text="No" data-size="small" value="1" {% if singleUserData.allowAccess is defined and singleUserData.allowAccess == "1"%}checked="checked"{% endif %} disabled>
+                                </div>
+                            
+                    </td>
+                    <td>
                         {{singleUserData.officeLocation}}
                     </td>
                     <td>
-                        {{singleUserData.userAddress|striptags}}
+                        <small>{{singleUserData.userAddress|striptags}}</small>
                     </td>
                     <td align="center">
-                        <a class="btn purple btn-outline" href="{{ constant('BASEPATH') }}/viewfile/{{singleUserData.id}}" target="_blank" data-toggle="tootltip" data-placement="bottom" title="Download">Download &nbsp; <i class="fa fa-download"></i></a>
+                        <a class="btn purple btn-outline" href="{{ constant('BASEPATH') }}/viewfile/{{singleUserData.id}}" target="_blank" data-toggle="tootltip" data-placement="bottom" title="Download"><i class="fa fa-download"></i></a>
                     </td>
                     <td align="center">
-                        <a class="btn blue btn-outline" href='{{ constant('BASEPATH') }}/edituser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a>
-                        <a class="btn red btn-outline" href='{{ constant('BASEPATH') }}/deleteuser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-user-times"></i></a>
+                        <a class="btn blue btn-outline" href='{{ constant('BASEPATH') }}/edituser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil-square-o"></i></a>
+                        <a class="btn red btn-outline" href='{{ constant('BASEPATH') }}/deleteuser/{{pageHeading}}/{{singleUserData.id}}' data-toggle="tootltip" data-placement="bottom" title="Delete"><i class="fa fa-user-times"></i></a>
                     </td>
                     <td align="center">
-                        <a class="btn green btn-outline" href = '{{ constant('BASEPATH') }}/viewHistory/{{singleUserData.userEmail}}' data-toggle="tootltip" data-placement="bottom" title="View exams of this user">View &nbsp; <i class="fa fa-eye"></i></a>
+                        <a class="btn green btn-outline" href = '{{ constant('BASEPATH') }}/viewHistory/{{singleUserData.userEmail}}' data-toggle="tootltip" data-placement="bottom" title="View exams of this user"><i class="fa fa-eye"></i> &nbsp;<small>View</small></a>
                     </td>
                 </tr>
             {% endfor %}

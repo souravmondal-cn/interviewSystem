@@ -4,6 +4,7 @@ namespace Controller\FrontEnd;
 
 use Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use \Controller\FrontEnd\ExamController;
 
 class Home extends Controller {
 
@@ -18,13 +19,13 @@ class Home extends Controller {
         ));
 
         if (empty($loginInfo)) {
-            
+
             $sessionUserData->getFlashBag()->add('alert_danger', 'Sorry, email and password does not match');
-            return $this->app->redirect(BASEPATH."/login");
+            return $this->app->redirect(BASEPATH . "/login");
         }
 
         $sessionUserData->set('loggedInId', $loginInfo->getId());
-        return $this->app->redirect(BASEPATH.'/');
+        return $this->app->redirect(BASEPATH . '/');
     }
 
     public function home() {
@@ -33,41 +34,70 @@ class Home extends Controller {
         $loggerId = $sessionData->get('loggedInId');
 
         if (empty($loggerId)) {
-            $route = BASEPATH.'/login';
+            $route = BASEPATH . '/login';
         } else {
-            $route = $this->checkLoggerId($loggerId);
+            $route = $this->getProperRouteForUser($loggerId);
         }
 
         return $this->app->redirect($route);
     }
 
-    public function checkLoggerId($loggerId) {
+    public function getProperRouteForUser($loggerId) {
 
         $sessionData = $this->app['session'];
         $entityManager = $this->app['doctrine'];
+        $defaultRoute = BASEPATH . '/login';
 
         $userDetails = $entityManager->getRepository('Entity\User')->find($loggerId);
 
         if (empty($userDetails)) {
-
-            $returnRoute = BASEPATH.'/login';
-        } else {
-
-            $isAdmin = $userDetails->getIsAdmin();
-
-            if (!empty($isAdmin) && $isAdmin == 1) {
-
-                $sessionData->set('adminSession', true);
-                $sessionData->getFlashBag()->add('alert_success', 'Welcome to admin panel');
-                $returnRoute = BASEPATH.'/admin';
-            } else {
-
-                $sessionData->set('userSession', true);
-                $returnRoute = BASEPATH.'/dashboard';
-            }
+            return $defaultRoute;
         }
 
-        return $returnRoute;
+        $isAdmin = $userDetails->getIsAdmin();
+        if (!empty($isAdmin) && $isAdmin == 1) {
+
+            $sessionData->set('adminSession', true);
+            $sessionData->getFlashBag()->add('alert_success', 'Welcome to admin panel');
+            $defaultRoute = BASEPATH . '/admin';
+
+            return $defaultRoute;
+        }
+
+        if ($this->checkAllowedCandidate($loggerId)) {
+
+            $sessionData->set('userSession', true);
+            $defaultRoute = BASEPATH . '/dashboard';
+
+            return $defaultRoute;
+        }
+
+        return $defaultRoute;
+    }
+
+    public function checkAllowedCandidate($loggerId) {
+
+        $sessionData = $this->app['session'];
+        $entityManager = $this->app['doctrine'];
+
+        $userRepository = $entityManager->getRepository('Entity\User');
+        $allowedUserDetails = $userRepository->findOneby(array(
+            'id' => $loggerId,
+            'isAdmin' => false,
+            'allowAccess' => true
+        ));
+
+        $exam = new ExamController($this->app);
+        $examData = $exam->getExamData($loggerId);
+        $successData = $exam->getExamSuccessStatus($loggerId);
+        
+        if (!empty($allowedUserDetails) && !empty($examData)) {
+            $sessionData->set('userSession', true);
+            return true;
+        }
+
+        $sessionData->getFlashBag()->add('alert_danger', 'Sorry! Access denied!');
+        return false;
     }
 
 }

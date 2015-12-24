@@ -8,12 +8,12 @@
     <body>
         <div class="container">
             {% for message in app.session.getFlashBag.get('alert_danger') %}
-                <div class="alert alert-danger">
+                <div class="alert alert-danger" align="center">
                     <p>{{message}}</p>
                 </div>
             {%endfor%}
             {% for message in app.session.getFlashBag.get('alert_success') %}
-                <div class="alert alert-success">
+                <div class="alert alert-success" align="center">
                     <p>{{message}}</p>
                 </div>
             {%endfor%}

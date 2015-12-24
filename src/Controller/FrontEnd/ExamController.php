@@ -8,11 +8,11 @@ use \DateTime;
 
 class ExamController extends Controller {
 
-    public function getExamData($id) {
+    public function getExamData($userId) {
         $entityManager = $this->app['doctrine'];
         $examData = $entityManager->getRepository('Entity\Examination')->findOneBy(
             array(
-                'userId' => $id,
+                'userId' => $userId,
                 'completed' => null
             )
         );

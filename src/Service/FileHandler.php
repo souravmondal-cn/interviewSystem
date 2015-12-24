@@ -28,7 +28,7 @@ class FileHandler {
         
         $fullFilePath = $uploadpath . $fileName;
         $uploadedFile->move($uploadpath, $fullFilePath . '.' . $uploadedFile->guessExtension());
-        $sessionData->getFlashBag()->add("alert_success", "Resumé uploaded successfully");
+        $sessionData->getFlashBag()->add("alert_success", "Resume uploaded successfully");
         return true;
     }
     

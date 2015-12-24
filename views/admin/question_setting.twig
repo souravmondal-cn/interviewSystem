@@ -13,15 +13,15 @@
                 <th>
                     Question Id
                 </th>
-
                 <th>
                     Question
                 </th>
-
                 <th>
                     Question Category
                 </th>
-
+                <th>
+                    Difficulty level
+                </th>
                 <th>
                     Action
                 </th>
@@ -41,8 +41,11 @@
                         {{ question.categoryId.categoryName }}
                     </td>
                     <td>
-                        <a class="btn blue btn-outline" href="{{ constant('BASEPATH') }}/editQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Edit">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></a> 
-                        <a class="btn red btn-outline" href="{{ constant('BASEPATH') }}/deleteQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Delete">Delete &nbsp; <i class="fa fa-trash"></i></a>
+                        {% if question.difficultyLevel == "0" %}Beginner{% elseif question.difficultyLevel == "1" %}Intermediate{% elseif question.difficultyLevel == "2" %}Expert{% else %}{% endif %}
+                    </td>
+                    <td>
+                        <a class="btn blue btn-outline" href="{{ constant('BASEPATH') }}/editQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit</a> 
+                        <a class="btn red btn-outline" href="{{ constant('BASEPATH') }}/deleteQuestion/{{ question.id }}" data-toggle="tootltip" data-placement="bottom" title="Delete"><i class="fa fa-trash"></i>&nbsp;Delete</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -72,8 +72,7 @@ class AdminController extends Controller {
         if (
                 $postedFormData['userName'] == '' ||
                 $postedFormData['userEmail'] == '' ||
-                $postedFormData['password'] == '' ||
-                $postedFormData['isAdmin'] == ''
+                $postedFormData['password'] == ''
         ) {
             $sessionData->getFlashBag()->add("alert_danger", "No field should left blank");
             return $this->app->redirect(BASEPATH."/adduser/" . $userType);
@@ -82,10 +81,14 @@ class AdminController extends Controller {
         if ($postedFormData['userId'] == '') {
 
             $user = new User();
+            $formHeading = 'Add ';
+            $redirectUrl = BASEPATH."/adduser/" . $userType;
             $sessionData->getFlashBag()->add("alert_success", $userType . " added successfully!");
         } else {
 
             $user = $entityManager->find('Entity\User', $postedFormData['userId']);
+            $formHeading = 'Edit ';
+            $redirectUrl = BASEPATH."/usersetting";
             $sessionData->getFlashBag()->add('alert_info', $userType . ' details edited successfully');
         }
 
@@ -96,6 +99,7 @@ class AdminController extends Controller {
         $user->setIsAdmin($postedFormData['isAdmin']);
         $user->setOfficeLocation($postedFormData['officeLocation']);
         $user->setUserAddress($postedFormData['userAddress']);
+        $user->setAllowAccess($postedFormData['allowAccess']);
 
         if ($prevPassword != $newPassword) {
             $user->setPassword($postedFormData['password']);
@@ -110,7 +114,7 @@ class AdminController extends Controller {
                 $fs->fileUpload($request->files->get('resumeFile'), $user->getId(), UPLOAD_PATH);
             }
 
-            return $this->app->redirect(BASEPATH."/adduser/" . $userType);
+            return $this->app->redirect($redirectUrl);
         } catch (UniqueConstraintViolationException $ex) {
 
             $sessionData->getFlashBag()->add("alert_danger", "Email id is already registered, unique required!");
@@ -118,13 +122,14 @@ class AdminController extends Controller {
             $userData = ['isAdmin' => $postedFormData['isAdmin'],
                 'userName' => $postedFormData['userName'],
                 'userEmail' => $postedFormData['userEmail'],
-                'officeLocation' => $postedFormData['location'],
-                'userAddress' => $postedFormData['user_address'],
-                'password' => $postedFormData['password']
+                'officeLocation' => $postedFormData['officeLocation'],
+                'userAddress' => $postedFormData['userAddress'],
+                'password' => $postedFormData['password'],
+                'allowAccess' => $postedFormData['allowAccess']
             ];
             return $this->app['twig']->render('admin/addallusers.twig', array(
                         'userData' => $userData,
-                        'formHeading' => 'Edit ',
+                        'formHeading' => $formHeading,
                         'userType' => $userType,
                         'pageTitle' => 'Add '.$userType));
         }

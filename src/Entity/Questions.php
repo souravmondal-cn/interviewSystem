@@ -70,6 +70,13 @@ class Questions {
      * })
      */
     private $categoryId;
+    
+    /**
+     * @var integer
+     * 
+     * @Column(type="integer")
+     */
+    private $difficultyLevel;
 
     public function getId() {
         return $this->id;
@@ -101,6 +108,10 @@ class Questions {
 
     public function getCategoryId() {
         return $this->categoryId;
+    }
+    
+    public function getDifficultyLevel() {
+        return $this->difficultyLevel;
     }
 
     public function setQuestion($question) {
@@ -138,4 +149,8 @@ class Questions {
         return $this;
     }
 
+    public function setDifficultyLevel($difficultyLevel) {
+        $this->difficultyLevel = $difficultyLevel;
+        return $this;
+    }
 }

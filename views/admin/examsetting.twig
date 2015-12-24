@@ -19,7 +19,7 @@
         </div>
         <br>
         <div class="form-group">
-            <label>Choose Question category (Min {{ constant('MIN_CATEGORY') }} category and Maximum {{ constant('MAX_CATEGORY') }} category)</label>
+            <span style="color:grey"><label>Choose Question category (Min {{ constant('MIN_CATEGORY') }} category and Maximum {{ constant('MAX_CATEGORY') }} category)</label></span>
             <br>{% set i = 0 %}
             {% for key,value in categories %}
                 {{value}} &nbsp;&nbsp;&nbsp; : <input type="checkbox" name="qCategory[]" id="qCategory[]" value="{{key}}">&nbsp;&nbsp;&nbsp;

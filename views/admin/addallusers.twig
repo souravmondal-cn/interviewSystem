@@ -34,7 +34,7 @@
         </div>
 
         <div class="form-group" id="locationDiv">
-            <label for="officeLocation">Location</label>
+            <label for="officeLocation">Office Location</label>
             <select id="officeLocation" name="officeLocation" class="form-control">
                 <option value=''>
                     Select office location
@@ -57,12 +57,19 @@
 
         <div class="form-group" id='fileUploadDiv'>
             <label for='resumeFile'>Upload resume </label>
-            <span style="color:grey">(  allowed file types: PDF, DOC & DOCX  )</span>
-            <input type='file' name='resumeFile' id='resumeFile'>
+            <span style="color:grey"><small>( allowed file types: PDF, DOC & DOCX )</small></span>
+            <input type='file' name='resumeFile' id='resumeFile' class="form-control">
+        </div>
+
+        <div class="form-group" id="allowAccessDiv">
+            <div class="bootstrap-switch-container">
+                <label for="allowAccess">Access permission :</label><br>
+                <input type="checkbox" name="allowAccess" class="make-switch" data-on-text="Yes" data-off-text="No" value="1" {% if userData.allowAccess is defined and userData.allowAccess == "1"%}checked="checked"{% endif %}>
+            </div>
         </div>
 
         <div class="form-group">
-            <button type="submit" value="addUser" class="btn btn-primary">Submit</button>
+            <button type="submit" value="addUser" class="btn green"><i class="fa fa-check"></i> &nbsp; Submit</button>
         </div>
     </form>
 

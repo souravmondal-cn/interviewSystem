@@ -10,12 +10,14 @@ $(document).ready(function () {
         $("#addressDiv").hide();
         $("#locationDiv").hide();
         $("#fileUploadDiv").hide();
+        $("#allowAccessDiv").hide();
     }
 
     if (isAdmin === '0') {
         $("#addressDiv").show();
         $("#locationDiv").show();
         $("#fileUploadDiv").show();
+        $("#allowAccessDiv").show();
     }
 });
 
@@ -26,12 +28,14 @@ $("#isAdmin").change(function () {
         $("#addressDiv").hide();
         $("#locationDiv").hide();
         $("#fileUploadDiv").hide();
+        $("#allowAccessDiv").hide();
     }
 
     if (isAdmin === '0') {
         $("#addressDiv").show();
         $("#locationDiv").show();
         $("#fileUploadDiv").show();
+        $("#allowAccessDiv").show();
     }
 });
 

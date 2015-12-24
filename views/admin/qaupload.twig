@@ -22,6 +22,16 @@
         </div>
 
         <div class="form-group">
+            <label>Difficulty level :</label>
+                <select class="bs-select form-control" name="difficultyLevel">
+                    <option value="">-- Select difficulty --</option>
+                    <option value="0" {% if questionDetails.difficultyLevel is defined and questionDetails.difficultyLevel == "0" %}selected="selected"{% endif %}>Beginner</option>
+                    <option value="1" {% if questionDetails.difficultyLevel is defined and questionDetails.difficultyLevel == "1" %}selected="selected"{% endif %}>Intermediate</option>
+                    <option value="2" {% if questionDetails.difficultyLevel is defined and questionDetails.difficultyLevel == "2" %}selected="selected"{% endif %}>Expert</option>
+                </select>
+        </div>
+
+        <div class="form-group">
             <label for="addquestion">Question :</label>
             <textarea name="addquestion" id="addquestion"  class="form-control">{% if questionDetails.question is defined %}{{questionDetails.question}}{%endif%}</textarea>
         </div>
