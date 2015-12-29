@@ -2,15 +2,24 @@
 
 {% block body %}
 
+    <a href = '{{ constant('BASEPATH') }}/viewHistory/{{emailId}}' class='btn btn-default'>Back to exam history</a>
+    <br>
+    
     <h5>Email ID: {{emailId}} </h5>
     Total questions : {{totalQuestions}}<br>
     Correct answers : {{totalAnswers}}<br>
     Accuracy:{{dataPercentage|number_format(2,'.')}}%<br>
     Is qualified? {% if isQualified == 0 %}No{% else %} Yes {% endif %}
     <br><br>
-    <a href = '{{ constant('BASEPATH') }}/setQualified/{{examId}}' class='btn btn-primary'>Set qualified</a>
-    <a href = '{{ constant('BASEPATH') }}/viewHistory/{{emailId}}' class='btn btn-default'>Back to exam history</a>
-    <br><br>
+    <form class="form-inline" action="{{ constant('BASEPATH') }}/setQualified/{{examId}}" method="post">
+        <div class="form-group" id="allowAccessDiv">
+            <div class="bootstrap-switch-container">
+                <label for="allowAccess">Set qualified :</label>
+                <input type="checkbox" name="setQualified" class="make-switch" data-on-text="Yes" data-off-text="No" value="1" {% if isQualified == "1"%}checked="checked"{% endif %}>
+            </div>
+        </div>
+        <button type="submit" class="btn green"><i class="fa fa-check"></i> &nbsp; Submit</button>
+    </form>
 
     {% for dataField in examSubmitData %}
         <div class="col-xs-6 col-lg-6">

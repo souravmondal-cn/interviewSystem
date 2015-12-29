@@ -73,7 +73,7 @@ $app->post("/examsetting","exam.settings:examGenerate");
 
 $app->get("/viewHistory/{emailId}", "exam.settings:listExamHistory");
 $app->get("/examdetail/{examId}", "exam.settings:viewExamDetail");
-$app->get("/setQualified/{examId}", "exam.settings:setQualified");
+$app->post("/setQualified/{examId}", "exam.settings:setQualified");
 
 $app->get("/examstart/{userId}", "exam.controller:examStart");
 $app->get("/displayQuestion", "exam.controller:displayQuestion");

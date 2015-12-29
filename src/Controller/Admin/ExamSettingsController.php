@@ -185,10 +185,15 @@ class ExamSettingsController extends Controller {
                     'pageTitle' => 'Examination Detail']);
     }
 
-    public function setQualified($examId) {
+    public function setQualified(Request $request, $examId) {
+        $setQualified = $request->request->get('setQualified');
         $entityManager = $this->app['doctrine'];
         $examDetail = $entityManager->find('Entity\Examination', $examId);
-        $examDetail->setIsQualified(true);
+        if(isset($setQualified)) {
+            $examDetail->setIsQualified(true);
+        } else {
+            $examDetail->setIsQualified(false);
+        }
         $entityManager->persist($examDetail);
         $entityManager->flush();
 

@@ -45,12 +45,8 @@
                     <td>
                         <a href = '{{ constant('BASEPATH') }}/viewHistory/{{singleUserData.userEmail}}'>{{singleUserData.userEmail}}</a>
                     </td>
-                    <td>
-                        
-                                <div class="bootstrap-switch-container">
-                                    <input type="checkbox" name="allowAccess" id="userPermission" class="make-switch" data-on-text="Yes" data-off-text="No" data-size="small" value="1" {% if singleUserData.allowAccess is defined and singleUserData.allowAccess == "1"%}checked="checked"{% endif %} disabled>
-                                </div>
-                            
+                    <td align="center">
+                        {% if singleUserData.allowAccess is defined and singleUserData.allowAccess == "1"%}<i class="fa fa-check" style="color: green"></i>{% else %}<i class="fa fa-times"  style="color: brown"></i>{% endif %}
                     </td>
                     <td>
                         {{singleUserData.officeLocation}}

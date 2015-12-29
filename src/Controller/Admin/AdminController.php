@@ -99,7 +99,12 @@ class AdminController extends Controller {
         $user->setIsAdmin($postedFormData['isAdmin']);
         $user->setOfficeLocation($postedFormData['officeLocation']);
         $user->setUserAddress($postedFormData['userAddress']);
-        $user->setAllowAccess($postedFormData['allowAccess']);
+        if(isset($postedFormData['allowAccess'])) {
+            $user->setAllowAccess($postedFormData['allowAccess']);
+        } else {
+            $user->setAllowAccess("0");
+        }
+        
 
         if ($prevPassword != $newPassword) {
             $user->setPassword($postedFormData['password']);
